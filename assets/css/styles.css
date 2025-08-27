@@ -301,17 +301,19 @@ body {
     transform: translateY(-1px);
 }
 
-/* Checkbox styling for GDPR */
+/* Checkbox styling - consistent with radio buttons */
 .checkbox-label {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-md);
     cursor: pointer;
     padding: var(--spacing-md);
-    border: 1px solid transparent;
+    border: 1px solid var(--border-light);
     border-radius: var(--border-radius);
     transition: var(--transition-fast);
     user-select: none;
+    background: var(--white);
+    min-height: 48px;
 }
 
 .checkbox-label:hover {
@@ -793,14 +795,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border-radius: var(--border-radius-sm);
     border-top: 1px solid var(--border-light);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-md);
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .service-dropdown {
     flex: 1;
     min-width: 200px;
+    max-width: 300px;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--border-light);
     border-radius: var(--border-radius-sm);
@@ -809,6 +815,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     font-size: 0.9rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    text-align: left !important;
+    direction: ltr;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .service-dropdown:focus {
@@ -823,6 +835,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .service-input {
     width: 120px;
+    min-width: 120px;
+    max-width: 120px;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--border-light);
     border-radius: var(--border-radius-sm);
@@ -830,6 +844,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     color: var(--text-primary);
     font-size: 0.9rem;
     transition: var(--transition-fast);
+    text-align: left !important;
+    direction: ltr;
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 .service-input:focus {
@@ -840,6 +858,46 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .service-input::placeholder {
     color: var(--text-muted);
+    text-align: left !important;
+    direction: ltr;
+}
+
+.service-dropdown option {
+    text-align: left !important;
+    direction: ltr;
+    padding: 8px;
+}
+
+/* Säkerställ vänsterjustering för alla form-element */
+select, input[type="text"], input[type="number"], input[type="email"], input[type="tel"] {
+    text-align: left !important;
+    direction: ltr;
+}
+
+/* Konsistent spacing för alla form-sektioner */
+.form-row {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-sm);
+}
+
+.help-text {
+    margin-top: var(--spacing-sm);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+select option {
+    text-align: left !important;
+    direction: ltr;
+}
+
+input::placeholder {
+    text-align: left !important;
+    direction: ltr;
 }
 
 .fixed-price-info {
@@ -1064,14 +1122,16 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .checkbox-custom {
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--border-light);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-light);
     border-radius: var(--border-radius-sm);
     background: var(--white);
     transition: var(--transition-fast);
     flex-shrink: 0;
-    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -1085,12 +1145,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
     content: '✓';
-    display: block;
-    color: var(--primary-dark);
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 14px;
     font-weight: bold;
-    text-align: center;
-    line-height: 16px;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -1856,25 +1918,37 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 /* Mobile phones (portrait) */
 @media (max-width: 480px) {
     :root {
-        --spacing-xs: 3px;
-        --spacing-sm: 6px;
-        --spacing-md: 10px;
-        --spacing-lg: 14px;
-        --spacing-xl: 20px;
-        --spacing-2xl: 28px;
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --spacing-xl: 24px;
+        --spacing-2xl: 32px;
+    }
+    
+    body {
+        font-size: 16px; /* Prevent iOS zoom */
+        line-height: 1.4;
     }
     
     .container {
-        padding: 0 var(--spacing-xs);
+        padding: 0 var(--spacing-sm);
+        max-width: 100%;
     }
     
     .header {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm);
         text-align: center;
+        position: sticky;
+        top: 0;
+        background: var(--white);
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .logo-section {
         flex-direction: column;
+        align-items: center;
         gap: var(--spacing-xs);
     }
     
@@ -2556,4 +2630,144 @@ body[data-theme="dark"] .signature-fullscreen-controls {
 body[data-theme="dark"] .signature-preview {
     background: var(--surface-light);
     border-color: var(--border-light);
+}
+
+/* Cost breakdown styling */
+.cost-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cost-line {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cost-line:last-child {
+    border-bottom: none;
+}
+
+.cost-total {
+    font-weight: 600;
+    color: var(--text-primary);
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    border-top: 2px solid var(--primary-color);
+}
+
+/* ROT breakdown styling */
+.rot-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.rot-line {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.rot-amount {
+    font-weight: 600;
+    color: var(--success-color);
+    font-size: 1rem;
+}
+
+/* Grön Teknik-avdrag stilar */
+.green-tech-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.green-tech-line {
+    color: #22c55e;
+    font-size: 0.9rem;
+}
+
+.green-tech-amount {
+    color: #22c55e;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.green-tech-row {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-left: 4px solid #22c55e;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+}
+
+.green-tech-row .price-label {
+    color: #166534;
+    font-weight: 600;
+}
+
+
+
+
+/* Unit info styling */
+.unit-info {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Responsiv service-options för mindre skärmar */
+@media (max-width: 768px) {
+    .service-options {
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: nowrap;
+    }
+    
+    .service-dropdown {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        white-space: normal;
+    }
+    
+    .service-input {
+        width: 100px;
+        min-width: 100px;
+        max-width: 150px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .service-input {
+        width: 80px;
+        min-width: 80px;
+        max-width: 120px;
+        font-size: 0.85rem;
+    }
+    
+    .service-dropdown {
+        font-size: 0.85rem;
+    }
+}
+    font-style: italic;
+}
+
+/* Pricing display enhancements */
+.pricing-section .price-item {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.pricing-section .price-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

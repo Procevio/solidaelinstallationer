@@ -5,87 +5,275 @@ const PASSWORD_CONFIG = {
     SESSION_KEY: 'solida_auth_session'
 };
 
-// Priskonfiguration för elinstallationer
+// Priskonfiguration för elinstallationer med detaljerade produktval
 const CONFIG = {
-    // Elinstallationer-priser med dropdown-struktur (exkl moms)
+    // Timpris för elektriker (exkl moms)
+    HOURLY_RATE: 750,
+
+    // Elinstallationer-priser med separata material- och laborvariabler
     ELECTRICAL_PRICING: {
         // Installation & Utbyggnad
         'extra_eluttag': {
-            'inomhus_vagg': 1440,           // 1800kr inkl moms = 1440kr exkl moms
-            'uteplats_garage': 1760         // 2200kr inkl moms = 1760kr exkl moms
+            'schneider_exxact_16a': {
+                materialCost: 45,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Schneider Exxact 16A'
+            },
+            'abb_impressivo_16a': {
+                materialCost: 65,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'ABB Impressivo 16A'
+            },
+            'gira_system55_16a': {
+                materialCost: 85,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Gira System 55 16A'
+            }
         },
         'strombrytare': {
-            'vanlig': 960,                  // 1200kr inkl moms = 960kr exkl moms
-            'dimmer': 1200,                 // 1500kr inkl moms = 1200kr exkl moms
-            'smart_switch': 1600            // 2000kr inkl moms = 1600kr exkl moms
+            'schneider_exxact_enpolig': {
+                materialCost: 35,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Schneider Exxact enpolig'
+            },
+            'jung_as500_dimmer_led': {
+                materialCost: 180,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Jung AS500 dimmer LED'
+            },
+            'plejd_wrt01_smart': {
+                materialCost: 450,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Plejd WRT-01 smart switch'
+            }
         },
-        'byte_elcentral': 20000,            // 25000kr inkl moms = 20000kr exkl moms (fast pris)
-        'dragning_ny_el': 680,              // 850kr/m inkl moms = 680kr/m exkl moms
         'inkoppling_hushallsmaskin': {
-            'diskmaskin': 2000,             // 2500kr inkl moms = 2000kr exkl moms
-            'ugn': 2000,                    // 2500kr inkl moms = 2000kr exkl moms
-            'spis': 2400,                   // 3000kr inkl moms = 2400kr exkl moms
-            'tvattmaskin': 1600             // 2000kr inkl moms = 1600kr exkl moms
+            'diskmaskin': {
+                materialCost: 120,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Diskmaskin'
+            },
+            'ugn': {
+                materialCost: 145,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Ugn'
+            },
+            'induktionsspis': {
+                materialCost: 180,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Induktionsspis'
+            }
         },
-        'jordfelsbrytare': 1200,            // 1500kr inkl moms = 1200kr exkl moms
 
         // Belysning
         'taklampa': {
-            'vanlig_taklampa': 800,         // 1000kr inkl moms = 800kr exkl moms
-            'kristallkrona': 1600,          // 2000kr inkl moms = 1600kr exkl moms
-            'takflakt_belysning': 2400      // 3000kr inkl moms = 2400kr exkl moms
+            'grundarmatur_e27': {
+                materialCost: 85,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Grundarmatur E27'
+            },
+            'led_downlight_infälld': {
+                materialCost: 120,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'LED downlight infälld'
+            },
+            'takfläkt_belysning': {
+                materialCost: 850,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Takfläkt med belysning'
+            }
         },
         'spotlights': {
-            'led_downlights': 400,          // 500kr inkl moms = 400kr exkl moms
-            'skena_spots': 800,             // 1000kr inkl moms = 800kr exkl moms
-            'infallda_spots': 600           // 750kr inkl moms = 600kr exkl moms
-        },
-        'utomhusbelysning': {
-            'fasadbelysning': 1200,         // 1500kr inkl moms = 1200kr exkl moms
-            'tradgardsspots': 800,          // 1000kr inkl moms = 800kr exkl moms
-            'vaggarmatur': 960              // 1200kr inkl moms = 960kr exkl moms
+            'philips_led_downlight_10w': {
+                materialCost: 95,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Philips LED downlight 10W'
+            },
+            'paulmann_skena_3spots': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Paulmann skena 3-spots'
+            },
+            'malmbergs_infälld_gu10': {
+                materialCost: 65,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Malmbergs infälld spot GU10'
+            }
         },
         'led_strip': {
-            'koksbelysning': 400,           // 500kr/m inkl moms = 400kr/m exkl moms
-            'trappbelysning': 480,          // 600kr/m inkl moms = 480kr/m exkl moms
-            'dekorativ': 320                // 400kr/m inkl moms = 320kr/m exkl moms
-        },
-        'smart_belysning': {
-            'plejd_system': 8000,           // 10000kr inkl moms = 8000kr exkl moms (per rum)
-            'philips_hue': 4000,            // 5000kr inkl moms = 4000kr exkl moms (per rum)
-            'knx': 16000                    // 20000kr inkl moms = 16000kr exkl moms (per rum)
+            'philips_hue_lightstrip_2m': {
+                materialCost: 450,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Philips Hue lightstrip 2m'
+            },
+            'paulmann_profil_per_meter': {
+                materialCost: 85,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Paulmann profil kökslist per meter'
+            },
+            'ikea_myrvarv_35m': {
+                materialCost: 180,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'IKEA Myrvarv 3,5m'
+            }
         },
 
         // Energi & Laddning
         'laddbox_elbil': {
-            'typ2_22kw': 12000,             // 15000kr inkl moms = 12000kr exkl moms
-            'cee_16a': 8000,                // 10000kr inkl moms = 8000kr exkl moms
-            'typ2_11kw': 10000              // 12500kr inkl moms = 10000kr exkl moms
+            'easee_home_22kw': {
+                materialCost: 8500,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Easee Home 22kW',
+                greenTech: true,
+                greenTechRate: 50 // 50% avdrag
+            },
+            'zaptec_go_11kw': {
+                materialCost: 6200,
+                laborHours: 3.5,
+                laborCost: 2625, // 3.5h × 750kr/h
+                description: 'Zaptec Go 11kW',
+                greenTech: true,
+                greenTechRate: 50 // 50% avdrag
+            },
+            'garo_glb_16a_cee': {
+                materialCost: 2100,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Garo GLB 16A CEE',
+                greenTech: true,
+                greenTechRate: 50 // 50% avdrag
+            }
         },
+
+        // Solenergi
         'solceller': {
-            'vaxelriktare': 8000,           // 10000kr inkl moms = 8000kr exkl moms
-            'optimizers': 4000,             // 5000kr inkl moms = 4000kr exkl moms
-            'batterisystem': 40000          // 50000kr inkl moms = 40000kr exkl moms
+            'vaxelriktare': {
+                materialCost: 15000,
+                laborHours: 8,
+                laborCost: 6000, // 8h × 750kr/h
+                description: 'Växelriktare solceller',
+                greenTech: true,
+                greenTechRate: 15 // 15% avdrag
+            },
+            'optimizers': {
+                materialCost: 8500,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Power optimizers',
+                greenTech: true,
+                greenTechRate: 15 // 15% avdrag
+            },
+            'batterisystem': {
+                materialCost: 45000,
+                laborHours: 12,
+                laborCost: 9000, // 12h × 750kr/h
+                description: 'Hemlagringsbatteri',
+                greenTech: true,
+                greenTechRate: 50 // 50% avdrag för batterilagring
+            }
         },
 
         // Värme & Komfort
-        'handdukstork': 1600,               // 2000kr inkl moms = 1600kr exkl moms
-        'golvvarme': 800,                   // 1000kr/kvm inkl moms = 800kr/kvm exkl moms
-        'varmepump': {
-            'inkoppling_befintlig': 4000,   // 5000kr inkl moms = 4000kr exkl moms
-            'installation_luft_luft': 12000 // 15000kr inkl moms = 12000kr exkl moms
+        'handdukstork': {
+            'thermia_straight_600w': {
+                materialCost: 850,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Thermia Straight 600W'
+            },
+            'rointe_d_series_500w': {
+                materialCost: 1200,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Rointe D-Series 500W'
+            },
+            'hafa_original_400w': {
+                materialCost: 680,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Hafa Original 400W'
+            }
+        },
+        'golvvarme': {
+            'thermia_per_kvm': {
+                materialCost: 220,
+                laborHours: 0.4,
+                laborCost: 300, // 0.4h × 750kr/h
+                description: 'Thermia Golvvärme per kvm'
+            },
+            'fenix_ecofloor_per_kvm': {
+                materialCost: 180,
+                laborHours: 0.4,
+                laborCost: 300, // 0.4h × 750kr/h
+                description: 'Fenix ecofloor per kvm'
+            },
+            'nexans_per_kvm': {
+                materialCost: 260,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Nexans per kvm'
+            }
         },
 
         // Säkerhet & Smarta Hem
         'brandvarnare': {
-            'hardkopplad': 800,             // 1000kr inkl moms = 800kr exkl moms
-            'rokdetektor': 600              // 750kr inkl moms = 600kr exkl moms
+            'kidde_29hd_optisk': {
+                materialCost: 180,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Kidde 29HD optisk'
+            },
+            'aico_ei650_10ar': {
+                materialCost: 220,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Aico Ei650 10år batteri'
+            },
+            'cavius_2103_mini': {
+                materialCost: 280,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Cavius 2103 mini'
+            }
         },
-        'hemlarm': 8000,                    // 10000kr inkl moms = 8000kr exkl moms (fast pris)
         'natverksuttag': {
-            'cat6_uttag': 800,              // 1000kr inkl moms = 800kr exkl moms
-            'fiber': 1600,                  // 2000kr inkl moms = 1600kr exkl moms
-            'wifi_access_point': 2400       // 3000kr inkl moms = 2400kr exkl moms
+            'abb_impressivo_rj45_cat6': {
+                materialCost: 65,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'ABB Impressivo RJ45 Cat6'
+            },
+            'fiber_sc_uttag': {
+                materialCost: 95,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Fiber SC-uttag'
+            },
+            'unifi_u6_lite_ap': {
+                materialCost: 950,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'UniFi U6-Lite access point'
+            }
         }
     },
 
@@ -471,13 +659,24 @@ class QuoteCalculator {
             });
         });
 
-        // Lyssna på materialkostnad dropdown
-        const materialkostnad = document.getElementById('materialkostnad');
-        if (materialkostnad) {
-            materialkostnad.addEventListener('change', () => {
+        // Lyssna på Grön Teknik-avdrag checkbox
+        const greenTechCheckbox = document.getElementById('green_tech_eligible');
+        if (greenTechCheckbox) {
+            greenTechCheckbox.addEventListener('change', () => {
+                this.handleGreenTechChange();
                 this.calculateElectricalQuote();
             });
         }
+
+        // Lyssna på Grön Teknik personer-dropdown
+        const greenTechPersons = document.getElementById('green_tech_persons');
+        if (greenTechPersons) {
+            greenTechPersons.addEventListener('change', () => {
+                this.calculateElectricalQuote();
+            });
+        }
+
+        // Materialkostnad hanteras nu automatiskt från produktval
 
         // Lyssna på kundinformation för arbetsbeskrivning
         const customerFields = [
@@ -519,7 +718,6 @@ class QuoteCalculator {
         const kundROT = document.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked');
         
         const delatRotSection = document.getElementById('delat-rot-section');
-        const materialkostnadSection = document.getElementById('materialkostnad-section');
         
         // Visa/dölj ROT-relaterade sektioner
         const showROTSections = fastighetROT?.value === 'Ja - Villa/Radhus' && 
@@ -529,41 +727,167 @@ class QuoteCalculator {
             delatRotSection.style.display = showROTSections ? 'block' : 'none';
         }
         
-        if (materialkostnadSection) {
-            materialkostnadSection.style.display = showROTSections ? 'block' : 'none';
+        // Uppdatera även grön teknik-synlighet
+        this.updateGreenTechVisibility();
+    }
+
+    updateGreenTechVisibility() {
+        const selectedServices = this.getSelectedElectricalServices();
+        const hasGreenTechProducts = selectedServices.some(service => service.greenTech);
+        
+        const greenTechSection = document.getElementById('green-tech-section');
+        if (greenTechSection) {
+            greenTechSection.style.display = hasGreenTechProducts ? 'block' : 'none';
         }
     }
 
-    calculateElectricalQuote() {
-        console.log('💰 Beräknar elinstallationer-pris');
+    handleGreenTechChange() {
+        const greenTechCheckbox = document.getElementById('green_tech_eligible');
+        const greenTechPersonsSection = document.getElementById('green-tech-persons-section');
         
-        let subtotal = 0;
-        const selectedServices = this.getSelectedElectricalServices();
+        if (greenTechPersonsSection) {
+            greenTechPersonsSection.style.display = greenTechCheckbox?.checked ? 'block' : 'none';
+        }
+    }
+
+    collectGreenTechData() {
+        const eligible = document.getElementById('green_tech_eligible')?.checked || false;
+        const persons = document.getElementById('green_tech_persons')?.value || '1';
         
-        // Beräkna totalkostnad för alla tjänster
+        return {
+            eligible,
+            maxAmount: persons === '1' ? 50000 : 100000
+        };
+    }
+
+    categorizeServices(selectedServices) {
+        const greenTechServices = [];
+        const regularServices = [];
+        
         selectedServices.forEach(service => {
-            subtotal += service.totalPrice;
+            if (service.greenTech) {
+                greenTechServices.push(service);
+            } else {
+                regularServices.push(service);
+            }
+        });
+        
+        return { greenTechServices, regularServices };
+    }
+
+    calculateElectricalQuote() {
+        console.log('💰 Beräknar elinstallationer-pris med ROT/Grön Teknik dubbla avdrag');
+        
+        const selectedServices = this.getSelectedElectricalServices();
+        this.updateGreenTechVisibility(); // Uppdatera grön teknik-synlighet
+        
+        if (selectedServices.length === 0) {
+            this.updatePricingDisplay(0, 0, 0, 0, 0, 0, {});
+            return { subtotal: 0, finalTotal: 0, services: [] };
+        }
+
+        // Kategorisera tjänster i grön teknik och vanliga
+        const { greenTechServices, regularServices } = this.categorizeServices(selectedServices);
+        
+        // Beräkna totalkostnader
+        let totalMaterial = 0;
+        let totalLabor = 0;
+        let greenTechMaterial = 0;
+        let greenTechLabor = 0;
+        let regularMaterial = 0;
+        let regularLabor = 0;
+
+        selectedServices.forEach(service => {
+            totalMaterial += service.totalMaterial;
+            totalLabor += service.totalLabor;
+            
+            if (service.greenTech) {
+                greenTechMaterial += service.totalMaterial;
+                greenTechLabor += service.totalLabor;
+            } else {
+                regularMaterial += service.totalMaterial;
+                regularLabor += service.totalLabor;
+            }
         });
 
-        // Beräkna moms (25%)
+        const subtotal = totalMaterial + totalLabor;
         const vatAmount = subtotal * 0.25;
         const totalWithVat = subtotal + vatAmount;
 
-        // Beräkna ROT-avdrag
-        const rotData = this.collectROTData();
-        let rotDeduction = 0;
-        let materialDeduction = 0;
+        // Beräkna med moms för avdragskategorier
+        const regularMaterialWithVat = regularMaterial * 1.25;
+        const regularLaborWithVat = regularLabor * 1.25;
+        const greenTechMaterialWithVat = greenTechMaterial * 1.25;
+        const greenTechLaborWithVat = greenTechLabor * 1.25;
 
+        // SCENARIO 1: Bara grön teknik-produkter
+        if (greenTechServices.length > 0 && regularServices.length === 0) {
+            const greenTechData = this.collectGreenTechData();
+            let greenTechDeduction = 0;
+            
+            if (greenTechData.eligible) {
+                // Grön teknik-avdrag på hela kostnaden (material + arbete)
+                greenTechServices.forEach(service => {
+                    const serviceTotal = (service.totalMaterial + service.totalLabor) * 1.25;
+                    greenTechDeduction += serviceTotal * (service.greenTechRate / 100);
+                });
+                
+                // Begränsa enligt maxbelopp
+                if (greenTechDeduction > greenTechData.maxAmount) {
+                    greenTechDeduction = greenTechData.maxAmount;
+                }
+            }
+            
+            const finalTotal = totalWithVat - greenTechDeduction;
+            this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, 0, greenTechDeduction, finalTotal, {
+                totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+                scenario: 'greenOnly'
+            });
+            
+            return {
+                subtotal, totalWithVat, greenTechDeduction, finalTotal, services: selectedServices,
+                scenario: 'greenOnly'
+            };
+        }
+        
+        // SCENARIO 2: Bara vanliga produkter
+        if (regularServices.length > 0 && greenTechServices.length === 0) {
+            const rotData = this.collectROTData();
+            let rotDeduction = 0;
+            
+            if (this.isROTEligible(rotData)) {
+                rotDeduction = regularLaborWithVat * CONFIG.ROT_DEDUCTION.RATE;
+                
+                const maxROTDeduction = rotData.delatROT === 'Ja' ? 
+                    CONFIG.ROT_DEDUCTION.MAX_SHARED : CONFIG.ROT_DEDUCTION.MAX_PER_PERSON;
+                
+                if (rotDeduction > maxROTDeduction) {
+                    rotDeduction = maxROTDeduction;
+                }
+            }
+            
+            const finalTotal = totalWithVat - rotDeduction;
+            this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, 0, finalTotal, {
+                totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+                scenario: 'rotOnly'
+            });
+            
+            return {
+                subtotal, totalWithVat, rotDeduction, finalTotal, services: selectedServices,
+                scenario: 'rotOnly'
+            };
+        }
+        
+        // SCENARIO 3: Blandade produkter - båda avdragen
+        const rotData = this.collectROTData();
+        const greenTechData = this.collectGreenTechData();
+        let rotDeduction = 0;
+        let greenTechDeduction = 0;
+        
+        // ROT-avdrag på vanliga produkters arbetskostnad
         if (this.isROTEligible(rotData)) {
-            // Materialkostnad som procent
-            const materialPercent = parseInt(rotData.materialkostnad) / 100;
-            materialDeduction = totalWithVat * materialPercent;
+            rotDeduction = regularLaborWithVat * CONFIG.ROT_DEDUCTION.RATE;
             
-            // ROT-avdrag på arbetskostnad (50% av totalbelopp minus materialkostnad)
-            const workCost = totalWithVat - materialDeduction;
-            rotDeduction = workCost * CONFIG.ROT_DEDUCTION.RATE;
-            
-            // Begränsa ROT-avdrag enligt regler
             const maxROTDeduction = rotData.delatROT === 'Ja' ? 
                 CONFIG.ROT_DEDUCTION.MAX_SHARED : CONFIG.ROT_DEDUCTION.MAX_PER_PERSON;
             
@@ -571,20 +895,28 @@ class QuoteCalculator {
                 rotDeduction = maxROTDeduction;
             }
         }
-
-        const finalTotal = totalWithVat - rotDeduction;
-
-        // Uppdatera prisvisning
-        this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, finalTotal, { materialDeduction });
+        
+        // Grön Teknik-avdrag på grön teknik-produkter (material + arbete)
+        if (greenTechData.eligible) {
+            greenTechServices.forEach(service => {
+                const serviceTotal = (service.totalMaterial + service.totalLabor) * 1.25;
+                greenTechDeduction += serviceTotal * (service.greenTechRate / 100);
+            });
+            
+            if (greenTechDeduction > greenTechData.maxAmount) {
+                greenTechDeduction = greenTechData.maxAmount;
+            }
+        }
+        
+        const finalTotal = totalWithVat - rotDeduction - greenTechDeduction;
+        this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, {
+            totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+            scenario: 'mixed'
+        });
         
         return {
-            subtotal,
-            vatAmount,
-            totalWithVat,
-            rotDeduction,
-            materialDeduction,
-            finalTotal,
-            services: selectedServices
+            subtotal, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, services: selectedServices,
+            scenario: 'mixed'
         };
     }
 
@@ -602,8 +934,7 @@ class QuoteCalculator {
                                     document.getElementById(`${serviceId}_meter`) || 
                                     document.getElementById(`${serviceId}_kvm`);
                 
-                let price = 0;
-                let serviceType = '';
+                let productData = null;
                 let quantity = 1;
                 
                 // Hämta kvantitet
@@ -611,25 +942,31 @@ class QuoteCalculator {
                     quantity = parseInt(quantityInput.value) || 1;
                 }
                 
-                // Bestäm pris baserat på dropdown eller fast pris
-                if (dropdown && dropdown.value && typeof serviceConfig === 'object' && serviceConfig[dropdown.value]) {
-                    price = serviceConfig[dropdown.value];
-                    serviceType = dropdown.options[dropdown.selectedIndex].text;
-                } else if (typeof serviceConfig === 'number') {
-                    price = serviceConfig;
-                    serviceType = checkbox.labels[0].textContent;
+                // Hämta produktdata från dropdown
+                if (dropdown && dropdown.value && serviceConfig[dropdown.value]) {
+                    productData = serviceConfig[dropdown.value];
                 }
                 
-                if (price > 0) {
-                    const totalPrice = price * quantity;
+                if (productData && quantity > 0) {
+                    const totalMaterial = productData.materialCost * quantity;
+                    const totalLabor = productData.laborCost * quantity;
+                    const totalPrice = totalMaterial + totalLabor;
                     
                     services.push({
                         id: serviceId,
                         name: checkbox.labels[0].textContent,
-                        type: serviceType,
-                        unitPrice: price,
+                        productName: productData.description,
+                        productKey: dropdown.value,
                         quantity: quantity,
-                        totalPrice: totalPrice
+                        unitMaterial: productData.materialCost,
+                        unitLabor: productData.laborCost,
+                        unitTotal: productData.materialCost + productData.laborCost,
+                        totalMaterial: totalMaterial,
+                        totalLabor: totalLabor,
+                        totalPrice: totalPrice,
+                        laborHours: productData.laborHours,
+                        greenTech: productData.greenTech || false,
+                        greenTechRate: productData.greenTechRate || 0
                     });
                 }
             }
@@ -651,49 +988,95 @@ class QuoteCalculator {
         return {
             fastighetBerättigad: fastighetROT?.value || 'Nej - Lägenhet/Kontor/Annat',
             kundBerättigad: kundROT?.value || 'Nej - visa pris utan ROT-avdrag',
-            delatROT: delatROT?.value || 'Nej',
-            materialkostnad: document.getElementById('materialkostnad')?.value || '0'
+            delatROT: delatROT?.value || 'Nej'
         };
     }
 
-    updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, finalTotal, extras = {}) {
-        // Uppdatera subtotal
+    updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, extras = {}) {
+        const { 
+            totalMaterial = 0, 
+            totalLabor = 0, 
+            regularMaterial = 0, 
+            regularLabor = 0, 
+            greenTechMaterial = 0, 
+            greenTechLabor = 0,
+            scenario = 'rotOnly'
+        } = extras;
+
+        // Uppdatera subtotal med kategoriserade kostnader
         const subtotalDisplay = document.getElementById('subtotal-price-display');
         if (subtotalDisplay) {
-            subtotalDisplay.textContent = new Intl.NumberFormat('sv-SE').format(Math.round(subtotal)) + ' kr';
+            let breakdownHtml = '<div class="cost-breakdown">';
+            
+            if (scenario === 'mixed') {
+                breakdownHtml += `
+                    <div class="cost-line">Vanlig material: ${new Intl.NumberFormat('sv-SE').format(Math.round(regularMaterial))} kr</div>
+                    <div class="cost-line">Vanligt arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(regularLabor))} kr</div>
+                    <div class="cost-line">Grön teknik material: ${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechMaterial))} kr</div>
+                    <div class="cost-line">Grön teknik arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechLabor))} kr</div>
+                `;
+            } else {
+                breakdownHtml += `
+                    <div class="cost-line">Material: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalMaterial))} kr</div>
+                    <div class="cost-line">Arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalLabor))} kr</div>
+                `;
+            }
+            
+            breakdownHtml += `
+                <div class="cost-total"><strong>Subtotal: ${new Intl.NumberFormat('sv-SE').format(Math.round(subtotal))} kr</strong></div>
+                </div>
+            `;
+            
+            subtotalDisplay.innerHTML = breakdownHtml;
         }
 
         // Uppdatera total med moms
         const totalWithVatDisplay = document.getElementById('total-with-vat');
         if (totalWithVatDisplay) {
-            totalWithVatDisplay.innerHTML = '<strong>' + new Intl.NumberFormat('sv-SE').format(Math.round(totalWithVat)) + ' kr</strong>';
+            let vatHtml = '<div class="cost-breakdown">';
+            
+            if (scenario === 'mixed') {
+                vatHtml += `
+                    <div class="cost-line">Vanliga produkter (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round((regularMaterial + regularLabor) * 1.25))} kr</div>
+                    <div class="cost-line">Grön teknik (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round((greenTechMaterial + greenTechLabor) * 1.25))} kr</div>
+                `;
+            } else {
+                const materialWithVat = totalMaterial * 1.25;
+                const laborWithVat = totalLabor * 1.25;
+                vatHtml += `
+                    <div class="cost-line">Material (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round(materialWithVat))} kr</div>
+                    <div class="cost-line">Arbete (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round(laborWithVat))} kr</div>
+                `;
+            }
+            
+            vatHtml += `
+                <div class="cost-total"><strong>Total inkl moms: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalWithVat))} kr</strong></div>
+                </div>
+            `;
+            
+            totalWithVatDisplay.innerHTML = vatHtml;
         }
 
-        // Uppdatera ROT-avdrag
+        // Uppdatera avdrag
         const rotDeductionEl = document.getElementById('rot-deduction');
         const rotRow = document.getElementById('rot-row');
         const rotPreliminaryText = document.getElementById('rot-preliminary-text');
-        const materialRow = document.getElementById('material-row');
-        const materialDeductionEl = document.getElementById('material-deduction');
 
+        // Uppdatera ROT-avdrag display
         if (rotDeduction > 0) {
             if (rotDeductionEl) {
-                rotDeductionEl.textContent = '-' + new Intl.NumberFormat('sv-SE').format(Math.round(rotDeduction)) + ' kr';
+                rotDeductionEl.innerHTML = `
+                    <div class="rot-breakdown">
+                        <div class="rot-line">ROT-avdrag (50% på arbetskostnad vanliga produkter):</div>
+                        <div class="rot-amount">-${new Intl.NumberFormat('sv-SE').format(Math.round(rotDeduction))} kr</div>
+                    </div>
+                `;
             }
             if (rotRow) {
                 rotRow.style.display = 'flex';
             }
             if (rotPreliminaryText) {
                 rotPreliminaryText.style.display = 'block';
-            }
-
-            // Visa materialkostnad avdrag om det finns
-            const { materialDeduction = 0 } = extras;
-            if (materialDeduction > 0 && materialDeductionEl && materialRow) {
-                materialDeductionEl.textContent = '-' + new Intl.NumberFormat('sv-SE').format(Math.round(materialDeduction)) + ' kr';
-                materialRow.style.display = 'flex';
-            } else if (materialRow) {
-                materialRow.style.display = 'none';
             }
         } else {
             if (rotRow) {
@@ -702,8 +1085,47 @@ class QuoteCalculator {
             if (rotPreliminaryText) {
                 rotPreliminaryText.style.display = 'none';
             }
-            if (materialRow) {
-                materialRow.style.display = 'none';
+        }
+
+        // Uppdatera Grön Teknik-avdrag (skapa eller uppdatera element)
+        let greenTechRow = document.getElementById('green-tech-row');
+        if (!greenTechRow && greenTechDeduction > 0) {
+            // Skapa Grön Teknik-rad om den inte finns
+            const priceBreakdown = document.querySelector('.price-breakdown');
+            if (priceBreakdown) {
+                greenTechRow = document.createElement('div');
+                greenTechRow.id = 'green-tech-row';
+                greenTechRow.className = 'price-row green-tech-row';
+                greenTechRow.innerHTML = `
+                    <span class="price-label">Grön Teknik-avdrag:</span>
+                    <span class="price-value" id="green-tech-deduction">-0 kr</span>
+                `;
+                // Lägg till efter ROT-raden eller före slutsumman
+                const finalRow = document.getElementById('final-price-row');
+                if (finalRow) {
+                    priceBreakdown.insertBefore(greenTechRow, finalRow);
+                } else {
+                    priceBreakdown.appendChild(greenTechRow);
+                }
+            }
+        }
+
+        const greenTechDeductionEl = document.getElementById('green-tech-deduction');
+        if (greenTechDeduction > 0) {
+            if (greenTechDeductionEl) {
+                greenTechDeductionEl.innerHTML = `
+                    <div class="green-tech-breakdown">
+                        <div class="green-tech-line">Grön Teknik-avdrag (${scenario === 'mixed' ? 'på grön teknik-produkter' : 'laddbox/solceller/batteri'}):</div>
+                        <div class="green-tech-amount">-${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechDeduction))} kr</div>
+                    </div>
+                `;
+            }
+            if (greenTechRow) {
+                greenTechRow.style.display = 'flex';
+            }
+        } else {
+            if (greenTechRow) {
+                greenTechRow.style.display = 'none';
             }
         }
 
@@ -733,25 +1155,52 @@ class QuoteCalculator {
         if (selectedServices.length === 0) {
             workDescription += 'Inga tjänster valda ännu.\n\n';
         } else {
+            let totalMaterial = 0;
+            let totalLabor = 0;
+            
             selectedServices.forEach((service, index) => {
-                workDescription += `${index + 1}. ${service.name.toUpperCase()}`;
-                if (service.type && service.type !== service.name) {
-                    workDescription += ` (${service.type})`;
-                }
-                workDescription += `\n   Antal: ${service.quantity} st\n   Pris: ${new Intl.NumberFormat('sv-SE').format(service.totalPrice)} kr\n\n`;
+                totalMaterial += service.totalMaterial;
+                totalLabor += service.totalLabor;
+                
+                workDescription += `${index + 1}. ${service.name.toUpperCase()}\n`;
+                workDescription += `   Produkt: ${service.productName}\n`;
+                workDescription += `   Antal: ${service.quantity} st\n`;
+                workDescription += `   Material: ${new Intl.NumberFormat('sv-SE').format(service.unitMaterial)} kr × ${service.quantity} = ${new Intl.NumberFormat('sv-SE').format(service.totalMaterial)} kr\n`;
+                workDescription += `   Arbete: ${new Intl.NumberFormat('sv-SE').format(service.unitLabor)} kr × ${service.quantity} = ${new Intl.NumberFormat('sv-SE').format(service.totalLabor)} kr\n`;
+                workDescription += `   Total: ${new Intl.NumberFormat('sv-SE').format(service.totalPrice)} kr\n\n`;
                 
                 // Lägg till detaljerad arbetsbeskrivning
-                const description = this.getServiceWorkDescription(service.id, service.type);
+                const description = this.getServiceWorkDescription(service.id, service.productKey);
                 if (description) {
                     workDescription += `   ARBETSBESKRIVNING:\n   ${description.split('\n').join('\n   ')}\n\n`;
                 }
             });
+            
+            // Lägg till kostnadssummering
+            workDescription += '='.repeat(50) + '\n';
+            workDescription += 'KOSTNADSSUMMERING\n';
+            workDescription += '='.repeat(50) + '\n\n';
+            workDescription += `Total materialkostnad: ${new Intl.NumberFormat('sv-SE').format(totalMaterial)} kr\n`;
+            workDescription += `Total arbetskostnad: ${new Intl.NumberFormat('sv-SE').format(totalLabor)} kr\n`;
+            workDescription += `Subtotal (exkl moms): ${new Intl.NumberFormat('sv-SE').format(totalMaterial + totalLabor)} kr\n`;
+            workDescription += `Moms 25%: ${new Intl.NumberFormat('sv-SE').format((totalMaterial + totalLabor) * 0.25)} kr\n`;
+            workDescription += `Total inkl moms: ${new Intl.NumberFormat('sv-SE').format((totalMaterial + totalLabor) * 1.25)} kr\n\n`;
+            
+            // ROT-avdrag information
+            const rotData = this.collectROTData();
+            if (this.isROTEligible(rotData)) {
+                const rotDeduction = (totalLabor * 1.25) * 0.5;
+                const finalTotal = (totalMaterial + totalLabor) * 1.25 - rotDeduction;
+                workDescription += `ROT-avdrag (50% på arbetskostnad inkl moms): -${new Intl.NumberFormat('sv-SE').format(rotDeduction)} kr\n`;
+                workDescription += `SLUTSUMMA EFTER ROT-AVDRAG: ${new Intl.NumberFormat('sv-SE').format(finalTotal)} kr\n\n`;
+            }
         }
 
         // Lägg till allmän information
         workDescription += '='.repeat(50) + '\n';
         workDescription += 'ALLMÄN INFORMATION\n';
         workDescription += '='.repeat(50) + '\n\n';
+        workDescription += '• Timpris elektriker: 750 kr/h (exkl moms)\n';
         workDescription += '• Alla installationer utförs enligt gällande standarder (SS-EN)\n';
         workDescription += '• Besiktning och certifiering ingår\n';
         workDescription += '• Garantitid: 5 år på utfört arbete\n';
@@ -883,7 +1332,7 @@ class QuoteCalculator {
         });
         
         // Nollställ prisvisning
-        this.updatePricingDisplay(0, 0, 0, 0, 0);
+        this.updatePricingDisplay(0, 0, 0, 0, 0, 0, {});
         
         // Rensa arbetsbeskrivning
         const workDescriptionTextarea = document.getElementById('arb-beskrivning');

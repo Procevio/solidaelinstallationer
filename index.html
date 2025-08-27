@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Solida Elinstallationer AB - Anbudsapp</title>
     <meta name="description" content="Professionell elinstallationsapp för prisberäkning och anbudshantering">
     <meta name="keywords" content="elinstallationer, elmontör, elarbeten, elreparationer, ROT-avdrag">
@@ -158,9 +158,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="extra_eluttag_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="inomhus_vagg">Inomhus vägg</option>
-                                    <option value="uteplats_garage">Uteplats/garage</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="schneider_exxact_16a">Schneider Exxact 16A</option>
+                                    <option value="abb_impressivo_16a">ABB Impressivo 16A</option>
+                                    <option value="gira_system55_16a">Gira System 55 16A</option>
                                 </select>
                                 <input type="number" id="extra_eluttag_antal" class="service-input" min="1" max="50" placeholder="Antal">
                             </div>
@@ -173,10 +174,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="strombrytare_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="vanlig">Vanlig strömbrytare</option>
-                                    <option value="dimmer">Dimmer</option>
-                                    <option value="smart_switch">Smart switch</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="schneider_exxact_enpolig">Schneider Exxact enpolig</option>
+                                    <option value="jung_as500_dimmer_led">Jung AS500 dimmer LED</option>
+                                    <option value="plejd_wrt01_smart">Plejd WRT-01 smart switch</option>
                                 </select>
                                 <input type="number" id="strombrytare_antal" class="service-input" min="1" max="50" placeholder="Antal">
                             </div>
@@ -212,8 +213,7 @@
                                     <option value="">Välj maskin</option>
                                     <option value="diskmaskin">Diskmaskin</option>
                                     <option value="ugn">Ugn</option>
-                                    <option value="spis">Spis</option>
-                                    <option value="tvattmaskin">Tvättmaskin</option>
+                                    <option value="induktionsspis">Induktionsspis</option>
                                 </select>
                                 <input type="number" id="inkoppling_hushallsmaskin_antal" class="service-input" min="1" max="10" placeholder="Antal">
                             </div>
@@ -243,10 +243,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="taklampa_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="vanlig_taklampa">Vanlig taklampa</option>
-                                    <option value="kristallkrona">Kristallkrona</option>
-                                    <option value="takflakt_belysning">Takfläkt med belysning</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="grundarmatur_e27">Grundarmatur E27</option>
+                                    <option value="led_downlight_infälld">LED downlight infälld</option>
+                                    <option value="takfläkt_belysning">Takfläkt med belysning</option>
                                 </select>
                                 <input type="number" id="taklampa_antal" class="service-input" min="1" max="50" placeholder="Antal">
                             </div>
@@ -259,10 +259,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="spotlights_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="led_downlights">LED downlights</option>
-                                    <option value="skena_spots">Skena med spots</option>
-                                    <option value="infallda_spots">Infällda spots</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="philips_led_downlight_10w">Philips LED downlight 10W</option>
+                                    <option value="paulmann_skena_3spots">Paulmann skena 3-spots</option>
+                                    <option value="malmbergs_infälld_gu10">Malmbergs infälld spot GU10</option>
                                 </select>
                                 <input type="number" id="spotlights_antal" class="service-input" min="1" max="100" placeholder="Antal">
                             </div>
@@ -291,10 +291,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="led_strip_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="koksbelysning">Köksbelysning</option>
-                                    <option value="trappbelysning">Trappbelysning</option>
-                                    <option value="dekorativ">Dekorativ</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="philips_hue_lightstrip_2m">Philips Hue lightstrip 2m</option>
+                                    <option value="paulmann_profil_per_meter">Paulmann profil kökslist per meter</option>
+                                    <option value="ikea_myrvarv_35m">IKEA Myrvarv 3,5m</option>
                                 </select>
                                 <input type="number" id="led_strip_meter" class="service-input" min="1" max="100" placeholder="Antal meter">
                             </div>
@@ -330,11 +330,12 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="laddbox_elbil_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="typ2_22kw">Typ 2 (22kW)</option>
-                                    <option value="cee_16a">CEE 16A</option>
-                                    <option value="typ2_11kw">Typ 2 (11kW)</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="easee_home_22kw">Easee Home 22kW</option>
+                                    <option value="zaptec_go_11kw">Zaptec Go 11kW</option>
+                                    <option value="garo_glb_16a_cee">Garo GLB 16A CEE</option>
                                 </select>
+                                <input type="number" id="laddbox_elbil_antal" class="service-input" min="1" max="5" placeholder="Antal">
                                 <span class="unit-info">Per enhet</span>
                             </div>
                         </div>
@@ -368,6 +369,12 @@
                                 <label for="handdukstork">Handdukstork</label>
                             </div>
                             <div class="service-options" style="display: none;">
+                                <select id="handdukstork_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="thermia_straight_600w">Thermia Straight 600W</option>
+                                    <option value="rointe_d_series_500w">Rointe D-Series 500W</option>
+                                    <option value="hafa_original_400w">Hafa Original 400W</option>
+                                </select>
                                 <input type="number" id="handdukstork_antal" class="service-input" min="1" max="10" placeholder="Antal">
                             </div>
                         </div>
@@ -378,6 +385,12 @@
                                 <label for="golvvarme">Golvvärme (el)</label>
                             </div>
                             <div class="service-options" style="display: none;">
+                                <select id="golvvarme_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="thermia_per_kvm">Thermia Golvvärme per kvm</option>
+                                    <option value="fenix_ecofloor_per_kvm">Fenix ecofloor per kvm</option>
+                                    <option value="nexans_per_kvm">Nexans per kvm</option>
+                                </select>
                                 <input type="number" id="golvvarme_kvm" class="service-input" min="1" max="500" placeholder="Antal kvm">
                             </div>
                         </div>
@@ -411,9 +424,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="brandvarnare_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="hardkopplad">Hårdkopplad</option>
-                                    <option value="rokdetektor">Rökdetektor</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="kidde_29hd_optisk">Kidde 29HD optisk</option>
+                                    <option value="aico_ei650_10ar">Aico Ei650 10år batteri</option>
+                                    <option value="cavius_2103_mini">Cavius 2103 mini</option>
                                 </select>
                                 <input type="number" id="brandvarnare_antal" class="service-input" min="1" max="20" placeholder="Antal">
                             </div>
@@ -436,10 +450,10 @@
                             </div>
                             <div class="service-options" style="display: none;">
                                 <select id="natverksuttag_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="cat6_uttag">Cat6 uttag</option>
-                                    <option value="fiber">Fiber</option>
-                                    <option value="wifi_access_point">WiFi access point</option>
+                                    <option value="">Välj produkt</option>
+                                    <option value="abb_impressivo_rj45_cat6">ABB Impressivo RJ45 Cat6</option>
+                                    <option value="fiber_sc_uttag">Fiber SC-uttag</option>
+                                    <option value="unifi_u6_lite_ap">UniFi U6-Lite access point</option>
                                 </select>
                                 <input type="number" id="natverksuttag_antal" class="service-input" min="1" max="50" placeholder="Antal">
                             </div>
@@ -494,14 +508,14 @@
                             <label>Berättigad till ROT-avdrag på fastigheten?</label>
                             <div class="radio-group">
                                 <label class="radio-label">
-                                    <input type="radio" name="fastighet_rot_berättigad" value="Ja - Villa/Radhus" required>
-                                    <span class="radio-custom"></span>
-                                    Ja - Villa/Radhus
-                                </label>
-                                <label class="radio-label">
                                     <input type="radio" name="fastighet_rot_berättigad" value="Nej - Lägenhet/Kontor/Annat" required>
                                     <span class="radio-custom"></span>
                                     Nej - Lägenhet/Kontor/Annat
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fastighet_rot_berättigad" value="Ja - Villa/Radhus" required>
+                                    <span class="radio-custom"></span>
+                                    Ja - Villa/Radhus
                                 </label>
                             </div>
                             <div class="error-message" id="fastighet_rot_berättigad-error"></div>
@@ -564,6 +578,30 @@
                                 <option value="20">20%</option>
                             </select>
                             <div class="help-text">Materialkostnad i procent (för ROT-avdrag beräkning)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grön Teknik-avdrag sektion - visas bara om grön teknik-produkter valts -->
+                    <div class="form-row" id="green-tech-section" style="display: none;">
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="green_tech_eligible" name="green_tech_eligible">
+                                <span class="checkbox-custom"></span>
+                                Berättigad till Grön Teknik-avdrag
+                            </label>
+                            <div class="help-text">För laddboxar (50%), solceller (15%) och batterilagring (50%)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grön Teknik personer alternativ - visas bara om grön teknik-avdrag är valt -->
+                    <div class="form-row" id="green-tech-persons-section" style="display: none;">
+                        <div class="form-group">
+                            <label for="green_tech_persons">Antal personer som äger fastigheten</label>
+                            <select id="green_tech_persons" name="green_tech_persons" class="form-select">
+                                <option value="1">1 person (max 50.000 kr avdrag)</option>
+                                <option value="2">2+ personer (max 100.000 kr avdrag)</option>
+                            </select>
+                            <div class="help-text">Avgör maxbeloppet för Grön Teknik-avdrag</div>
                         </div>
                     </div>
                 </section>
