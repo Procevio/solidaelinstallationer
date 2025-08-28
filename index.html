@@ -2,47 +2,19 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Solida Elinstallationer AB - Anbudsapp</title>
-    <meta name="description" content="Professionell elinstallationsapp för prisberäkning och anbudshantering">
-    <meta name="keywords" content="elinstallationer, elmontör, elarbeten, elreparationer, ROT-avdrag">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anbudsförfrågan - Sternbecks Måleri & Fönsterhantverk</title>
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body data-theme="light">
-    <!-- Lösenordsskydd -->
-    <div id="password-overlay" class="password-overlay" style="display: flex;">
-        <div class="password-container">
-            <div class="password-header">
-                <img src="assets/images/Solida_Elinstallationer_AB_logotyp.png" alt="Solida Elinstallationer AB" class="password-logo">
-                <h2>Välkommen till Solida Elinstallationer AB</h2>
-                <p>Ange lösenord för att komma åt anbudsformuläret</p>
-            </div>
-            
-            <form id="password-form" class="password-form">
-                <div class="password-input-group">
-                    <label for="password-input">Lösenord:</label>
-                    <input type="password" id="password-input" name="password" placeholder="Ange lösenord..." required>
-                    <button type="submit" class="password-submit-btn">Logga in</button>
-                </div>
-                <div id="password-error" class="password-error" style="display: none;">
-                    Felaktigt lösenord. Kontakta Solida Elinstallationer AB för åtkomst.
-                </div>
-            </form>
-            
-            <div class="password-footer">
-                <p>© 2024 Solida Elinstallationer AB</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div id="mainContainer" class="main-container" style="display: none;">
-        <div class="demo-badge">demo</div>
-        <div class="header">
+<body>
+    <div class="container">
+        <header class="header">
             <div class="logo-section">
-                <img src="assets/images/Solida_Elinstallationer_AB_logotyp.png" alt="Solida Elinstallationer AB" class="company-logo">
+                <img src="assets/images/Sternbecks logotyp.png" alt="Sternbecks Måleri & Fönsterhantverk" class="company-logo">
             </div>
             
+            <!-- Modern Navigation Bar -->
             <nav class="navigation-bar">
                 <button id="logout-btn" class="nav-btn logout-btn" title="Logga ut">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,8 +27,9 @@
                 
                 <button id="reset-btn" class="nav-btn reset-btn" title="Återställ formulär">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                        <path d="M3 3v5h5"></path>
+                        <polyline points="23,4 23,10 17,10"></polyline>
+                        <polyline points="1,20 1,14 7,14"></polyline>
+                        <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"></path>
                     </svg>
                     <span class="nav-label">Återställ</span>
                 </button>
@@ -79,975 +52,608 @@
                     <span class="nav-label">Tema</span>
                 </button>
             </nav>
-        </div>
+        </header>
 
-        <!-- Tab Navigation -->
-        <div class="tabs">
-            <button class="tab-button active" data-tab="stadtjanster">Elinstallationer</button>
-            <button class="tab-button" data-tab="arbetsbeskrivning">Arbetsbeskrivning</button>
-            <button class="tab-button" data-tab="tillaggtjanst">Tilläggstjänst</button>
-        </div>
-
-        <!-- Städtjänster Tab Content -->
-        <div id="stadtjanster" class="tab-content active">
-            <form id="stadtjanster-form" class="quote-form">
-                
-                <!-- Kundinformation -->
-                <section class="form-section">
-                    <h2>Kundinformation</h2>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customer-company">Företag/Namn *</label>
-                            <input type="text" id="customer-company" name="customer-company" autocomplete="organization" required>
-                            <div class="error-message" id="customer-company-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customer-contact">Kontaktperson</label>
-                            <input type="text" id="customer-contact" name="customer-contact" autocomplete="name">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="customer-email">E-post *</label>
-                            <input type="email" id="customer-email" name="customer-email" autocomplete="email" required>
-                            <div class="error-message" id="customer-email-error"></div>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="customer-phone">Telefonnummer *</label>
-                            <input type="tel" id="customer-phone" name="customer-phone" autocomplete="tel" inputmode="tel" required>
-                            <div class="error-message" id="customer-phone-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="customer-address">Adress *</label>
-                            <input type="text" id="customer-address" name="customer-address" autocomplete="address-line1" required>
-                            <div class="error-message" id="customer-address-error"></div>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="customer-postal-code">Postnummer *</label>
-                            <input type="text" id="customer-postal-code" name="customer-postal-code" autocomplete="postal-code" pattern="\d{3}\s?\d{2}" inputmode="numeric" required>
-                            <div class="error-message" id="customer-postal-code-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="customer-city">Ort *</label>
-                            <input type="text" id="customer-city" name="customer-city" autocomplete="address-level2" required>
-                            <div class="error-message" id="customer-city-error"></div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Installation & Utbyggnad -->
-                <section class="form-section">
-                    <h2>Installation & Utbyggnad</h2>
-                    
-                    <div class="service-category">
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="extra_eluttag" name="elinstallationer" value="extra_eluttag">
-                                <label for="extra_eluttag">Extra eluttag</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="extra_eluttag_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="schneider_exxact_16a">Schneider Exxact 16A</option>
-                                    <option value="abb_impressivo_16a">ABB Impressivo 16A</option>
-                                    <option value="gira_system55_16a">Gira System 55 16A</option>
-                                </select>
-                                <input type="number" id="extra_eluttag_antal" class="service-input" min="1" max="50" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="strombrytare" name="elinstallationer" value="strombrytare">
-                                <label for="strombrytare">Strömbrytare</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="strombrytare_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="schneider_exxact_enpolig">Schneider Exxact enpolig</option>
-                                    <option value="jung_as500_dimmer_led">Jung AS500 dimmer LED</option>
-                                    <option value="plejd_wrt01_smart">Plejd WRT-01 smart switch</option>
-                                </select>
-                                <input type="number" id="strombrytare_antal" class="service-input" min="1" max="50" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="byte_elcentral" name="elinstallationer" value="byte_elcentral">
-                                <label for="byte_elcentral">Byte elcentral/automatsäkringar</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <span class="fixed-price-info">Fast pris</span>
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="dragning_ny_el" name="elinstallationer" value="dragning_ny_el">
-                                <label for="dragning_ny_el">Dragning ny el (renovering)</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <input type="number" id="dragning_ny_el_meter" class="service-input" min="1" max="500" placeholder="Antal meter">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="inkoppling_hushallsmaskin" name="elinstallationer" value="inkoppling_hushallsmaskin">
-                                <label for="inkoppling_hushallsmaskin">Inkoppling hushållsmaskin</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="inkoppling_hushallsmaskin_type" class="service-dropdown">
-                                    <option value="">Välj maskin</option>
-                                    <option value="diskmaskin">Diskmaskin</option>
-                                    <option value="ugn">Ugn</option>
-                                    <option value="induktionsspis">Induktionsspis</option>
-                                </select>
-                                <input type="number" id="inkoppling_hushallsmaskin_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="jordfelsbrytare" name="elinstallationer" value="jordfelsbrytare">
-                                <label for="jordfelsbrytare">Installation jordfelsbrytare</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <input type="number" id="jordfelsbrytare_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="motorvarmaruttag" name="elinstallationer" value="motorvarmaruttag">
-                                <label for="motorvarmaruttag">Motorvärmaruttag</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="motorvarmaruttag_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="cee_16a_standard">CEE 16A standard</option>
-                                    <option value="schneider_uttag_ip44">Schneider uttag IP44</option>
-                                    <option value="garo_med_timer">Garo med timer</option>
-                                </select>
-                                <input type="number" id="motorvarmaruttag_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="pool_spa_elinstallation" name="elinstallationer" value="pool_spa_elinstallation">
-                                <label for="pool_spa_elinstallation">Pool/spa elinstallation</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="pool_spa_elinstallation_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="standard_poolinstallation">Standard poolinstallation</option>
-                                    <option value="spa_jacuzzi_32a">Spa/jacuzzi 32A</option>
-                                    <option value="pool_med_belysning">Pool med belysning</option>
-                                </select>
-                                <input type="number" id="pool_spa_elinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="timer_ljussensor_utomhus" name="elinstallationer" value="timer_ljussensor_utomhus">
-                                <label for="timer_ljussensor_utomhus">Timer/ljussensor utomhus</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="timer_ljussensor_utomhus_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="enkel_skymningsrela">Enkel skymningsrelä</option>
-                                    <option value="digital_timer_med_backup">Digital timer med backup</option>
-                                    <option value="smart_sensor_med_app">Smart sensor med app</option>
-                                </select>
-                                <input type="number" id="timer_ljussensor_utomhus_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Belysning -->
-                <section class="form-section">
-                    <h2>Belysning</h2>
-                    
-                    <div class="service-category">
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="taklampa" name="elinstallationer" value="taklampa">
-                                <label for="taklampa">Taklampa</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="taklampa_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="grundarmatur_e27">Grundarmatur E27</option>
-                                    <option value="led_downlight_infälld">LED downlight infälld</option>
-                                    <option value="takfläkt_belysning">Takfläkt med belysning</option>
-                                </select>
-                                <input type="number" id="taklampa_antal" class="service-input" min="1" max="50" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="spotlights" name="elinstallationer" value="spotlights">
-                                <label for="spotlights">Spotlights</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="spotlights_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="philips_led_downlight_10w">Philips LED downlight 10W</option>
-                                    <option value="paulmann_skena_3spots">Paulmann skena 3-spots</option>
-                                    <option value="malmbergs_infälld_gu10">Malmbergs infälld spot GU10</option>
-                                </select>
-                                <input type="number" id="spotlights_antal" class="service-input" min="1" max="100" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="utomhusbelysning" name="elinstallationer" value="utomhusbelysning">
-                                <label for="utomhusbelysning">Utomhusbelysning</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="utomhusbelysning_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="fasadbelysning">Fasadbelysning</option>
-                                    <option value="tradgardsspots">Trädgårdsspots</option>
-                                    <option value="vaggarmatur">Väggarmatur</option>
-                                </select>
-                                <input type="number" id="utomhusbelysning_antal" class="service-input" min="1" max="20" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="led_strip" name="elinstallationer" value="led_strip">
-                                <label for="led_strip">LED-strip</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="led_strip_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="philips_hue_lightstrip_2m">Philips Hue lightstrip 2m</option>
-                                    <option value="paulmann_profil_per_meter">Paulmann profil kökslist per meter</option>
-                                    <option value="ikea_myrvarv_35m">IKEA Myrvarv 3,5m</option>
-                                </select>
-                                <input type="number" id="led_strip_meter" class="service-input" min="1" max="100" placeholder="Antal meter">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="smart_belysning" name="elinstallationer" value="smart_belysning">
-                                <label for="smart_belysning">Smart belysning</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="smart_belysning_type" class="service-dropdown">
-                                    <option value="">Välj system</option>
-                                    <option value="plejd_system">Plejd system</option>
-                                    <option value="philips_hue">Philips Hue</option>
-                                    <option value="knx">KNX</option>
-                                </select>
-                                <span class="unit-info">Per rum/område</span>
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="markbelysning" name="elinstallationer" value="markbelysning">
-                                <label for="markbelysning">Markbelysning</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="markbelysning_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="led_spots_12v_system">LED-spots 12V system</option>
-                                    <option value="solceller_markbelysning">Solceller markbelysning</option>
-                                    <option value="kabeldragen_230v_system">Kabeldragen 230V system</option>
-                                </select>
-                                <input type="number" id="markbelysning_antal" class="service-input" min="1" max="20" placeholder="Antal">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Energi & Laddning -->
-                <section class="form-section">
-                    <h2>Energi & Laddning</h2>
-                    
-                    <div class="service-category">
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="laddbox_elbil" name="elinstallationer" value="laddbox_elbil">
-                                <label for="laddbox_elbil">Laddbox elbil</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="laddbox_elbil_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="easee_home_22kw">Easee Home 22kW</option>
-                                    <option value="zaptec_go_11kw">Zaptec Go 11kW</option>
-                                    <option value="garo_glb_16a_cee">Garo GLB 16A CEE</option>
-                                </select>
-                                <input type="number" id="laddbox_elbil_antal" class="service-input" min="1" max="5" placeholder="Antal">
-                                <span class="unit-info">Per enhet</span>
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="solceller" name="elinstallationer" value="solceller">
-                                <label for="solceller">Solceller</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="solceller_type" class="service-dropdown">
-                                    <option value="">Välj komponent</option>
-                                    <option value="vaxelriktare">Växelriktare</option>
-                                    <option value="optimizers">Optimizers</option>
-                                    <option value="batterisystem">Batterisystem</option>
-                                </select>
-                                <span class="unit-info">Per system</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Värme & Komfort -->
-                <section class="form-section">
-                    <h2>Värme & Komfort</h2>
-                    
-                    <div class="service-category">
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="handdukstork" name="elinstallationer" value="handdukstork">
-                                <label for="handdukstork">Handdukstork</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="handdukstork_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="thermia_straight_600w">Thermia Straight 600W</option>
-                                    <option value="rointe_d_series_500w">Rointe D-Series 500W</option>
-                                    <option value="hafa_original_400w">Hafa Original 400W</option>
-                                </select>
-                                <input type="number" id="handdukstork_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="golvvarme" name="elinstallationer" value="golvvarme">
-                                <label for="golvvarme">Golvvärme (el)</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="golvvarme_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="thermia_per_kvm">Thermia Golvvärme per kvm</option>
-                                    <option value="fenix_ecofloor_per_kvm">Fenix ecofloor per kvm</option>
-                                    <option value="nexans_per_kvm">Nexans per kvm</option>
-                                </select>
-                                <input type="number" id="golvvarme_kvm" class="service-input" min="1" max="500" placeholder="Antal kvm">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="varmepump" name="elinstallationer" value="varmepump">
-                                <label for="varmepump">Värmepump</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="varmepump_type" class="service-dropdown">
-                                    <option value="">Välj typ</option>
-                                    <option value="inkoppling_befintlig">Inkoppling befintlig</option>
-                                    <option value="installation_luft_luft">Installation ny luft-luft</option>
-                                </select>
-                                <span class="unit-info">Per enhet</span>
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="bergvarme_elinstallation" name="elinstallationer" value="bergvarme_elinstallation">
-                                <label for="bergvarme_elinstallation">Bergvärme elinstallation</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="bergvarme_elinstallation_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="bergvarmepump_inkoppling">Bergvärmepump inkoppling</option>
-                                </select>
-                                <input type="number" id="bergvarme_elinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="bastuinstallation" name="elinstallationer" value="bastuinstallation">
-                                <label for="bastuinstallation">Bastuinstallation</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="bastuinstallation_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="6kw_bastupanel">6kW bastupanel</option>
-                                    <option value="9kw_bastupanel">9kW bastupanel</option>
-                                    <option value="bastuaggregat_med_styrning">Bastuaggregat med styrning</option>
-                                </select>
-                                <input type="number" id="bastuinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Praktiska Tillägg -->
-                <section class="form-section">
-                    <h2>Praktiska Tillägg</h2>
-                    
-                    <div class="service-category">
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="garagedorr_automatik" name="elinstallationer" value="garagedorr_automatik">
-                                <label for="garagedorr_automatik">Garagedörr automatik</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="garagedorr_automatik_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="chamberlain_basic">Chamberlain basic</option>
-                                    <option value="hormann_promatic_4">Hormann ProMatic 4</option>
-                                    <option value="smart_garage_med_app">Smart garage med app</option>
-                                </select>
-                                <input type="number" id="garagedorr_automatik_antal" class="service-input" min="1" max="5" placeholder="Antal">
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="ventilation_elinstallation" name="elinstallationer" value="ventilation_elinstallation">
-                                <label for="ventilation_elinstallation">Ventilation elinstallation</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="ventilation_elinstallation_type" class="service-dropdown">
-                                    <option value="">Välj produkt</option>
-                                    <option value="badrumsfläkt_enkel">Badrumsfläkt enkel</option>
-                                    <option value="köksfläkt_16a_anslutning">Köksfläkt 16A anslutning</option>
-                                    <option value="centralventilation_inkoppling">Centralventilation inkoppling</option>
-                                </select>
-                                <input type="number" id="ventilation_elinstallation_antal" class="service-input" min="1" max="10" placeholder="Antal">
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-
-                <!-- Projekttid & Schema -->
-                <div id="projekt-schema" style="display: none;">
-                    <section class="form-section">
-                        <h2>Projekttid & Schema</h2>
-                        
-                        <div class="form-group">
-                            <label for="preferred-day">Vilken dag passar bäst?</label>
-                            <select id="preferred-day" name="preferred-day">
-                                <option value="">Välj dag...</option>
-                                <option value="måndag">Måndag</option>
-                                <option value="tisdag">Tisdag</option>
-                                <option value="onsdag">Onsdag</option>
-                                <option value="torsdag">Torsdag</option>
-                                <option value="fredag">Fredag</option>
-                                <option value="helger">Helger</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="preferred-time">Föredragen tid på dagen?</label>
-                            <select id="preferred-time" name="preferred-time">
-                                <option value="">Välj tid...</option>
-                                <option value="förmiddag">Förmiddag 08-12</option>
-                                <option value="eftermiddag">Eftermiddag 12-17</option>
-                                <option value="kväll">Kvällstid 17-20</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="start-date">Startdatum för installation?</label>
-                            <input type="date" id="start-date" name="start-date">
-                        </div>
-                    </section>
+        <!-- Lösenordsskydd -->
+        <div id="password-overlay" class="password-overlay">
+            <div class="password-container">
+                <div class="password-header">
+                    <h2>Välkommen till Sternbecks Anbudsapplikation</h2>
+                    <p>Ange lösenord för att komma åt anbudsformuläret</p>
                 </div>
+                
+                <form id="password-form" class="password-form">
+                    <div class="password-input-group">
+                        <label for="password-input">Lösenord:</label>
+                        <input type="password" id="password-input" name="password" placeholder="Ange lösenord..." required>
+                        <button type="submit" class="password-submit-btn">Logga in</button>
+                    </div>
+                    <div id="password-error" class="password-error" style="display: none;">
+                        Felaktigt lösenord. Kontakta Sternbecks för åtkomst.
+                    </div>
+                </form>
+                
+                <div class="password-footer">
+                    <p>© 2024 Sternbecks Måleri & Fönsterhantverk</p>
+                </div>
+            </div>
+        </div>
 
+        <main class="main-content" id="main-app" style="display: none;">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Sternbecks Anbudsapplikation</h2>
+                </div>
+                
+                <!-- Tab Navigation -->
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button type="button" class="tab-button active" data-tab="anbud">Anbud</button>
+                        <button type="button" class="tab-button" data-tab="arbetsbeskrivning">Arbetsbeskrivning</button>
+                    </div>
+                </div>
+                
+                <!-- Tab Content: Anbud -->
+                <div id="anbud-tab" class="tab-content active">
+                    <form id="quote-form" class="quote-form">
+                    <!-- Kontaktinformation -->
+                    <section class="form-section">
+                        <h3>Kontaktinformation</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="company">Företag/Namn *</label>
+                                <input type="text" id="company" name="company" autocomplete="organization" required>
+                                <div class="error-message" id="company-error"></div>
+                            </div>
+                        </div>
 
-                <!-- ROT-information -->
-                <section class="form-section">
-                    <h2>ROT-avdrag</h2>
-                    
-                    <div class="form-row">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contact_person">Kontaktperson</label>
+                                <input type="text" id="contact_person" name="contact_person" autocomplete="name">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="email">E-post *</label>
+                                <input type="email" id="email" name="email" autocomplete="email" required>
+                                <div class="error-message" id="email-error"></div>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="phone">Telefonnummer *</label>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required>
+                                <div class="error-message" id="phone-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="address">Adress *</label>
+                                <input type="text" id="address" name="address" autocomplete="address-line1" required>
+                                <div class="error-message" id="address-error"></div>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="fastighetsbeteckning">Fastighetsbeteckning</label>
+                                <input type="text" id="fastighetsbeteckning" name="fastighetsbeteckning" placeholder="T.ex. Exempel 1:23">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="postal_code">Postnummer *</label>
+                                <input type="text" id="postal_code" name="postal_code" pattern="[0-9]{5}" autocomplete="postal-code" inputmode="numeric" required>
+                                <div class="error-message" id="postal_code-error"></div>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="city">Ort *</label>
+                                <input type="text" id="city" name="city" autocomplete="address-level2" required>
+                                <div class="error-message" id="city-error"></div>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <!-- Arbetsbeskrivning -->
+                    <section class="form-section">
+                        <h3>Typ av renovering</h3>
+                        
                         <div class="form-group">
-                            <label>Berättigad till ROT-avdrag på fastigheten?</label>
+                            <label for="typ_av_renovering">Välj renoveringstyp *</label>
+                            <select id="typ_av_renovering" name="typ_av_renovering" class="form-select" required>
+                                <option value="">Välj renoveringstyp...</option>
+                                <option value="Traditionell - Linoljebehandling">Traditionell - Linoljebehandling</option>
+                                <option value="Modern - Alcro bestå">Modern - Alcro bestå</option>
+                            </select>
+                            <div class="error-message" id="typ_av_renovering-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Arbetsbeskrivning *</label>
                             <div class="radio-group">
                                 <label class="radio-label">
-                                    <input type="radio" name="fastighet_rot_berättigad" value="Nej - Lägenhet/Kontor/Annat" required>
+                                    <input type="radio" name="arbetsbeskrivning" value="Utvändig renovering" required>
                                     <span class="radio-custom"></span>
-                                    Nej - Lägenhet/Kontor/Annat
+                                    Utvändig renovering
                                 </label>
                                 <label class="radio-label">
-                                    <input type="radio" name="fastighet_rot_berättigad" value="Ja - Villa/Radhus" required>
+                                    <input type="radio" name="arbetsbeskrivning" value="Invändig renovering" required>
                                     <span class="radio-custom"></span>
-                                    Ja - Villa/Radhus
+                                    Invändig renovering
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="arbetsbeskrivning" value="Utvändig renovering samt målning av innerbågens insida" required>
+                                    <span class="radio-custom"></span>
+                                    Utvändig renovering samt målning av innerbågens insida
                                 </label>
                             </div>
-                            <div class="error-message" id="fastighet_rot_berättigad-error"></div>
+                            <div class="error-message" id="arbetsbeskrivning-error"></div>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
+
                         <div class="form-group">
-                            <label>Vill du inkludera ROT-avdrag i anbudet?</label>
+                            <label>Fönsteröppning *</label>
                             <div class="radio-group">
-                                <div class="radio-item">
+                                <label class="radio-label">
+                                    <input type="radio" name="fonsteroppning" value="Inåtgående" required checked>
+                                    <span class="radio-custom"></span>
+                                    Inåtgående
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fonsteroppning" value="Utåtgående" required>
+                                    <span class="radio-custom"></span>
+                                    Utåtgående
+                                </label>
+                            </div>
+                            <div class="error-message" id="fonsteroppning-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Typ av fönster *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Kopplade standard" required checked>
+                                    <span class="radio-custom"></span>
+                                    Kopplade standard
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Isolerglas" required>
+                                    <span class="radio-custom"></span>
+                                    Isolerglas
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Kopplade isolerglas" required>
+                                    <span class="radio-custom"></span>
+                                    Kopplade isolerglas
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Insatsbågar yttre" required>
+                                    <span class="radio-custom"></span>
+                                    Insatsbågar yttre
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Insatsbågar inre" required>
+                                    <span class="radio-custom"></span>
+                                    Insatsbågar inre
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="typ_av_fonster" value="Insatsbågar komplett" required>
+                                    <span class="radio-custom"></span>
+                                    Insatsbågar komplett
+                                </label>
+                            </div>
+                            <div class="error-message" id="typ_av_fonster-error"></div>
+                        </div>
+
+
+                        <!-- Prisjustering -->
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="price_adjustment_plus">Tillägg (+)</label>
+                                <input type="number" id="price_adjustment_plus" name="price_adjustment_plus" min="0" step="100" placeholder="Ange tillägg i kr" inputmode="numeric">
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="price_adjustment_minus">Avdrag (-)</label>
+                                <input type="number" id="price_adjustment_minus" name="price_adjustment_minus" min="0" step="100" placeholder="Ange avdrag i kr" inputmode="numeric">
+                            </div>
+                        </div>
+                        
+                    </section>
+
+                    <!-- Antal partier -->
+                    <section class="form-section">
+                        <h3>Antal partier</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group quarter-width">
+                                <label for="window_sections">Fönsterpartier</label>
+                                <input type="number" id="window_sections" name="window_sections" min="0" placeholder="Ange antal" inputmode="numeric">
+                                <div class="error-message" id="window_sections-error"></div>
+                            </div>
+                            <div class="form-group quarter-width">
+                                <label for="antal_dorrpartier">Dörrpartier</label>
+                                <input type="number" id="antal_dorrpartier" name="antal_dorrpartier" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group quarter-width">
+                                <label for="antal_kallare_glugg">Källare/Glugg</label>
+                                <input type="number" id="antal_kallare_glugg" name="antal_kallare_glugg" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group quarter-width">
+                                <label for="antal_pardorr_balkong">Pardörr balkong/altan</label>
+                                <input type="number" id="antal_pardorr_balkong" name="antal_pardorr_balkong" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                        </div>
+                        
+                        <!-- Parties validation message -->
+                        <div id="parties-validation" class="validation-message" style="display: none;">
+                            <span id="parties-validation-text"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group third-width">
+                                <label for="antal_1_luftare">1 luftare</label>
+                                <input type="number" id="antal_1_luftare" name="antal_1_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group third-width">
+                                <label for="antal_2_luftare">2 luftare</label>
+                                <input type="number" id="antal_2_luftare" name="antal_2_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group third-width">
+                                <label for="antal_3_luftare">3 luftare</label>
+                                <input type="number" id="antal_3_luftare" name="antal_3_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group third-width">
+                                <label for="antal_4_luftare">4 luftare</label>
+                                <input type="number" id="antal_4_luftare" name="antal_4_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group third-width">
+                                <label for="antal_5_luftare">5 luftare</label>
+                                <input type="number" id="antal_5_luftare" name="antal_5_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                            <div class="form-group third-width">
+                                <label for="antal_6_luftare">6 luftare</label>
+                                <input type="number" id="antal_6_luftare" name="antal_6_luftare" min="0" placeholder="Ange antal" inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <!-- Spröjs sektion -->
+                        <div class="form-group">
+                            <label>Har fönstren spröjs?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="sprojs_choice" value="Nej" checked>
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="sprojs_choice" value="Ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="sprojs-antal-group" style="display: none;">
+                            <label for="antal_sprojs_per_bage">Antal spröjs per båge</label>
+                            <input type="number" id="antal_sprojs_per_bage" name="antal_sprojs_per_bage" min="0" placeholder="Ange antal" inputmode="numeric">
+                        </div>
+                        
+                        <div class="form-group" id="sprojs-fonster-group" style="display: none;">
+                            <label for="antal_fonster_med_sprojs">Hur många av fönstren har spröjs?</label>
+                            <input type="number" id="antal_fonster_med_sprojs" name="antal_fonster_med_sprojs" min="0" placeholder="Ange antal fönster" inputmode="numeric">
+                        </div>
+
+                        <!-- LE-glas sektion -->
+                        <div class="form-group">
+                            <label>Byte till LE-glas?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="le_glas_choice" value="Nej" checked>
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="le_glas_choice" value="Ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="le-glas-kvm-group" style="display: none;">
+                            <label for="le_kvm">LE-glas kvm</label>
+                            <input type="number" id="le_kvm" name="le_kvm" min="0" step="0.01" placeholder="Ange kvm" inputmode="decimal">
+                        </div>
+
+                        <!-- ROT-avdrag frågor -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Är fastigheten berättigad till ROT-avdrag? *</label>
+                                <div class="radio-group">
                                     <label class="radio-label">
-                                        <input type="radio" name="är_du_berättigad_rot_avdrag" value="Nej - visa pris utan ROT-avdrag" required>
+                                        <input type="radio" name="fastighet_rot_berättigad" value="Nej - Hyresrätt/Kommersiell fastighet" required checked>
                                         <span class="radio-custom"></span>
-                                        Nej - visa pris utan ROT-avdrag
+                                        Nej - Hyresrätt/Kommersiell fastighet
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="fastighet_rot_berättigad" value="Ja - Villa/Radhus" required>
+                                        <span class="radio-custom"></span>
+                                        Ja - Villa/Radhus
                                     </label>
                                 </div>
-                                <div class="radio-item">
+                                <div class="error-message" id="fastighet_rot_berättigad-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Är kunden berättigad ROT-avdrag? *</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="är_du_berättigad_rot_avdrag" value="Nej - visa fullpris utan avdrag" required checked>
+                                        <span class="radio-custom"></span>
+                                        Nej - visa fullpris utan avdrag
+                                    </label>
                                     <label class="radio-label">
                                         <input type="radio" name="är_du_berättigad_rot_avdrag" value="Ja - inkludera ROT-avdrag i anbudet" required>
                                         <span class="radio-custom"></span>
                                         Ja - inkludera ROT-avdrag i anbudet
                                     </label>
                                 </div>
+                                <div class="error-message" id="är_du_berättigad_rot_avdrag-error"></div>
                             </div>
-                            <div class="error-message" id="är_du_berättigad_rot_avdrag-error"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Delat ROT-avdrag alternativ - visas bara om ROT-avdrag är valt -->
-                    <div class="form-row" id="delat-rot-section" style="display: none;">
-                        <div class="form-group">
-                            <label>Två personer som delar på ROT-avdraget (max 150 000 kr)</label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="delat_rot_avdrag" value="Nej" checked>
-                                    <span class="radio-custom"></span>
-                                    Nej
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="delat_rot_avdrag" value="Ja">
-                                    <span class="radio-custom"></span>
-                                    Ja
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Materialkostnad - visas bara om ROT-avdrag är valt -->
-                    <div class="form-row" id="materialkostnad-section" style="display: none;">
-                        <div class="form-group half-width">
-                            <label for="materialkostnad">Materialkostnad</label>
-                            <select id="materialkostnad" name="materialkostnad" class="form-select">
-                                <option value="0" selected>0%</option>
-                                <option value="5">5%</option>
-                                <option value="7">7%</option>
-                                <option value="10">10%</option>
-                                <option value="13">13%</option>
-                                <option value="15">15%</option>
-                                <option value="20">20%</option>
-                            </select>
-                            <div class="help-text">Materialkostnad i procent (för ROT-avdrag beräkning)</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Grön Teknik-avdrag sektion - visas bara om grön teknik-produkter valts -->
-                    <div class="form-row" id="green-tech-section" style="display: none;">
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="green_tech_eligible" name="green_tech_eligible">
-                                <span class="checkbox-custom"></span>
-                                Berättigad till Grön Teknik-avdrag
-                            </label>
-                            <div class="help-text">För laddboxar (48,5%), solceller (19,4%) och batterilagring (48,5%)</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Grön Teknik personer alternativ - visas bara om grön teknik-avdrag är valt -->
-                    <div class="form-row" id="green-tech-persons-section" style="display: none;">
-                        <div class="form-group">
-                            <label for="green_tech_persons">Antal personer som äger fastigheten</label>
-                            <select id="green_tech_persons" name="green_tech_persons" class="form-select">
-                                <option value="1">1 person (max 50.000 kr avdrag)</option>
-                                <option value="2">2+ personer (max 100.000 kr avdrag)</option>
-                            </select>
-                            <div class="help-text">Avgör maxbeloppet för Grön Teknik-avdrag</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Prisberäkning -->
-                <section class="form-section price-section" id="main-price-section">
-                    <h3>Prisberäkning</h3>
-                    <div class="price-breakdown">
-                        <!-- Dold detaljvy för intern beräkning -->
-                        <div style="display: none;">
-                            <span id="base-components-price">0</span>
-                            <span id="installation-cost">0</span>
-                            <span id="lighting-cost">0</span>
-                            <span id="energy-cost">0</span>
-                            <span id="heating-cost">0</span>
-                            <span id="security-cost">0</span>
-                            <span id="emergency-cost">0</span>
-                            <span id="material-cost-display">0</span>
-                            <span id="subtotal-price">0</span>
-                            <span id="vat-cost">0</span>
                         </div>
                         
-                        <div class="price-category">
-                            <div class="price-row">
-                                <span>Totalsumma exkl. moms:</span>
-                                <span id="subtotal-price-display">0 kr</span>
-                            </div>
-                            <div class="price-row total">
-                                <span><strong>Totalt inkl. moms:</strong></span>
-                                <span id="total-with-vat"><strong>0 kr</strong></span>
-                            </div>
-                            <div class="price-row material-cost" id="material-row" style="display: none;">
-                                <span>Materialkostnad avdrag:</span>
-                                <span id="material-deduction">0 kr</span>
-                            </div>
-                            <div class="price-row rot-deduction" id="rot-row" style="display: none;">
-                                <span>ROT-avdrag (50% på arbetskostnad):</span>
-                                <span id="rot-deduction">-0 kr</span>
-                            </div>
-                            <!-- ROT preliminär text - visas bara när ROT-avdrag är aktivt -->
-                            <div class="price-row" id="rot-preliminary-text" style="display: none;">
-                                <div style="width: 100%; padding: 5px 0; font-style: italic; color: #666; font-size: 0.9em;">
-                                    ROT-avdraget som visas är en preliminär uppskattning. Slutligt avdrag beviljas av Skatteverket efter att personnummer lämnats och ansökan skickats in.
+                        <!-- Delat ROT-avdrag alternativ - visas bara om ROT-avdrag är valt -->
+                        <div class="form-row" id="delat-rot-section" style="display: none;">
+                            <div class="form-group">
+                                <label>Två personer som delar på ROT-avdraget (max 100 000 kr)</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="delat_rot_avdrag" value="Nej" checked>
+                                        <span class="radio-custom"></span>
+                                        Nej
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="delat_rot_avdrag" value="Ja">
+                                        <span class="radio-custom"></span>
+                                        Ja
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="price-separator final-separator"></div>
-                        
-                        <div class="price-category final-price">
-                            <div class="price-row customer-pays">
-                                <span><strong>KUNDEN BETALAR:</strong></span>
-                                <span id="final-customer-price"><strong>0 kr</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </form>
-        </div>
-
-        <!-- Arbetsbeskrivning Tab Content -->
-        <div id="arbetsbeskrivning" class="tab-content">
-            <form id="arbetsbeskrivning-form" class="quote-form">
-                
-                <!-- Kontaktinformation -->
-                <section class="form-section">
-                    <h3>Kontaktinformation</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="arb-company">Företag/Namn *</label>
-                            <input type="text" id="arb-company" name="arb-company" autocomplete="organization" required readonly>
-                            <div class="error-message" id="arb-company-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="arb-contact_person">Kontaktperson</label>
-                            <input type="text" id="arb-contact_person" name="arb-contact_person" autocomplete="name" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="arb-email">E-post *</label>
-                            <input type="email" id="arb-email" name="arb-email" autocomplete="email" required readonly>
-                            <div class="error-message" id="arb-email-error"></div>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="arb-phone">Telefonnummer *</label>
-                            <input type="tel" id="arb-phone" name="arb-phone" autocomplete="tel" inputmode="tel" required readonly>
-                            <div class="error-message" id="arb-phone-error"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="arb-address">Adress *</label>
-                            <input type="text" id="arb-address" name="arb-address" autocomplete="address-line1" required readonly>
-                            <div class="error-message" id="arb-address-error"></div>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="arb-fastighetsbeteckning">Fastighetsbeteckning</label>
-                            <input type="text" id="arb-fastighetsbeteckning" name="arb-fastighetsbeteckning" placeholder="T.ex. Exempel 1:23" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="arb-postal_code">Postnummer *</label>
-                            <input type="text" id="arb-postal_code" name="arb-postal_code" pattern="[0-9]{5}" autocomplete="postal-code" inputmode="numeric" required readonly>
-                            <div class="error-message" id="arb-postal_code-error"></div>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="arb-city">Ort *</label>
-                            <input type="text" id="arb-city" name="arb-city" autocomplete="address-level2" required readonly>
-                            <div class="error-message" id="arb-city-error"></div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Projektbeskrivning -->
-                <section class="form-section">
-                    <h3>Arbetsbeskrivning</h3>
-                    
-                    <div class="form-group">
-                        <label for="arb-beskrivning">Arbetsbeskrivning baserad på valda tjänster *</label>
-                        <textarea id="arb-beskrivning" name="arb-beskrivning" rows="25" required readonly placeholder="Välj tjänster under Anbud-fliken så genereras en detaljerad arbetsbeskrivning automatiskt här." class="work-description-textarea"></textarea>
-                    </div>
-                </section>
-
-                <!-- GDPR sektion -->
-                <section class="form-section gdpr-section">
-                    <div class="gdpr-consent-group">
-                        <label class="checkbox-label gdpr-consent">
-                            <input type="checkbox" id="arb-gdpr-consent" name="arb-gdpr-consent" required>
-                            <span class="checkmark"></span>
-                            Jag godkänner behandling av personuppgifter för anbud och kontakt enligt GDPR
-                        </label>
-                        <div class="error-message" id="arb-gdpr-consent-error"></div>
-                        <div class="gdpr-info">
-                            <a href="#" id="arb-gdpr-details-link" class="privacy-link">Läs mer om dataskydd</a>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Submit knapp -->
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn" id="arb-submit-btn">
-                        <span class="btn-text">Begär arbetsbeskrivning</span>
-                        <div class="loading-spinner" id="arb-loading-spinner"></div>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Success/Error meddelanden (exakt som Sternbecks) -->
-            <div id="success-message" class="message success-message" style="display: none;">
-                <h3>Tack för din förfrågan!</h3>
-                <p>Vi har mottagit din anbudsförfrågan och återkommer inom kort med ett kostnadsfritt anbud.</p>
-            </div>
-            <div id="error-message" class="message error-message" style="display: none;">
-                <h3>Ett fel uppstod</h3>
-                <p>Vi kunde inte skicka din förfrågan just nu. Vänligen försök igen eller kontakta oss direkt.</p>
-            </div>
-        </div> <!-- End of arbetsbeskrivning-tab -->
-
-        <!-- Tilläggstjänst Tab Content -->
-        <div id="tillaggtjanst" class="tab-content">
-            <form id="tillaggtjanst-form" class="quote-form">
-                <!-- Kundinformation -->
-                <section class="form-section">
-                    <h3>Kundinformation</h3>
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="tillagg-customer-company">Företag/Namn *</label>
-                            <input type="text" id="tillagg-customer-company" name="tillagg-customer-company" readonly>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="tillagg-customer-contact">Kontaktperson</label>
-                            <input type="text" id="tillagg-customer-contact" name="tillagg-customer-contact" readonly>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="tillagg-customer-email">E-post *</label>
-                            <input type="email" id="tillagg-customer-email" name="tillagg-customer-email" readonly>
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="tillagg-customer-address">Adress *</label>
-                            <input type="text" id="tillagg-customer-address" name="tillagg-customer-address" readonly>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Tilläggstjänst detaljer -->
-                <section class="form-section">
-                    <h3>Tilläggstjänst</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="tillagg-service-type">Typ av tillägg *</label>
-                            <textarea id="tillagg-service-type" name="tillagg-service-type" required rows="6"
-                                      placeholder="Beskriv den tilläggstjänst som utförs...&#10;&#10;Exempel:&#10;• Extra eluttag i kök&#10;• Installation av LED-belysning&#10;• Smart hem-system"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half-width">
-                            <label for="tillagg-service-price">Pris (kr) *</label>
-                            <input type="number" id="tillagg-service-price" name="tillagg-service-price" 
-                                   min="0" step="0.01" required placeholder="0.00">
-                        </div>
-                        <div class="form-group half-width">
-                            <label for="tillagg-service-date">Datum för tilläggstjänst</label>
-                            <input type="date" id="tillagg-service-date" name="tillagg-service-date">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="tillagg-service-comment">Kommentar</label>
-                            <textarea id="tillagg-service-comment" name="tillagg-service-comment" 
-                                      rows="3" placeholder="Valfri kommentar..."></textarea>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Signatur-sektion -->
-                <section class="form-section signature-section">
-                    <h3>Signatur</h3>
-                    <div class="signature-info">
-                        <p><strong>Jag godkänner tilläggstjänsten enligt ovan</strong></p>
-                        <p class="signature-instruction">Signera med finger eller penna i rutan nedan:</p>
-                    </div>
-                    
-                    <div class="signature-container">
-                        <div class="signature-preview" id="tillagg-signature-preview">
-                            <p class="signature-placeholder">Ingen signatur än</p>
-                            <img id="tillagg-signature-image" style="display: none; max-width: 100%; height: auto;" />
-                        </div>
-                        <div class="signature-controls">
-                            <button type="button" class="signature-fullscreen-btn" id="tillagg-signature-fullscreen-btn">Signera tilläggstjänst</button>
-                            <button type="button" class="clear-signature-btn" id="tillagg-clear-signature" style="display: none;">Rensa signatur</button>
-                        </div>
-                    </div>
-                    <div class="error-message" id="tillagg-signature-error" style="display: none;">
-                        Signatur krävs för att godkänna tilläggstjänsten
-                    </div>
-                </section>
-
-                <!-- Submit knapp -->
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn" id="tillagg-submit-btn">
-                        <span class="btn-text">Skicka tilläggstjänst</span>
-                        <div class="loading-spinner" id="tillagg-loading-spinner" style="display: none;"></div>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Success meddelande -->
-            <div id="tillagg-success-message" class="message success-message" style="display: none;">
-                <h3>Tilläggstjänst och signatur skickad!</h3>
-                <p>Tilläggstjänsten och din signatur har skickats till vårt system och kommer att behandlas tillsammans med ditt ursprungliga anbud.</p>
-                <p><small>Signaturen sparas automatiskt i Google Drive kopplad till ditt anbud.</small></p>
-            </div>
-        </div> <!-- End of tillaggtjanst-tab -->
-
-        <!-- Tilläggstjänst Modal -->
-        <div id="additional-service-modal" class="modal-overlay" style="display: none;">
-            <div class="modal-content additional-service-modal">
-                <div class="modal-header">
-                    <h2>Tilläggstjänst</h2>
-                    <button class="modal-close" id="additional-service-close">&times;</button>
-                </div>
-                
-                <form id="additional-service-form" class="additional-service-form">
-                    <!-- Kundinformation -->
-                    <section class="form-section">
-                        <h3>Kundinformation</h3>
-                        <div class="form-row">
+                        <!-- Materialkostnad - visas bara om ROT-avdrag är valt -->
+                        <div class="form-row" id="materialkostnad-section" style="display: none;">
                             <div class="form-group half-width">
-                                <label for="additional-customer-name">Namn</label>
-                                <input type="text" id="additional-customer-name" name="additional-customer-name" readonly>
-                            </div>
-                            <div class="form-group half-width">
-                                <label for="additional-customer-phone">Telefon</label>
-                                <input type="text" id="additional-customer-phone" name="additional-customer-phone" readonly>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="additional-customer-address">Adress</label>
-                                <input type="text" id="additional-customer-address" name="additional-customer-address" readonly>
+                                <label for="materialkostnad">Materialkostnad</label>
+                                <select id="materialkostnad" name="materialkostnad" class="form-select">
+                                    <option value="0" selected>0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="7">7%</option>
+                                    <option value="10">10%</option>
+                                    <option value="13">13%</option>
+                                    <option value="15">15%</option>
+                                    <option value="20">20%</option>
+                                </select>
+                                <div class="help-text">Materialkostnad i procent (för ROT-avdrag beräkning)</div>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Tilläggstjänst detaljer -->
-                    <section class="form-section">
-                        <h3>Tilläggstjänst</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="additional-service-type">Typ av tillägg *</label>
-                                <textarea id="additional-service-type" name="additional-service-type" required rows="6"
-                                          placeholder="Beskriv den tilläggstjänst som utförs...&#10;&#10;Exempel:&#10;• Extra eluttag i kök&#10;• Installation av LED-belysning&#10;• Smart hem-system"></textarea>
+                    <!-- Prisberäkning -->
+                    <section class="form-section price-section">
+                        <h3>Prisberäkning</h3>
+                        <div class="price-breakdown">
+                            <!-- Dold detaljvy för intern beräkning -->
+                            <div style="display: none;">
+                                <span id="base-components-price">0</span>
+                                <span id="window-type-cost">0</span>
+                                <span id="extras-cost">0</span>
+                                <span id="renovation-markup">0</span>
+                                <span id="extra-hours-cost">0</span>
+                                <span id="material-cost-display">0</span>
+                                <span id="subtotal-price">0</span>
+                                <span id="vat-cost">0</span>
+                                <span id="extra-hours-display">0</span>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group half-width">
-                                <label for="additional-service-price">Pris (kr) *</label>
-                                <input type="number" id="additional-service-price" name="additional-service-price" 
-                                       min="0" step="0.01" required placeholder="0.00">
+                            
+                            <div class="price-category">
+                                <div class="price-row" id="kallare-glugg-row" style="display: none;">
+                                    <span>Källare/Glugg:</span>
+                                    <span id="kallare-glugg-cost">0 kr</span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Totalsumma exkl. moms:</span>
+                                    <span id="subtotal-price-display">0 kr</span>
+                                </div>
+                                <div class="price-row total">
+                                    <span><strong>Totalt inkl. moms:</strong></span>
+                                    <span id="total-with-vat"><strong>0 kr</strong></span>
+                                </div>
+                                <div class="price-row material-cost" id="material-row" style="display: none;">
+                                    <span>Materialkostnad avdrag:</span>
+                                    <span id="material-deduction">0 kr</span>
+                                </div>
+                                <div class="price-row rot-deduction" id="rot-row" style="display: none;">
+                                    <span>ROT-avdrag (50% på arbetskostnad):</span>
+                                    <span id="rot-deduction">-0 kr</span>
+                                </div>
+                                <!-- ROT preliminär text - visas bara när ROT-avdrag är aktivt -->
+                                <div class="price-row" id="rot-preliminary-text" style="display: none;">
+                                    <div style="width: 100%; padding: 5px 0; font-style: italic; color: #666; font-size: 0.9em;">
+                                        ROT-avdraget som visas är en preliminär uppskattning. Slutligt avdrag beviljas av Skatteverket efter att personnummer lämnats och ansökan skickats in.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group half-width">
-                                <label for="additional-service-comment">Kommentar</label>
-                                <textarea id="additional-service-comment" name="additional-service-comment" 
-                                          rows="3" placeholder="Valfri kommentar..."></textarea>
+                            
+                            <div class="price-separator final-separator"></div>
+                            
+                            <div class="price-category final-price">
+                                <div class="price-row customer-pays">
+                                    <span><strong>KUNDEN BETALAR:</strong></span>
+                                    <span id="final-customer-price"><strong>0 kr</strong></span>
+                                </div>
                             </div>
                         </div>
                     </section>
 
-                    <!-- Signatur-sektion -->
-                    <section class="form-section signature-section">
-                        <h3>Signatur</h3>
-                        <div class="signature-info">
-                            <p><strong>Jag godkänner tilläggstjänsten enligt ovan</strong></p>
-                            <p class="signature-instruction">Signera med finger eller penna i rutan nedan:</p>
-                        </div>
-                        
-                        <div class="signature-container">
-                            <div class="signature-preview" id="signature-preview">
-                                <p class="signature-placeholder">Ingen signatur än</p>
-                                <img id="signature-image" style="display: none; max-width: 100%; height: auto;" />
+                    <!-- GDPR-sektion -->
+                    <section class="form-section gdpr-section">
+                        <div class="form-group">
+                            <label class="checkbox-label gdpr-consent">
+                                <input type="checkbox" id="gdpr-consent" name="gdpr-consent" required>
+                                <span class="checkmark"></span>
+                                Jag godkänner behandling av personuppgifter för anbud och kontakt enligt GDPR
+                            </label>
+                            <div class="error-message" id="gdpr-consent-error"></div>
+                            <div class="gdpr-info">
+                                <a href="#" id="gdpr-details-link" class="privacy-link">Läs mer om dataskydd</a>
                             </div>
-                            <div class="signature-controls">
-                                <button type="button" class="signature-fullscreen-btn" id="signature-fullscreen-btn">Signera tilläggstjänst</button>
-                                <button type="button" class="clear-signature-btn" id="clear-signature" style="display: none;">Rensa signatur</button>
-                            </div>
-                        </div>
-                        <div class="error-message" id="signature-error" style="display: none;">
-                            Signatur krävs för att godkänna tilläggstjänsten
                         </div>
                     </section>
 
-                    <!-- Modal actions -->
-                    <div class="modal-actions">
-                        <button type="button" class="cancel-btn" id="additional-service-cancel">Avbryt</button>
-                        <button type="submit" class="submit-btn" id="additional-service-submit">
-                            <span class="btn-text">Skicka tilläggstjänst</span>
-                            <div class="loading-spinner" id="additional-service-loading" style="display: none;"></div>
+                    <!-- Submit knapp -->
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn" id="submit-btn">
+                            <span class="btn-text">Skicka anbudsförfrågan</span>
+                            <div class="loading-spinner" id="loading-spinner"></div>
                         </button>
                     </div>
                 </form>
 
-                <!-- Success meddelande för tilläggstjänst -->
-                <div id="additional-service-success" class="message success-message" style="display: none;">
-                    <h3>Tilläggstjänst och signatur skickad!</h3>
-                    <p>Tilläggstjänsten och din signatur har skickats till vårt system och kommer att behandlas tillsammans med ditt ursprungliga anbud.</p>
-                    <p><small>Signaturen sparas automatiskt i Google Drive kopplad till ditt anbud.</small></p>
+                <!-- Success/Error meddelanden -->
+                <div id="success-message" class="message success-message" style="display: none;">
+                    <h3>Tack för din förfrågan!</h3>
+                    <p>Vi har mottagit din anbudsförfrågan och återkommer inom kort med ett kostnadsfritt anbud.</p>
                 </div>
-            </div>
-        </div>
 
-        </div>
+                <div id="error-message" class="message error-message" style="display: none;">
+                    <h3>Ett fel uppstod</h3>
+                    <p>Vi kunde inte skicka din förfrågan just nu. Vänligen försök igen eller kontakta oss direkt.</p>
+                </div>
+                </div> <!-- End of anbud-tab -->
+                
+                <!-- Tab Content: Arbetsbeskrivning -->
+                <div id="arbetsbeskrivning-tab" class="tab-content">
+                    <form id="arbetsbeskrivning-form" class="arbetsbeskrivning-form">
+                        <!-- Kunduppgifter (kopieras från anbud) -->
+                        <section class="form-section">
+                            <h3>Kunduppgifter</h3>
+                            <p class="info-text">Kunduppgifter kopieras automatiskt från anbudssidan</p>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="arb_company">Företag/Namn</label>
+                                    <input type="text" id="arb_company" name="arb_company" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group half-width">
+                                    <label for="arb_email">E-post</label>
+                                    <input type="email" id="arb_email" name="arb_email" readonly>
+                                </div>
+                                <div class="form-group half-width">
+                                    <label for="arb_phone">Telefonnummer</label>
+                                    <input type="tel" id="arb_phone" name="arb_phone" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="arb_address">Adress</label>
+                                    <input type="text" id="arb_address" name="arb_address" readonly>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Renoveringstyp -->
+                        <section class="form-section">
+                            <h3>Typ av renovering</h3>
+                            
+                            <div class="form-group">
+                                <label for="arb_typ_av_renovering">Välj renoveringstyp *</label>
+                                <select id="arb_typ_av_renovering" name="arb_typ_av_renovering" class="form-select" required>
+                                    <option value="">Välj renoveringstyp...</option>
+                                    <option value="Traditionell - Linoljebehandling">Traditionell - Linoljebehandling</option>
+                                    <option value="Modern - Alcro bestå">Modern - Alcro bestå</option>
+                                </select>
+                                <div class="error-message" id="arb_typ_av_renovering-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Arbetsbeskrivning *</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="arb_arbetsbeskrivning" value="Utvändig renovering" required>
+                                        <span class="radio-custom"></span>
+                                        Utvändig renovering
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="arb_arbetsbeskrivning" value="Invändig renovering" required>
+                                        <span class="radio-custom"></span>
+                                        Invändig renovering
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="arb_arbetsbeskrivning" value="Utvändig renovering samt målning av innerbågens insida" required>
+                                        <span class="radio-custom"></span>
+                                        Utvändig renovering samt målning av innerbågens insida
+                                    </label>
+                                </div>
+                                <div class="error-message" id="arb_arbetsbeskrivning-error"></div>
+                            </div>
+                        </section>
+
+                        <!-- Moment-checklista (dynamiskt baserat på renoveringstyp) -->
+                        <section class="form-section" id="moment-checklista-section" style="display: none;">
+                            <h3>Arbetsbeskrivning - Detaljerad checklista</h3>
+                            <div id="moment-checklista-container">
+                                <!-- Checklistor läggs till dynamiskt -->
+                            </div>
+                        </section>
+
+                        <!-- GDPR samma som anbud -->
+                        <section class="form-section gdpr-section">
+                            <div class="gdpr-consent-group">
+                                <label class="checkbox-label gdpr-consent">
+                                    <input type="checkbox" id="arb-gdpr-consent" name="arb-gdpr-consent" required>
+                                    <span class="checkmark"></span>
+                                    Jag godkänner behandling av personuppgifter för anbud och kontakt enligt GDPR
+                                </label>
+                                <div class="error-message" id="arb-gdpr-consent-error"></div>
+                                <div class="gdpr-info">
+                                    <a href="#" id="arb-gdpr-details-link" class="privacy-link">Läs mer om dataskydd</a>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Submit knapp -->
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn" id="arb-submit-btn">
+                                <span class="btn-text">Skicka arbetsbeskrivning</span>
+                                <div class="loading-spinner" id="arb-loading-spinner"></div>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success/Error meddelanden för arbetsbeskrivning -->
+                    <div id="arb-success-message" class="message success-message" style="display: none;">
+                        <h3>Tack för din förfrågan!</h3>
+                        <p>Vi har mottagit din arbetsbeskrivning och återkommer inom kort.</p>
+                    </div>
+                    <div id="arb-error-message" class="message error-message" style="display: none;">
+                        <h3>Ett fel uppstod</h3>
+                        <p>Vi kunde inte skicka din förfrågan just nu. Vänligen försök igen eller kontakta oss direkt.</p>
+                    </div>
+                </div> <!-- End of arbetsbeskrivning-tab -->
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Sternbecks Måleri & Fönsterhantverk. Kvalitet och hantverkstradition sedan 2015.</p>
+        </footer>
     </div>
 
     <!-- GDPR Modal -->
@@ -1058,16 +664,16 @@
                 <button class="gdpr-modal-close" id="gdpr-modal-close">&times;</button>
             </div>
             <div class="gdpr-modal-body">
-                <p><strong>Solida Elinstallationer AB behandlar dina personuppgifter för att:</strong></p>
+                <p><strong>Sternbecks Måleri behandlar dina personuppgifter för att:</strong></p>
                 <ul>
                     <li>Beräkna och skicka anbud</li>
                     <li>Kontakta dig om projektet</li>
                     <li>Arkivera för redovisning och garanti</li>
-                    <li>Följa upp kundnöjdhet</li>
                 </ul>
                 
+                <p><strong>Dina rättigheter:</strong></p>
                 <p>Uppgifterna lagras säkert i 7 år och delas aldrig vidare. Du kan begära utdrag, rättelse eller radering via 
-                <a href="mailto:info@solidaelinstallationer.se">info@solidaelinstallationer.se</a>.</p>
+                <a href="mailto:info@sternbecks.se">info@sternbecks.se</a>.</p>
                 
                 <p><strong>Fullständig integritetspolicy</strong> finns på vår hemsida.</p>
                 
@@ -1075,34 +681,6 @@
             </div>
             <div class="gdpr-modal-footer">
                 <button class="gdpr-modal-ok" id="gdpr-modal-ok">Stäng</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Fullscreen Signature Modal -->
-    <div id="signature-fullscreen-modal" class="signature-fullscreen-overlay" style="display: none;">
-        <div class="signature-fullscreen-content">
-            <div class="signature-fullscreen-header">
-                <h2>Signera Tilläggstjänst</h2>
-                <div class="signature-orientation-notice" id="signature-orientation-notice">
-                    <p>Vänd telefonen till liggande läge för bästa signeringsupplevelse</p>
-                </div>
-            </div>
-            
-            <div class="signature-fullscreen-body">
-                <canvas id="signature-fullscreen-canvas" class="signature-fullscreen-canvas"></canvas>
-            </div>
-            
-            <div class="signature-fullscreen-controls">
-                <button type="button" class="signature-control-btn signature-clear-btn" id="signature-fullscreen-clear">
-                    <span>Rensa</span>
-                </button>
-                <button type="button" class="signature-control-btn signature-cancel-btn" id="signature-fullscreen-cancel">
-                    <span>Avbryt</span>
-                </button>
-                <button type="button" class="signature-control-btn signature-save-btn" id="signature-fullscreen-save">
-                    <span>Spara Signering</span>
-                </button>
             </div>
         </div>
     </div>
