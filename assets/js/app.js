@@ -316,6 +316,181 @@ const CONFIG = {
                 laborCost: 1500, // 2h × 750kr/h
                 description: 'UniFi U6-Lite access point'
             }
+        },
+        // Nya tjänster - Installation & Utbyggnad
+        'motorvarmaruttag': {
+            'cee_16a_standard': {
+                materialCost: 180,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'CEE 16A standard',
+                greenTech: false
+            },
+            'schneider_uttag_ip44': {
+                materialCost: 220,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Schneider uttag IP44',
+                greenTech: false
+            },
+            'garo_med_timer': {
+                materialCost: 450,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Garo med timer',
+                greenTech: false
+            }
+        },
+        'pool_spa_elinstallation': {
+            'standard_poolinstallation': {
+                materialCost: 800,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Standard poolinstallation',
+                greenTech: false
+            },
+            'spa_jacuzzi_32a': {
+                materialCost: 1200,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Spa/jacuzzi 32A',
+                greenTech: false
+            },
+            'pool_med_belysning': {
+                materialCost: 1500,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'Pool med belysning',
+                greenTech: false
+            }
+        },
+        'timer_ljussensor_utomhus': {
+            'enkel_skymningsrela': {
+                materialCost: 150,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Enkel skymningsrelä',
+                greenTech: false
+            },
+            'digital_timer_med_backup': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Digital timer med backup',
+                greenTech: false
+            },
+            'smart_sensor_med_app': {
+                materialCost: 650,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Smart sensor med app',
+                greenTech: false
+            }
+        },
+        // Markbelysning (Belysning sektion)
+        'markbelysning': {
+            'led_spots_12v_system': {
+                materialCost: 320,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'LED-spots 12V system',
+                greenTech: false
+            },
+            'solceller_markbelysning': {
+                materialCost: 180,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Solceller markbelysning',
+                greenTech: true,
+                greenTechRate: 19.4
+            },
+            'kabeldragen_230v_system': {
+                materialCost: 480,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Kabeldragen 230V system',
+                greenTech: false
+            }
+        },
+        // Praktiska Tillägg
+        'garagedorr_automatik': {
+            'chamberlain_basic': {
+                materialCost: 2200,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Chamberlain basic',
+                greenTech: false
+            },
+            'hormann_promatic_4': {
+                materialCost: 3800,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Hormann ProMatic 4',
+                greenTech: false
+            },
+            'smart_garage_med_app': {
+                materialCost: 4500,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Smart garage med app',
+                greenTech: false
+            }
+        },
+        'ventilation_elinstallation': {
+            'badrumsfläkt_enkel': {
+                materialCost: 320,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Badrumsfläkt enkel',
+                greenTech: false
+            },
+            'köksfläkt_16a_anslutning': {
+                materialCost: 180,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Köksfläkt 16A anslutning',
+                greenTech: false
+            },
+            'centralventilation_inkoppling': {
+                materialCost: 850,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'Centralventilation inkoppling',
+                greenTech: false
+            }
+        },
+        // Värme & Komfort tillägg
+        'bergvarme_elinstallation': {
+            'bergvarmepump_inkoppling': {
+                materialCost: 650,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Bergvärmepump inkoppling',
+                greenTech: false
+            }
+        },
+        'bastuinstallation': {
+            '6kw_bastupanel': {
+                materialCost: 480,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: '6kW bastupanel',
+                greenTech: false
+            },
+            '9kw_bastupanel': {
+                materialCost: 680,
+                laborHours: 3.5,
+                laborCost: 2625, // 3.5h × 750kr/h
+                description: '9kW bastupanel',
+                greenTech: false
+            },
+            'bastuaggregat_med_styrning': {
+                materialCost: 1200,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Bastuaggregat med styrning',
+                greenTech: false
+            }
         }
     },
 

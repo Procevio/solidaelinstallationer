@@ -228,6 +228,54 @@
                                 <input type="number" id="jordfelsbrytare_antal" class="service-input" min="1" max="10" placeholder="Antal">
                             </div>
                         </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="motorvarmaruttag" name="elinstallationer" value="motorvarmaruttag">
+                                <label for="motorvarmaruttag">Motorvärmaruttag</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="motorvarmaruttag_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="cee_16a_standard">CEE 16A standard</option>
+                                    <option value="schneider_uttag_ip44">Schneider uttag IP44</option>
+                                    <option value="garo_med_timer">Garo med timer</option>
+                                </select>
+                                <input type="number" id="motorvarmaruttag_antal" class="service-input" min="1" max="10" placeholder="Antal">
+                            </div>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="pool_spa_elinstallation" name="elinstallationer" value="pool_spa_elinstallation">
+                                <label for="pool_spa_elinstallation">Pool/spa elinstallation</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="pool_spa_elinstallation_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="standard_poolinstallation">Standard poolinstallation</option>
+                                    <option value="spa_jacuzzi_32a">Spa/jacuzzi 32A</option>
+                                    <option value="pool_med_belysning">Pool med belysning</option>
+                                </select>
+                                <input type="number" id="pool_spa_elinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
+                            </div>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="timer_ljussensor_utomhus" name="elinstallationer" value="timer_ljussensor_utomhus">
+                                <label for="timer_ljussensor_utomhus">Timer/ljussensor utomhus</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="timer_ljussensor_utomhus_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="enkel_skymningsrela">Enkel skymningsrelä</option>
+                                    <option value="digital_timer_med_backup">Digital timer med backup</option>
+                                    <option value="smart_sensor_med_app">Smart sensor med app</option>
+                                </select>
+                                <input type="number" id="timer_ljussensor_utomhus_antal" class="service-input" min="1" max="10" placeholder="Antal">
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -313,6 +361,22 @@
                                     <option value="knx">KNX</option>
                                 </select>
                                 <span class="unit-info">Per rum/område</span>
+                            </div>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="markbelysning" name="elinstallationer" value="markbelysning">
+                                <label for="markbelysning">Markbelysning</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="markbelysning_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="led_spots_12v_system">LED-spots 12V system</option>
+                                    <option value="solceller_markbelysning">Solceller markbelysning</option>
+                                    <option value="kabeldragen_230v_system">Kabeldragen 230V system</option>
+                                </select>
+                                <input type="number" id="markbelysning_antal" class="service-input" min="1" max="20" placeholder="Antal">
                             </div>
                         </div>
                     </div>
@@ -409,53 +473,73 @@
                                 <span class="unit-info">Per enhet</span>
                             </div>
                         </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="bergvarme_elinstallation" name="elinstallationer" value="bergvarme_elinstallation">
+                                <label for="bergvarme_elinstallation">Bergvärme elinstallation</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="bergvarme_elinstallation_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="bergvarmepump_inkoppling">Bergvärmepump inkoppling</option>
+                                </select>
+                                <input type="number" id="bergvarme_elinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
+                            </div>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-header">
+                                <input type="checkbox" id="bastuinstallation" name="elinstallationer" value="bastuinstallation">
+                                <label for="bastuinstallation">Bastuinstallation</label>
+                            </div>
+                            <div class="service-options" style="display: none;">
+                                <select id="bastuinstallation_type" class="service-dropdown">
+                                    <option value="">Välj produkt</option>
+                                    <option value="6kw_bastupanel">6kW bastupanel</option>
+                                    <option value="9kw_bastupanel">9kW bastupanel</option>
+                                    <option value="bastuaggregat_med_styrning">Bastuaggregat med styrning</option>
+                                </select>
+                                <input type="number" id="bastuinstallation_antal" class="service-input" min="1" max="3" placeholder="Antal">
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                <!-- Säkerhet & Smarta Hem -->
+                <!-- Praktiska Tillägg -->
                 <section class="form-section">
-                    <h2>Säkerhet & Smarta Hem</h2>
+                    <h2>Praktiska Tillägg</h2>
                     
                     <div class="service-category">
                         <div class="service-item">
                             <div class="service-header">
-                                <input type="checkbox" id="brandvarnare" name="elinstallationer" value="brandvarnare">
-                                <label for="brandvarnare">Brandvarnare</label>
+                                <input type="checkbox" id="garagedorr_automatik" name="elinstallationer" value="garagedorr_automatik">
+                                <label for="garagedorr_automatik">Garagedörr automatik</label>
                             </div>
                             <div class="service-options" style="display: none;">
-                                <select id="brandvarnare_type" class="service-dropdown">
+                                <select id="garagedorr_automatik_type" class="service-dropdown">
                                     <option value="">Välj produkt</option>
-                                    <option value="kidde_29hd_optisk">Kidde 29HD optisk</option>
-                                    <option value="aico_ei650_10ar">Aico Ei650 10år batteri</option>
-                                    <option value="cavius_2103_mini">Cavius 2103 mini</option>
+                                    <option value="chamberlain_basic">Chamberlain basic</option>
+                                    <option value="hormann_promatic_4">Hormann ProMatic 4</option>
+                                    <option value="smart_garage_med_app">Smart garage med app</option>
                                 </select>
-                                <input type="number" id="brandvarnare_antal" class="service-input" min="1" max="20" placeholder="Antal">
+                                <input type="number" id="garagedorr_automatik_antal" class="service-input" min="1" max="5" placeholder="Antal">
                             </div>
                         </div>
                         
                         <div class="service-item">
                             <div class="service-header">
-                                <input type="checkbox" id="hemlarm" name="elinstallationer" value="hemlarm">
-                                <label for="hemlarm">Hemlarm</label>
+                                <input type="checkbox" id="ventilation_elinstallation" name="elinstallationer" value="ventilation_elinstallation">
+                                <label for="ventilation_elinstallation">Ventilation elinstallation</label>
                             </div>
                             <div class="service-options" style="display: none;">
-                                <span class="fixed-price-info">Fast pris per system</span>
-                            </div>
-                        </div>
-                        
-                        <div class="service-item">
-                            <div class="service-header">
-                                <input type="checkbox" id="natverksuttag" name="elinstallationer" value="natverksuttag">
-                                <label for="natverksuttag">Nätverk</label>
-                            </div>
-                            <div class="service-options" style="display: none;">
-                                <select id="natverksuttag_type" class="service-dropdown">
+                                <select id="ventilation_elinstallation_type" class="service-dropdown">
                                     <option value="">Välj produkt</option>
-                                    <option value="abb_impressivo_rj45_cat6">ABB Impressivo RJ45 Cat6</option>
-                                    <option value="fiber_sc_uttag">Fiber SC-uttag</option>
-                                    <option value="unifi_u6_lite_ap">UniFi U6-Lite access point</option>
+                                    <option value="badrumsfläkt_enkel">Badrumsfläkt enkel</option>
+                                    <option value="köksfläkt_16a_anslutning">Köksfläkt 16A anslutning</option>
+                                    <option value="centralventilation_inkoppling">Centralventilation inkoppling</option>
                                 </select>
-                                <input type="number" id="natverksuttag_antal" class="service-input" min="1" max="50" placeholder="Antal">
+                                <input type="number" id="ventilation_elinstallation_antal" class="service-input" min="1" max="10" placeholder="Antal">
                             </div>
                         </div>
                     </div>
