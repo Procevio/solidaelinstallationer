@@ -135,6 +135,48 @@ const CONFIG = {
                 description: 'IKEA Myrvarv 3,5m'
             }
         },
+        // Utomhusbelysning
+        'utomhusbelysning': {
+            'fasadbelysning': {
+                materialCost: 450,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Fasadbelysning LED IP65'
+            },
+            'tradgardsspots': {
+                materialCost: 320,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Trädgårdsspots LED 10W'
+            },
+            'vaggarmatur': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Väggarmatur LED IP44'
+            }
+        },
+        // Smart belysning
+        'smart_belysning': {
+            'plejd_system': {
+                materialCost: 850,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Plejd smart belysningssystem'
+            },
+            'philips_hue': {
+                materialCost: 650,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Philips Hue smart belysning'
+            },
+            'knx': {
+                materialCost: 1200,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'KNX smart belysningssystem'
+            }
+        },
 
         // Energi & Laddning
         'laddbox_elbil': {
@@ -144,7 +186,7 @@ const CONFIG = {
                 laborCost: 3000, // 4h × 750kr/h
                 description: 'Easee Home 22kW',
                 greenTech: true,
-                greenTechRate: 50 // 50% avdrag
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
             },
             'zaptec_go_11kw': {
                 materialCost: 6200,
@@ -152,7 +194,7 @@ const CONFIG = {
                 laborCost: 2625, // 3.5h × 750kr/h
                 description: 'Zaptec Go 11kW',
                 greenTech: true,
-                greenTechRate: 50 // 50% avdrag
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
             },
             'garo_glb_16a_cee': {
                 materialCost: 2100,
@@ -160,7 +202,7 @@ const CONFIG = {
                 laborCost: 1875, // 2.5h × 750kr/h
                 description: 'Garo GLB 16A CEE',
                 greenTech: true,
-                greenTechRate: 50 // 50% avdrag
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
             }
         },
 
@@ -172,7 +214,7 @@ const CONFIG = {
                 laborCost: 6000, // 8h × 750kr/h
                 description: 'Växelriktare solceller',
                 greenTech: true,
-                greenTechRate: 15 // 15% avdrag
+                greenTechRate: 19.4 // 19,4% avdrag för solceller
             },
             'optimizers': {
                 materialCost: 8500,
@@ -180,7 +222,7 @@ const CONFIG = {
                 laborCost: 3000, // 4h × 750kr/h
                 description: 'Power optimizers',
                 greenTech: true,
-                greenTechRate: 15 // 15% avdrag
+                greenTechRate: 19.4 // 19,4% avdrag för solceller
             },
             'batterisystem': {
                 materialCost: 45000,
@@ -188,7 +230,7 @@ const CONFIG = {
                 laborCost: 9000, // 12h × 750kr/h
                 description: 'Hemlagringsbatteri',
                 greenTech: true,
-                greenTechRate: 50 // 50% avdrag för batterilagring
+                greenTechRate: 48.5 // 48,5% avdrag för batterier (50% på 97% av totalkostnad)
             }
         },
 
@@ -461,6 +503,12 @@ class PasswordProtection {
             this.passwordOverlay.style.display = 'none';
             this.mainApp.style.display = 'block';
             this.mainApp.style.animation = 'fadeIn 0.5s ease-out';
+            
+            // Show navigation bar
+            const navigationBar = document.querySelector('.navigation-bar');
+            if (navigationBar) {
+                navigationBar.classList.add('visible');
+            }
             
             // Initialisera huvudapplikation
             if (window.quoteCalculator) {
@@ -1078,7 +1126,7 @@ class QuoteCalculator {
 
         // Add show details button
         coreHtml += `
-            <button class="show-details-btn" onclick="this.parentElement.parentElement.querySelector('.price-details').style.display = this.parentElement.parentElement.querySelector('.price-details').style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Visa detaljer' ? 'Dölj detaljer' : 'Visa detaljer';">
+            <button class="show-details-btn" id="show-details-btn">
                 Visa detaljer
             </button>
         `;
@@ -1091,6 +1139,22 @@ class QuoteCalculator {
         `;
 
         priceContainer.innerHTML = coreHtml;
+        
+        // Add event listener for details toggle button
+        const showDetailsBtn = document.getElementById('show-details-btn');
+        if (showDetailsBtn) {
+            showDetailsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const priceDetails = document.querySelector('.price-details');
+                if (priceDetails) {
+                    const isHidden = priceDetails.style.display === 'none';
+                    priceDetails.style.display = isHidden ? 'block' : 'none';
+                    showDetailsBtn.textContent = isHidden ? 'Dölj detaljer' : 'Visa detaljer';
+                }
+            });
+        }
 
         // Build detailed breakdown (hidden by default)
         this.updateDetailedBreakdown(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, extras, formatPrice);
@@ -1142,11 +1206,11 @@ class QuoteCalculator {
         // Calculation explanation
         let explanationText = '';
         if (rotDeduction > 0 && greenTechDeduction > 0) {
-            explanationText = 'ROT beräknas på arbetskostnad inkl. moms. Grön teknik-avdrag beräknas på både produkter och arbete inom grön teknik.';
+            explanationText = 'ROT beräknas på arbetskostnad inkl. moms. Grön teknik-avdrag beräknas på totalkostnad enligt Skatteverkets procentsatser: solceller 19,4%, laddboxar/batterier 48,5%.';
         } else if (rotDeduction > 0) {
             explanationText = 'ROT-avdrag beräknas på 50% av arbetskostnad inkl. moms.';
         } else if (greenTechDeduction > 0) {
-            explanationText = 'Grön teknik-avdrag beräknas på både produkter och arbete inom grön teknik.';
+            explanationText = 'Grön teknik-avdrag beräknas på totalkostnad enligt Skatteverkets procentsatser: solceller 19,4%, laddboxar/batterier 48,5%.';
         }
 
         if (explanationText) {
@@ -1182,15 +1246,9 @@ class QuoteCalculator {
             let totalLabor = 0;
             
             selectedServices.forEach((service, index) => {
-                totalMaterial += service.totalMaterial;
-                totalLabor += service.totalLabor;
-                
                 workDescription += `${index + 1}. ${service.name.toUpperCase()}\n`;
                 workDescription += `   Produkt: ${service.productName}\n`;
-                workDescription += `   Antal: ${service.quantity} st\n`;
-                workDescription += `   Material: ${new Intl.NumberFormat('sv-SE').format(service.unitMaterial)} kr × ${service.quantity} = ${new Intl.NumberFormat('sv-SE').format(service.totalMaterial)} kr\n`;
-                workDescription += `   Arbete: ${new Intl.NumberFormat('sv-SE').format(service.unitLabor)} kr × ${service.quantity} = ${new Intl.NumberFormat('sv-SE').format(service.totalLabor)} kr\n`;
-                workDescription += `   Total: ${new Intl.NumberFormat('sv-SE').format(service.totalPrice)} kr\n\n`;
+                workDescription += `   Antal: ${service.quantity} st\n\n`;
                 
                 // Lägg till detaljerad arbetsbeskrivning
                 const description = this.getServiceWorkDescription(service.id, service.productKey);
@@ -1204,23 +1262,6 @@ class QuoteCalculator {
                     workDescription += `   MATERIAL:\n   ${materialInfo.split('\n').join('\n   ')}\n\n`;
                 }
             });
-            
-            // Lägg till kostnadssummering
-            workDescription += '**KOSTNADSSUMMERING**\n\n';
-            workDescription += `Total materialkostnad: ${new Intl.NumberFormat('sv-SE').format(totalMaterial)} kr\n`;
-            workDescription += `Total arbetskostnad: ${new Intl.NumberFormat('sv-SE').format(totalLabor)} kr\n`;
-            workDescription += `Subtotal (exkl moms): ${new Intl.NumberFormat('sv-SE').format(totalMaterial + totalLabor)} kr\n`;
-            workDescription += `Moms 25%: ${new Intl.NumberFormat('sv-SE').format((totalMaterial + totalLabor) * 0.25)} kr\n`;
-            workDescription += `Total inkl moms: ${new Intl.NumberFormat('sv-SE').format((totalMaterial + totalLabor) * 1.25)} kr\n\n`;
-            
-            // ROT-avdrag information
-            const rotData = this.collectROTData();
-            if (this.isROTEligible(rotData)) {
-                const rotDeduction = (totalLabor * 1.25) * 0.5;
-                const finalTotal = (totalMaterial + totalLabor) * 1.25 - rotDeduction;
-                workDescription += `ROT-avdrag (50% på arbetskostnad inkl moms): -${new Intl.NumberFormat('sv-SE').format(rotDeduction)} kr\n`;
-                workDescription += `SLUTSUMMA EFTER ROT-AVDRAG: ${new Intl.NumberFormat('sv-SE').format(finalTotal)} kr\n\n`;
-            }
         }
 
         // Lägg till allmän information
@@ -1229,13 +1270,6 @@ class QuoteCalculator {
         workDescription += '• Besiktning och certifiering ingår\n';
         workDescription += '• Garantitid: 5 år på utfört arbete\n';
         workDescription += '• Säkerhet: Alla elektriker är behöriga och certifierade\n\n';
-
-        // ROT-avdrag information
-        const rotData = this.collectROTData();
-        if (this.isROTEligible(rotData)) {
-            workDescription += '• ROT-avdrag kan tillämpas (50% skattereduktion på arbetskostnad)\n';
-            workDescription += '• Vi hjälper till med ROT-avdragsansökan\n\n';
-        }
 
         workDescription += 'Tack för förtroendet!\n';
         workDescription += 'Solida Elinstallationer AB';
@@ -1306,7 +1340,7 @@ class QuoteCalculator {
                 productKey?.includes('polykristallin') ?
                 '• Monteringsrail\n• Klämma och skruv\n• DC-kabel\n• Säkringar DC' :
                 '• Mikroinverterare\n• Monteringsrail\n• AC-kabel\n• Säkringar',
-            'laddbox': '• Jordfelsbrytare Typ A\n• Säkringsautomat 16-32A\n• Kabel 5G6-10mm²\n• Väggfäste',
+            'laddbox_elbil': '• Jordfelsbrytare Typ A\n• Säkringsautomat 16-32A\n• Kabel 5G6-10mm²\n• Väggfäste',
             'batterilagring': '• DC-säkringar\n• Batterikabel\n• Övervakningssystem\n• Ventilation'
         };
         
@@ -1753,6 +1787,12 @@ class QuoteCalculator {
             mainContainer.style.display = 'none';
         }
         
+        // Hide navigation bar
+        const navigationBar = document.querySelector('.navigation-bar');
+        if (navigationBar) {
+            navigationBar.classList.remove('visible');
+        }
+        
         // Fokusera på lösenordsfältet
         const passwordInput = document.getElementById('password-input');
         if (passwordInput) {
@@ -1768,6 +1808,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Starta lösenordsskyddet
     window.passwordProtection = new PasswordProtection();
+    
+    // Starta tema-toggle
+    window.themeToggle = new ThemeToggle();
     
     console.log('✅ App initialiserad');
 });

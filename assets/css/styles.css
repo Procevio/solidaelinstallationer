@@ -2955,6 +2955,29 @@ body[data-theme="dark"] .nav-btn::before {
     background: linear-gradient(90deg, transparent, rgba(249, 250, 251, 0.1), transparent);
 }
 
+/* Desktop view - larger navigation buttons and smaller logo */
+@media (min-width: 1024px) {
+    .nav-btn {
+        padding: 16px 24px;
+        min-width: 90px;
+        gap: 8px;
+    }
+    
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .nav-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .company-logo {
+        max-height: 196px; /* 30% smaller than default 280px */
+    }
+}
+
 /* =================
    FULLSCREEN SIGNATURE MODAL
    ================= */
