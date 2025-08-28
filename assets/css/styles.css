@@ -3007,7 +3007,7 @@ body[data-theme="dark"] .nav-btn::before {
     min-height: -webkit-fill-available; /* iOS fallback */
     display: flex;
     flex-direction: column;
-    background: var(--white);
+    background: #fff;              /* förhindra att "bakom" lyser igenom */
     position: relative;
     overflow: hidden;
 }
@@ -3073,8 +3073,9 @@ body[data-theme="dark"] .nav-btn::before {
     position: sticky;
     bottom: 0;
     z-index: 2;
-    padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0));
-    background: var(--white);
+    padding: 0.5rem 0.75rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    background: #fff;              /* matcha modalens bakgrund */
     display: flex;
     gap: 1rem;
     justify-content: center;
@@ -3220,11 +3221,9 @@ body[data-theme="dark"] .nav-btn::before {
         position: sticky !important;
         bottom: 0;
         flex-shrink: 0;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(15px);
+        background: #fff;              /* solid bakgrund */
         border-top: 2px solid #dee2e6;
         padding: 0.25rem 0.5rem;
-        padding-bottom: calc(0.25rem + env(safe-area-inset-bottom, 0));
         flex-direction: row;
         justify-content: center;
         gap: 8px;
@@ -3233,6 +3232,16 @@ body[data-theme="dark"] .nav-btn::before {
         display: flex;
         align-items: center;
     }
+}
+
+/* iOS safe-area support för landscape */
+@supports (padding: max(0px)) {
+  @media (orientation: landscape) {
+    .signature-fullscreen-controls {
+      padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+    }
+  }
+}
     
     .signature-control-btn {
         padding: 0.5rem 0.75rem;
