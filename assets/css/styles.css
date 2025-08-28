@@ -923,8 +923,20 @@ select, input[type="text"], input[type="number"], input[type="email"], input[typ
     font-size: 1rem;
 }
 
+.price-line.excl-vat-price {
+    margin-bottom: 12px;
+}
+
+.price-line.material-cost {
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding-left: 16px;
+}
+
 .price-line.main-price {
     margin-bottom: 12px;
+    font-weight: 600;
 }
 
 .price-line.deduction-line {

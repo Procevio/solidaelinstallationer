@@ -1033,6 +1033,14 @@ class QuoteCalculator {
         // Build clean core pricing display
         let coreHtml = `
             <div class="price-core">
+                <div class="price-line excl-vat-price">
+                    <span class="price-label">Pris exkl. moms:</span>
+                    <span class="price-value">${formatPrice(subtotal)}</span>
+                </div>
+                <div class="price-line material-cost">
+                    <span class="price-label">Varav materialkostnad:</span>
+                    <span class="price-value">${formatPrice(totalMaterial)}</span>
+                </div>
                 <div class="price-line main-price">
                     <span class="price-label">Pris inkl. moms:</span>
                     <span class="price-value">${formatPrice(totalWithVat)}</span>
@@ -1163,9 +1171,7 @@ class QuoteCalculator {
         workDescription += 'Telefon: 073-123 45 67\n';
         workDescription += 'E-post: info@solidaelinstallationer.se\n\n';
         
-        workDescription += '='.repeat(50) + '\n';
-        workDescription += 'VALDA ELINSTALLATIONER\n';
-        workDescription += '='.repeat(50) + '\n\n';
+        workDescription += '**VALDA ELINSTALLATIONER**\n\n';
 
         const selectedServices = this.getSelectedElectricalServices();
         
@@ -1194,9 +1200,7 @@ class QuoteCalculator {
             });
             
             // Lägg till kostnadssummering
-            workDescription += '='.repeat(50) + '\n';
-            workDescription += 'KOSTNADSSUMMERING\n';
-            workDescription += '='.repeat(50) + '\n\n';
+            workDescription += '**KOSTNADSSUMMERING**\n\n';
             workDescription += `Total materialkostnad: ${new Intl.NumberFormat('sv-SE').format(totalMaterial)} kr\n`;
             workDescription += `Total arbetskostnad: ${new Intl.NumberFormat('sv-SE').format(totalLabor)} kr\n`;
             workDescription += `Subtotal (exkl moms): ${new Intl.NumberFormat('sv-SE').format(totalMaterial + totalLabor)} kr\n`;
@@ -1214,14 +1218,10 @@ class QuoteCalculator {
         }
 
         // Lägg till allmän information
-        workDescription += '='.repeat(50) + '\n';
-        workDescription += 'ALLMÄN INFORMATION\n';
-        workDescription += '='.repeat(50) + '\n\n';
-        workDescription += '• Timpris elektriker: 750 kr/h (exkl moms)\n';
+        workDescription += '**ALLMÄN INFORMATION**\n\n';
         workDescription += '• Alla installationer utförs enligt gällande standarder (SS-EN)\n';
         workDescription += '• Besiktning och certifiering ingår\n';
         workDescription += '• Garantitid: 5 år på utfört arbete\n';
-        workDescription += '• Försäkring: Ansvarsförsäkring 10 miljoner kr\n';
         workDescription += '• Säkerhet: Alla elektriker är behöriga och certifierade\n\n';
 
         // ROT-avdrag information
