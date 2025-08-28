@@ -1365,6 +1365,12 @@ class QuoteCalculator {
                 // Recalculate layout after orientation change
                 this.updateGreenTechVisibility();
                 
+                // Reinitialize signature canvas if modal is open
+                const modal = document.getElementById('signature-fullscreen-modal');
+                if (modal && modal.style.display !== 'none') {
+                    this.initializeSignatureCanvas();
+                }
+                
                 // Scroll to top if needed on landscape
                 if (window.orientation === 90 || window.orientation === -90) {
                     const header = document.querySelector('.header');
@@ -1486,15 +1492,25 @@ class QuoteCalculator {
         this.signatureCanvas = canvas;
         this.signatureContext = canvas.getContext('2d');
 
-        // Set canvas size
+        // Set canvas size based on screen orientation and size
         const rect = canvas.parentElement.getBoundingClientRect();
-        canvas.width = rect.width - 40; // Account for padding
-        canvas.height = Math.min(400, rect.height - 40);
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isMobile = window.innerWidth < 768;
+        
+        if (isMobile && isLandscape) {
+            // Landscape mode on mobile - use full available space
+            canvas.width = Math.min(rect.width - 20, window.innerWidth - 20);
+            canvas.height = Math.min(rect.height - 100, window.innerHeight - 150); // Leave space for controls
+        } else {
+            // Portrait mode or desktop
+            canvas.width = rect.width - 40; // Account for padding
+            canvas.height = Math.min(400, rect.height - 40);
+        }
 
         // Setup canvas styling
         this.signatureContext.lineWidth = 3;
         this.signatureContext.lineCap = 'round';
-        this.signatureContext.strokeStyle = '#1e40af';
+        this.signatureContext.strokeStyle = '#000000';
 
         // Add event listeners for drawing
         this.setupCanvasDrawing();
