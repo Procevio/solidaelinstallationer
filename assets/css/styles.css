@@ -3126,7 +3126,11 @@ body[data-theme="dark"] .nav-btn::before {
     }
     
     .signature-fullscreen-header {
-        display: none;
+        display: none !important;
+    }
+    
+    .signature-orientation-notice {
+        display: none !important;
     }
     
     .signature-fullscreen-body {
@@ -3160,6 +3164,8 @@ body[data-theme="dark"] .nav-btn::before {
         justify-content: center;
         gap: 0.5rem;
         z-index: 10000;
+        min-height: 60px;
+        display: flex !important;
     }
     
     .signature-control-btn {

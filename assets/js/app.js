@@ -1688,11 +1688,16 @@ class QuoteCalculator {
     showOrientationNotice() {
         const notice = document.getElementById('signature-orientation-notice');
         if (notice && window.innerWidth < 768) {
-            if (window.innerHeight > window.innerWidth) {
+            const isPortrait = window.innerHeight > window.innerWidth;
+            if (isPortrait) {
                 notice.style.display = 'block';
             } else {
+                // In landscape mode, always hide the notice
                 notice.style.display = 'none';
             }
+        } else if (notice) {
+            // On desktop, hide the notice
+            notice.style.display = 'none';
         }
     }
 
