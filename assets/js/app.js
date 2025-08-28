@@ -1,2040 +1,588 @@
 // Lösenordsskydd konfiguration
 const PASSWORD_CONFIG = {
-    CORRECT_PASSWORD: 'sternbecks2025',
+    CORRECT_PASSWORD: 'solida123',
     MAX_ATTEMPTS: 3,
-    SESSION_KEY: 'sternbecks_auth_session'
+    SESSION_KEY: 'solida_auth_session'
 };
 
-// Konfiguration för applikationen
+// Priskonfiguration för elinstallationer med detaljerade produktval
 const CONFIG = {
-    BASE_PRICE: 0, // Grundpris baserat på komponenter, inte fast summa
-    
-    // Prissättning per enhet (exkl. moms)
-    UNIT_PRICES: {
-        'antal_dorrpartier': 6000,  // Dörrpartier: 6000kr/st (exkl. moms)
-        'antal_kallare_glugg': 3000, // Källare/Glugg: 3000kr/st (exkl. moms)
-        'antal_pardorr_balkong': 10000, // Pardörr balkong/altan: 10000kr/st (exkl. moms)
-        'antal_1_luftare': 3500,    // 1 luftare: 3500kr/st (exkl. moms)
-        'antal_2_luftare': 5500,    // 2 luftare: 5500kr/st (exkl. moms)
-        'antal_3_luftare': 8250,    // 3 luftare: 8250kr/st (exkl. moms)
-        'antal_4_luftare': 11000,   // 4 luftare: 11000kr/st (exkl. moms)
-        'antal_5_luftare': 13750,   // 5 luftare: 13750kr/st (exkl. moms)
-        'antal_6_luftare': 16500    // 6 luftare: 16500kr/st (exkl. moms)
+    // Timpris för elektriker (exkl moms)
+    HOURLY_RATE: 750,
+
+    // Elinstallationer-priser med separata material- och laborvariabler
+    ELECTRICAL_PRICING: {
+        // Installation & Utbyggnad
+        'extra_eluttag': {
+            'schneider_exxact_16a': {
+                materialCost: 45,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Schneider Exxact 16A'
+            },
+            'abb_impressivo_16a': {
+                materialCost: 65,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'ABB Impressivo 16A'
+            },
+            'gira_system55_16a': {
+                materialCost: 85,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Gira System 55 16A'
+            }
+        },
+        'strombrytare': {
+            'schneider_exxact_enpolig': {
+                materialCost: 35,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Schneider Exxact enpolig'
+            },
+            'jung_as500_dimmer_led': {
+                materialCost: 180,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Jung AS500 dimmer LED'
+            },
+            'plejd_wrt01_smart': {
+                materialCost: 450,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Plejd WRT-01 smart switch'
+            }
+        },
+        'inkoppling_hushallsmaskin': {
+            'diskmaskin': {
+                materialCost: 120,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Diskmaskin'
+            },
+            'ugn': {
+                materialCost: 145,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Ugn'
+            },
+            'induktionsspis': {
+                materialCost: 180,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Induktionsspis'
+            }
+        },
+
+        // Belysning
+        'taklampa': {
+            'grundarmatur_e27': {
+                materialCost: 85,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Grundarmatur E27'
+            },
+            'led_downlight_infälld': {
+                materialCost: 120,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'LED downlight infälld'
+            },
+            'takfläkt_belysning': {
+                materialCost: 850,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Takfläkt med belysning'
+            }
+        },
+        'spotlights': {
+            'philips_led_downlight_10w': {
+                materialCost: 95,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Philips LED downlight 10W'
+            },
+            'paulmann_skena_3spots': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Paulmann skena 3-spots'
+            },
+            'malmbergs_infälld_gu10': {
+                materialCost: 65,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'Malmbergs infälld spot GU10'
+            }
+        },
+        'led_strip': {
+            'philips_hue_lightstrip_2m': {
+                materialCost: 450,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Philips Hue lightstrip 2m'
+            },
+            'paulmann_profil_per_meter': {
+                materialCost: 85,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Paulmann profil kökslist per meter'
+            },
+            'ikea_myrvarv_35m': {
+                materialCost: 180,
+                laborHours: 0.75,
+                laborCost: 563, // 0.75h × 750kr/h
+                description: 'IKEA Myrvarv 3,5m'
+            }
+        },
+        // Utomhusbelysning
+        'utomhusbelysning': {
+            'fasadbelysning': {
+                materialCost: 450,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Fasadbelysning LED IP65'
+            },
+            'tradgardsspots': {
+                materialCost: 320,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Trädgårdsspots LED 10W'
+            },
+            'vaggarmatur': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Väggarmatur LED IP44'
+            }
+        },
+        // Smart belysning
+        'smart_belysning': {
+            'plejd_system': {
+                materialCost: 850,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Plejd smart belysningssystem'
+            },
+            'philips_hue': {
+                materialCost: 650,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Philips Hue smart belysning'
+            },
+            'knx': {
+                materialCost: 1200,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'KNX smart belysningssystem'
+            }
+        },
+
+        // Energi & Laddning
+        'laddbox_elbil': {
+            'easee_home_22kw': {
+                materialCost: 8500,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Easee Home 22kW',
+                greenTech: true,
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
+            },
+            'zaptec_go_11kw': {
+                materialCost: 6200,
+                laborHours: 3.5,
+                laborCost: 2625, // 3.5h × 750kr/h
+                description: 'Zaptec Go 11kW',
+                greenTech: true,
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
+            },
+            'garo_glb_16a_cee': {
+                materialCost: 2100,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Garo GLB 16A CEE',
+                greenTech: true,
+                greenTechRate: 48.5 // 48,5% avdrag (50% på 97% av totalkostnad)
+            }
+        },
+
+        // Solenergi
+        'solceller': {
+            'vaxelriktare': {
+                materialCost: 15000,
+                laborHours: 8,
+                laborCost: 6000, // 8h × 750kr/h
+                description: 'Växelriktare solceller',
+                greenTech: true,
+                greenTechRate: 19.4 // 19,4% avdrag för solceller
+            },
+            'optimizers': {
+                materialCost: 8500,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Power optimizers',
+                greenTech: true,
+                greenTechRate: 19.4 // 19,4% avdrag för solceller
+            },
+            'batterisystem': {
+                materialCost: 45000,
+                laborHours: 12,
+                laborCost: 9000, // 12h × 750kr/h
+                description: 'Hemlagringsbatteri',
+                greenTech: true,
+                greenTechRate: 48.5 // 48,5% avdrag för batterier (50% på 97% av totalkostnad)
+            }
+        },
+
+        // Värme & Komfort
+        'handdukstork': {
+            'thermia_straight_600w': {
+                materialCost: 850,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Thermia Straight 600W'
+            },
+            'rointe_d_series_500w': {
+                materialCost: 1200,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Rointe D-Series 500W'
+            },
+            'hafa_original_400w': {
+                materialCost: 680,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Hafa Original 400W'
+            }
+        },
+        'golvvarme': {
+            'thermia_per_kvm': {
+                materialCost: 220,
+                laborHours: 0.4,
+                laborCost: 300, // 0.4h × 750kr/h
+                description: 'Thermia Golvvärme per kvm'
+            },
+            'fenix_ecofloor_per_kvm': {
+                materialCost: 180,
+                laborHours: 0.4,
+                laborCost: 300, // 0.4h × 750kr/h
+                description: 'Fenix ecofloor per kvm'
+            },
+            'nexans_per_kvm': {
+                materialCost: 260,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Nexans per kvm'
+            }
+        },
+
+        // Säkerhet & Smarta Hem
+        'brandvarnare': {
+            'kidde_29hd_optisk': {
+                materialCost: 180,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Kidde 29HD optisk'
+            },
+            'aico_ei650_10ar': {
+                materialCost: 220,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Aico Ei650 10år batteri'
+            },
+            'cavius_2103_mini': {
+                materialCost: 280,
+                laborHours: 0.5,
+                laborCost: 375, // 0.5h × 750kr/h
+                description: 'Cavius 2103 mini'
+            }
+        },
+        'natverksuttag': {
+            'abb_impressivo_rj45_cat6': {
+                materialCost: 65,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'ABB Impressivo RJ45 Cat6'
+            },
+            'fiber_sc_uttag': {
+                materialCost: 95,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Fiber SC-uttag'
+            },
+            'unifi_u6_lite_ap': {
+                materialCost: 950,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'UniFi U6-Lite access point'
+            }
+        },
+        // Nya tjänster - Installation & Utbyggnad
+        'motorvarmaruttag': {
+            'cee_16a_standard': {
+                materialCost: 180,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'CEE 16A standard',
+                greenTech: false
+            },
+            'schneider_uttag_ip44': {
+                materialCost: 220,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Schneider uttag IP44',
+                greenTech: false
+            },
+            'garo_med_timer': {
+                materialCost: 450,
+                laborHours: 2.5,
+                laborCost: 1875, // 2.5h × 750kr/h
+                description: 'Garo med timer',
+                greenTech: false
+            }
+        },
+        'pool_spa_elinstallation': {
+            'standard_poolinstallation': {
+                materialCost: 800,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Standard poolinstallation',
+                greenTech: false
+            },
+            'spa_jacuzzi_32a': {
+                materialCost: 1200,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Spa/jacuzzi 32A',
+                greenTech: false
+            },
+            'pool_med_belysning': {
+                materialCost: 1500,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'Pool med belysning',
+                greenTech: false
+            }
+        },
+        'timer_ljussensor_utomhus': {
+            'enkel_skymningsrela': {
+                materialCost: 150,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Enkel skymningsrelä',
+                greenTech: false
+            },
+            'digital_timer_med_backup': {
+                materialCost: 280,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Digital timer med backup',
+                greenTech: false
+            },
+            'smart_sensor_med_app': {
+                materialCost: 650,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Smart sensor med app',
+                greenTech: false
+            }
+        },
+        // Markbelysning (Belysning sektion)
+        'markbelysning': {
+            'led_spots_12v_system': {
+                materialCost: 320,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'LED-spots 12V system',
+                greenTech: false
+            },
+            'solceller_markbelysning': {
+                materialCost: 180,
+                laborHours: 1,
+                laborCost: 750, // 1h × 750kr/h
+                description: 'Solceller markbelysning',
+                greenTech: true,
+                greenTechRate: 19.4
+            },
+            'kabeldragen_230v_system': {
+                materialCost: 480,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Kabeldragen 230V system',
+                greenTech: false
+            }
+        },
+        // Praktiska Tillägg
+        'garagedorr_automatik': {
+            'chamberlain_basic': {
+                materialCost: 2200,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: 'Chamberlain basic',
+                greenTech: false
+            },
+            'hormann_promatic_4': {
+                materialCost: 3800,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Hormann ProMatic 4',
+                greenTech: false
+            },
+            'smart_garage_med_app': {
+                materialCost: 4500,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Smart garage med app',
+                greenTech: false
+            }
+        },
+        'ventilation_elinstallation': {
+            'badrumsfläkt_enkel': {
+                materialCost: 320,
+                laborHours: 1.5,
+                laborCost: 1125, // 1.5h × 750kr/h
+                description: 'Badrumsfläkt enkel',
+                greenTech: false
+            },
+            'köksfläkt_16a_anslutning': {
+                materialCost: 180,
+                laborHours: 2,
+                laborCost: 1500, // 2h × 750kr/h
+                description: 'Köksfläkt 16A anslutning',
+                greenTech: false
+            },
+            'centralventilation_inkoppling': {
+                materialCost: 850,
+                laborHours: 6,
+                laborCost: 4500, // 6h × 750kr/h
+                description: 'Centralventilation inkoppling',
+                greenTech: false
+            }
+        },
+        // Värme & Komfort tillägg
+        'bergvarme_elinstallation': {
+            'bergvarmepump_inkoppling': {
+                materialCost: 650,
+                laborHours: 4,
+                laborCost: 3000, // 4h × 750kr/h
+                description: 'Bergvärmepump inkoppling',
+                greenTech: false
+            }
+        },
+        'bastuinstallation': {
+            '6kw_bastupanel': {
+                materialCost: 480,
+                laborHours: 3,
+                laborCost: 2250, // 3h × 750kr/h
+                description: '6kW bastupanel',
+                greenTech: false
+            },
+            '9kw_bastupanel': {
+                materialCost: 680,
+                laborHours: 3.5,
+                laborCost: 2625, // 3.5h × 750kr/h
+                description: '9kW bastupanel',
+                greenTech: false
+            },
+            'bastuaggregat_med_styrning': {
+                materialCost: 1200,
+                laborHours: 5,
+                laborCost: 3750, // 5h × 750kr/h
+                description: 'Bastuaggregat med styrning',
+                greenTech: false
+            }
+        }
     },
-    
-    // Renoveringstyp-påslag (Typ av renovering dropdown)
-    RENOVATION_TYPE_MULTIPLIERS: {
-        'Traditionell - Linoljebehandling': 1.15,  // +15%
-        'Modern - Alcro bestå': 1.0                // Standardpris
+
+    // Arbetsbeskrivningar för elinstallationer
+    WORK_DESCRIPTIONS: {
+        'extra_eluttag': {
+            'inomhus_vagg': 'Installation av extra eluttag inomhus:\n• Urtagning för eluttag\n• Dragning av kabel till elcentral\n• Montering av eluttag enligt SS-EN standard\n• Inkoppling och funktionstest\n• Efterjustering och städning av arbetsplats',
+            'uteplats_garage': 'Installation av eluttag uteplats/garage:\n• Urtagning för eluttag med IP44-klassning\n• Dragning av kabel från elcentral\n• Montering av jordfelsskydd\n• Installation och inkoppling\n• Funktionstest och dokumentation'
+        },
+        'strombrytare': {
+            'vanlig': 'Installation av vanlig strömbrytare:\n• Urtagning för strömbrytare\n• Dragning av styrledningar\n• Montering av strömbrytare\n• Inkoppling och märkning\n• Funktionstest',
+            'dimmer': 'Installation av dimmer:\n• Urtagning för dimmerreglage\n• Dragning av styrledningar\n• Montering av LED-kompatibel dimmer\n• Programmering och kalibrering\n• Funktionstest och dokumentation',
+            'smart_switch': 'Installation av smart switch:\n• Urtagning för smart strömbrytare\n• Dragning av nödvändiga ledningar\n• Installation och konfiguration\n• Uppkoppling mot hemautomation\n• Programmering och test'
+        },
+        'byte_elcentral': 'Byte av elcentral/automatsäkringar:\n• Avstängning av huvudbrytare\n• Demontering av befintlig central\n• Installation av ny elcentral\n• Överföring av kretsar\n• Märkning och dokumentation\n• Slutbesiktning och protokoll',
+        'dragning_ny_el': 'Dragning av ny el (renovering):\n• Planering av kabelvägar\n• Urtagning för kabelgenomföringar\n• Dragning av kabel enligt standard\n• Märkning av kablar\n• Inkoppling i elcentral',
+        'inkoppling_hushallsmaskin': {
+            'diskmaskin': 'Inkoppling diskmaskin:\n• Dragning av 3-fas kabel\n• Installation av uttag/kopplingsplint\n• Inkoppling enligt tillverkarens anvisningar\n• Funktionstest\n• Dokumentation',
+            'ugn': 'Inkoppling ugn:\n• Installation av högeffektsuttag\n• Dragning av dimensionerad kabel\n• Säkring i elcentral\n• Inkoppling och test\n• Säkerhetskontroll',
+            'spis': 'Inkoppling spis:\n• Installation av spisuttag\n• Dragning av 3-fas kabel\n• Inkoppling i elcentral\n• Funktions- och säkerhetstest\n• Dokumentation och märkning',
+            'tvattmaskin': 'Inkoppling tvättmaskin:\n• Installation av uttag med jordfelsbrytare\n• Dragning av kabel\n• Inkoppling enligt säkerhetsföreskrifter\n• Test av säkerhetsfunktioner\n• Dokumentation'
+        },
+        'jordfelsbrytare': 'Installation av jordfelsbrytare:\n• Identifiering av krets\n• Installation i elcentral\n• Inkoppling av fas och neutral\n• Test av utlösningsfunktion\n• Märkning och dokumentation',
+        
+        // Belysning
+        'taklampa': {
+            'vanlig_taklampa': 'Installation av taklampa:\n• Montering av takarmatur\n• Anslutning av ledningar\n• Installation av strömbrytare\n• Test av belysning\n• Slutjustering',
+            'kristallkrona': 'Installation av kristallkrona:\n• Förstärkning av takfäste\n• Montering av tung armatur\n• Anslutning av belysningskretsar\n• Installation av dimmer\n• Test och justering',
+            'takflakt_belysning': 'Installation av takfläkt med belysning:\n• Montering av takfäste\n• Anslutning av motor och belysning\n• Installation av styrenhet\n• Balansering av fläkt\n• Funktionstest'
+        },
+        'spotlights': {
+            'led_downlights': 'Installation av LED downlights:\n• Urtagning för spotlights\n• Dragning av belysningskabel\n• Montering av LED-spots\n• Inkoppling och dimmerkompatibilitet\n• Ljustest och justering',
+            'skena_spots': 'Installation av skena med spots:\n• Montering av belysningsskena\n• Installation av spotlights\n• Anslutning till dimmer\n• Programmering av ljusscener\n• Test och finjustering',
+            'infallda_spots': 'Installation av infällda spots:\n• Urtagning i tak/vägg\n• Installation av spotlights\n• Anslutning av belysningskretsar\n• Installation av dimmer\n• Ljustestning och justering'
+        },
+        'utomhusbelysning': {
+            'fasadbelysning': 'Installation av fasadbelysning:\n• Montering av utomhusarmaturer IP65\n• Dragning av utomhuskabel\n• Installation av timer/rörelsevakt\n• Anslutning och programmering\n• Test av belysningsfunktioner',
+            'tradgardsspots': 'Installation av trädgårdsspots:\n• Grävning för markkabel\n• Installation av trädgårdsspots\n• Anslutning till utomhusenhet\n• Programmering av belysning\n• Test och säkerhetsverifiering',
+            'vaggarmatur': 'Installation av väggarmatur:\n• Montering av väggarmatur\n• Anslutning av belysningskabel\n• Installation av strömbrytare\n• Test av belysningsfunktion\n• Slutjustering'
+        },
+        'led_strip': {
+            'koksbelysning': 'Installation av LED-strip köksbelysning:\n• Montering av LED-profiler\n• Installation av LED-strip\n• Anslutning av driver och dimmer\n• Programmering av ljusscener\n• Test och finjustering',
+            'trappbelysning': 'Installation av LED-strip trappbelysning:\n• Montering längs trappsteg\n• Installation av rörelsesensorer\n• Programmering av automatik\n• Säkerhetstestning\n• Funktionsverifiering',
+            'dekorativ': 'Installation av dekorativ LED-strip:\n• Planering av belysningsdesign\n• Montering av LED-strip\n• Installation av färgstyrning\n• Programmering av effekter\n• Test och demonstration'
+        },
+        'smart_belysning': {
+            'plejd_system': 'Installation av Plejd smart belysning:\n• Installation av Plejd-moduler\n• Konfiguration av mesh-nätverk\n• Programmering av scener\n• Integration med app\n• Användarutbildning',
+            'philips_hue': 'Installation av Philips Hue system:\n• Installation av Hue Bridge\n• Montering av smart belysning\n• Konfiguration av nätverk\n• Programmering av automationer\n• App-integration och test',
+            'knx': 'Installation av KNX smart belysning:\n• Installation av KNX-buss\n• Programmering av systemkomponenter\n• Integration av sensorer och styrenheter\n• Konfiguration av automationer\n• Systemtest och dokumentation'
+        },
+
+        // Energi & Laddning
+        'laddbox_elbil': {
+            'typ2_22kw': 'Installation av laddbox 22kW Typ 2:\n• Installation av 3-fas matning\n• Montering av laddbox\n• Inkoppling av kommunikation\n• Konfiguration och test\n• Slutbesiktning och dokumentation',
+            'cee_16a': 'Installation av CEE 16A laddning:\n• Installation av CEE-uttag\n• Dragning av dimensionerad kabel\n• Installation av säkringar\n• Test av laddningsfunktion\n• Säkerhetsdokumentation',
+            'typ2_11kw': 'Installation av laddbox 11kW Typ 2:\n• Installation av 3-fas matning\n• Montering av laddbox\n• Konfiguration av laddeffekt\n• Test av alla säkerhetsfunktioner\n• Dokumentation och certifiering'
+        },
+        'solceller': {
+            'vaxelriktare': 'Installation av växelriktare:\n• Montering av växelriktare\n• DC och AC-inkopplingar\n• Installation av övervakningssystem\n• Konfiguration och test\n• Nätkoppling och dokumentation',
+            'optimizers': 'Installation av optimizers:\n• Montering vid solcellspaneler\n• Inkoppling av DC-kablar\n• Konfiguration av system\n• Test av panelövervakning\n• Systemdokumentation',
+            'batterisystem': 'Installation av batterisystem:\n• Installation av batteripaket\n• Inkoppling av energihantering\n• Konfiguration av ladd-/urladdning\n• Integration med växelriktare\n• Säkerhetstest och certifiering'
+        },
+
+        // Värme & Komfort
+        'handdukstork': 'Installation av handdukstork:\n• Montering av värmeelement\n• Anslutning av kabel\n• Installation av termostat\n• Test av värmefunktion\n• Säkerhetskontroll',
+        'golvvarme': 'Installation av elvärme i golv:\n• Planering av värmeslingor\n• Installation av värmekabel\n• Montering av termostat\n• Test av alla värmekretsar\n• Isolering och dokumentation',
+        'varmepump': {
+            'inkoppling_befintlig': 'Inkoppling av befintlig värmepump:\n• Anslutning av elmatning\n• Installation av styrsystem\n• Inkoppling av sensorer\n• Test av alla funktioner\n• Programmering och dokumentation',
+            'installation_luft_luft': 'Installation av luft-luft värmepump:\n• Montering av inne- och uteenhet\n• Dragning av kylledningar\n• Elinkoppling och styrning\n• Vakuumtest och påfyllning\n• Driftsättning och dokumentation'
+        },
+
+        // Säkerhet & Smarta Hem
+        'brandvarnare': {
+            'hardkopplad': 'Installation av hårdkopplad brandvarnare:\n• Dragning av brandvarnarkabel\n• Montering av brandvarnare\n• Sammankoppling av system\n• Test av alla detektorer\n• Certifiering enligt standard',
+            'rokdetektor': 'Installation av rökdetektor:\n• Montering av rökdetektor\n• Test av detektorns funktion\n• Anslutning till larmsystem\n• Konfiguration av sensitivitet\n• Funktionstest och dokumentation'
+        },
+        'hemlarm': 'Installation av hemlarm:\n• Installation av larmcentral\n• Montering av rörelsesensorer och dörr/fönsterkontakter\n• Programmering av larmsystem\n• Installation av larmtelefon/app\n• Test av alla komponenter\n• Användarutbildning',
+        'natverksuttag': {
+            'cat6_uttag': 'Installation av Cat6 nätverksuttag:\n• Dragning av nätverkskabel\n• Montering av nätverksuttag\n• Terminering enligt Cat6-standard\n• Anslutning till nätverksswitch\n• Hastighetstest och dokumentation',
+            'fiber': 'Installation av fiberanslutning:\n• Dragning av fiberkabel\n• Installation av fiberuttag\n• Anslutning till fiberomvandlare\n• Test av överföringshastighet\n• Dokumentation och certifiering',
+            'wifi_access_point': 'Installation av WiFi access point:\n• Montering av accesspunkt\n• Anslutning till nätverkskabel\n• Konfiguration av trådlöst nätverk\n• Optimering av täckning\n• Säkerhetstest och dokumentation'
+        }
     },
-    
-    // Fönstertyp-påslag (checkboxes - kan välja flera)
-    // Nya beräkningslogik: pris × antal luftare × totalt antal fönster
-    // Fönstertyp rabatter per båge (negativa värden = rabatter)
-    WINDOW_TYPE_DISCOUNTS_PER_BAGE: {
-        'Kopplade standard': 0,                    // Standardpris (ingen rabatt)
-        'Isolerglas': -400,                       // -400kr per båge
-        'Kopplade isolerglas': 0,                 // Ingen rabatt (standardpris)
-        'Insatsbågar yttre': -400,                // -400kr per båge
-        'Insatsbågar inre': -1250,                // -1250kr per båge
-        'Insatsbågar komplett': 0,                // Ingen rabatt (standardpris)
-    },
-    
-    // Fönsteröppning-multiplikatorer (påverkar luftare-grundpriset)
-    WINDOW_OPENING_MULTIPLIERS: {
-        'Inåtgående': 1.0,                        // Ingen förändring
-        'Utåtgående': 1.05                        // +5% på luftare-grundpris
-    },
-    
-    // Arbetsbeskrivning-påslag
-    WORK_DESCRIPTION_MULTIPLIERS: {
-        'Utvändig renovering': 1.0,                // 100% av totalsumman
-        'Invändig renovering': 1.25,               // +25%
-        'Utvändig renovering samt målning av innerbågens insida': 1.05 // +5%
-    },
-    
-    // Tillägg (exkl. moms)
-    EXTRAS: {
-        SPROJS_LOW_PRICE: 250,      // 250kr per ruta för 1-3 spröjs (exkl. moms)
-        SPROJS_HIGH_PRICE: 400,     // 400kr per ruta för 4+ spröjs (exkl. moms)
-        SPROJS_THRESHOLD: 3,        // Gräns för prisökning
-        E_GLASS_PER_SQM: 2500,      // 2500kr/kvm (exkl. moms)
-        VAT_RATE: 0.25,             // 25% moms
-        ROT_DEDUCTION: 0.5          // 50% ROT-avdrag
-    },
-    
-    // WEBHOOK BORTTAGEN - exponerad säkerhetsrisk
-    // WEBHOOK_URL: 'REMOVED_FOR_SECURITY'
+
+    // ROT-avdrag konfiguration
+    ROT_DEDUCTION: {
+        MAX_PER_PERSON: 50000,
+        MAX_SHARED: 100000,
+        RATE: 0.50 // 50% avdrag
+    }
 };
 
-class QuoteCalculator {
-    constructor() {
-        console.log('🚀 Initializing QuoteCalculator...');
-        this.form = document.getElementById('quote-form');
-        console.log('Form element:', this.form);
-        
-        // Alla priselement
-        const priceElements = {
-            'base-components-price': this.baseComponentsPriceElement = document.getElementById('base-components-price'),
-            'window-type-cost': this.windowTypeCostElement = document.getElementById('window-type-cost'),
-            'extras-cost': this.extrasCostElement = document.getElementById('extras-cost'),
-            'renovation-markup': this.renovationMarkupElement = document.getElementById('renovation-markup'),
-            'material-cost-display': this.materialCostDisplayElement = document.getElementById('material-cost-display'),
-            'subtotal-price': this.subtotalPriceElement = document.getElementById('subtotal-price'),
-            'subtotal-price-display': this.subtotalPriceDisplayElement = document.getElementById('subtotal-price-display'),
-            'vat-cost': this.vatCostElement = document.getElementById('vat-cost'),
-            'total-with-vat': this.totalWithVatElement = document.getElementById('total-with-vat'),
-            'rot-deduction': this.rotDeductionElement = document.getElementById('rot-deduction'),
-            'rot-row': this.rotRowElement = document.getElementById('rot-row'),
-            'material-row': this.materialRowElement = document.getElementById('material-row'),
-            'final-customer-price': this.finalCustomerPriceElement = document.getElementById('final-customer-price'),
-            'material-deduction': this.materialDeductionElement = document.getElementById('material-deduction'),
-            'kallare-glugg-cost': this.kallareGluggCostElement = document.getElementById('kallare-glugg-cost'),
-            'kallare-glugg-row': this.kallareGluggRowElement = document.getElementById('kallare-glugg-row')
-        };
-        
-        // Kontrollera att alla priselement hittades
-        Object.entries(priceElements).forEach(([id, element]) => {
-            if (element) {
-                console.log(`✓ Found price element: ${id}`, element);
-            } else {
-                console.error(`❌ Missing price element: ${id}`);
-            }
-        });
-        
-        // Input elements för prisjustering
-        this.priceAdjustmentPlusInput = document.getElementById('price_adjustment_plus');
-        this.priceAdjustmentMinusInput = document.getElementById('price_adjustment_minus');
-        
-        // Form controls
-        this.submitBtn = document.getElementById('submit-btn');
-        this.successMessage = document.getElementById('success-message');
-        this.errorMessage = document.getElementById('error-message');
-        
-        // Validation elements
-        this.partiesValidation = document.getElementById('parties-validation');
-        this.partiesValidationText = document.getElementById('parties-validation-text');
-        
-        // GDPR elements
-        this.gdprConsent = document.getElementById('gdpr-consent');
-        this.gdprConsentError = document.getElementById('gdpr-consent-error');
-        this.gdprDetailsLink = document.getElementById('gdpr-details-link');
-        this.gdprModal = document.getElementById('gdpr-modal');
-        this.gdprModalClose = document.getElementById('gdpr-modal-close');
-        this.gdprModalOk = document.getElementById('gdpr-modal-ok');
-        
-        console.log('CONFIG object:', CONFIG);
-        
-        // Kontrollera att DOM är redo för QuoteCalculator
-        const mainApp = document.getElementById('main-app');
-        console.log('🔍 main-app element i QuoteCalculator:', mainApp);
-        console.log('🔍 main-app display:', mainApp ? mainApp.style.display : 'not found');
-        
-        // Kontrollera tab-element innan initialisering
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-        console.log('📊 QuoteCalculator DOM-kontroll:');
-        console.log('  - Tab buttons:', tabButtons.length);
-        console.log('  - Tab contents:', tabContents.length);
-        
-        this.initializeEventListeners();
-        this.initializeFastighetsbeteckningAutoFill();
-        this.initializeConditionalFields();
-        
-        console.log('🏷️ Initialiserar tabs från QuoteCalculator...');
-        this.initializeTabs();
-        
-        console.log('🔄 Running initial price calculation...');
-        this.updatePriceCalculation();
-        
-        // Test basic functionality
-        this.testBasicCalculation();
-        
-        console.log('✅ QuoteCalculator konstruktor slutförd');
-    }
-    
-    initializeEventListeners() {
-        // Lyssna på alla ändringar som påverkar prissättning
-        const priceAffectingFields = [
-            'price_adjustment_plus', 'price_adjustment_minus', 'materialkostnad', 'window_sections', 'antal_dorrpartier',
-            'antal_kallare_glugg', 'antal_pardorr_balkong', 'antal_1_luftare', 'antal_2_luftare', 'antal_3_luftare', 
-            'antal_4_luftare', 'antal_5_luftare', 'antal_6_luftare',
-            'antal_sprojs_per_bage', 'antal_fonster_med_sprojs', 'le_kvm', 'fastighetsbeteckning'
-        ];
-        
-        priceAffectingFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                console.log(`✓ Found price affecting field: ${fieldId}`, field);
-                field.addEventListener('input', () => {
-                    console.log(`🔥 Price affecting field INPUT changed: ${fieldId}`, field.value);
-                    this.updatePriceCalculation();
-                    this.validateParties(); // Validera partier vid ändringar
-                });
-                field.addEventListener('change', () => {
-                    console.log(`🔥 Price affecting field CHANGE changed: ${fieldId}`, field.value);
-                    this.updatePriceCalculation();
-                    this.validateParties(); // Validera partier vid ändringar
-                });
-            } else {
-                console.error(`❌ Could not find price affecting field: ${fieldId}`);
-            }
-        });
-        
-        // Lyssna på ändringar i checkboxes och select
-        const priceAffectingControls = [
-            'typ_av_renovering', 'arbetsbeskrivning', 'sprojs_choice', 'le_glas_choice', 
-            'fastighet_rot_berättigad', 'är_du_berättigad_rot_avdrag'
-        ];
-        
-        priceAffectingControls.forEach(name => {
-            const fields = this.form.querySelectorAll(`[name="${name}"]`);
-            if (fields.length > 0) {
-                console.log(`✓ Found ${fields.length} controls for: ${name}`, fields);
-            } else {
-                console.error(`❌ Could not find controls for: ${name}`);
-            }
-            
-            fields.forEach(field => {
-                if (field.type === 'radio' || field.type === 'checkbox') {
-                    field.addEventListener('change', () => {
-                        console.log(`🔥 Price affecting control CHANGE: ${name}`, field.value, 'checked:', field.checked);
-                        this.updatePriceCalculation();
-                        this.clearFieldError(field);
-                    });
-                } else {
-                    field.addEventListener('change', () => {
-                        console.log(`🔥 Price affecting control CHANGE: ${name}`, field.value);
-                        this.updatePriceCalculation();
-                    });
-                }
-            });
-        });
-        
-        // Lyssna på fönsteröppning och fönstertyp radiobuttons separat
-        const windowOpeningRadios = this.form.querySelectorAll('input[name="fonsteroppning"]');
-        windowOpeningRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                console.log('🔥 Window opening changed:', radio.value);
-                this.updatePriceCalculation();
-            });
-        });
-        
-        const windowTypeRadios = this.form.querySelectorAll('input[name="typ_av_fonster"]');
-        windowTypeRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                console.log('🔥 Window type changed:', radio.value);
-                this.updatePriceCalculation();
-            });
-        });
-        
-        // Lyssna på formulär submission
-        this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleFormSubmission();
-        });
-        
-        // Lyssna på arbetsbeskrivning formulär submission
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        if (arbetsForm) {
-            arbetsForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleArbetsbeskrivningSubmission();
-            });
-        }
-        
-        // Realtidsvalidering för alla inputfält
-        const inputs = this.form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => {
-                this.validateField(input);
-            });
-            
-            input.addEventListener('input', () => {
-                this.clearFieldError(input);
-            });
-        });
-        
-        // GDPR modal event listeners
-        if (this.gdprDetailsLink) {
-            this.gdprDetailsLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showGdprModal();
-            });
-        }
-        
-        if (this.gdprModalClose) {
-            this.gdprModalClose.addEventListener('click', () => {
-                this.hideGdprModal();
-            });
-        }
-        
-        if (this.gdprModalOk) {
-            this.gdprModalOk.addEventListener('click', () => {
-                this.hideGdprModal();
-            });
-        }
-        
-        // Close modal on background click
-        if (this.gdprModal) {
-            this.gdprModal.addEventListener('click', (e) => {
-                if (e.target === this.gdprModal) {
-                    this.hideGdprModal();
-                }
-            });
-        }
-    }
-    
-    initializeFastighetsbeteckningAutoFill() {
-        const fastighetsbeteckningField = document.getElementById('fastighetsbeteckning');
-        if (fastighetsbeteckningField) {
-            // Auto-fill med "-" när användaren lämnar fältet tomt
-            fastighetsbeteckningField.addEventListener('blur', () => {
-                if (!fastighetsbeteckningField.value.trim()) {
-                    fastighetsbeteckningField.value = '-';
-                }
-            });
-        }
-    }
-    
-    initializeConditionalFields() {
-        console.log('🔧 Initializing conditional fields...');
-        
-        // Hantera Spröjs conditional field
-        const sprojsChoiceRadios = this.form.querySelectorAll('input[name="sprojs_choice"]');
-        const sprojsAntalGroup = document.getElementById('sprojs-antal-group');
-        const sprojsFonsterGroup = document.getElementById('sprojs-fonster-group');
-        
-        console.log('Sprojs radios found:', sprojsChoiceRadios.length);
-        console.log('Sprojs antal group:', sprojsAntalGroup);
-        console.log('Sprojs fönster group:', sprojsFonsterGroup);
-        
-        sprojsChoiceRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'Ja' && radio.checked) {
-                    sprojsAntalGroup.style.display = 'block';
-                    sprojsFonsterGroup.style.display = 'block';
-                } else if (radio.value === 'Nej' && radio.checked) {
-                    sprojsAntalGroup.style.display = 'none';
-                    sprojsFonsterGroup.style.display = 'none';
-                    // Reset värden när de döljs
-                    document.getElementById('antal_sprojs_per_bage').value = '0';
-                    document.getElementById('antal_fonster_med_sprojs').value = '0';
-                    this.updatePriceCalculation();
-                }
-            });
-        });
-        
-        // Hantera LE-glas conditional field
-        const leGlasChoiceRadios = this.form.querySelectorAll('input[name="le_glas_choice"]');
-        const leGlasKvmGroup = document.getElementById('le-glas-kvm-group');
-        
-        console.log('LE-glas radios found:', leGlasChoiceRadios.length);
-        console.log('LE-glas kvm group:', leGlasKvmGroup);
-        
-        leGlasChoiceRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                if (radio.value === 'Ja' && radio.checked) {
-                    leGlasKvmGroup.style.display = 'block';
-                } else if (radio.value === 'Nej' && radio.checked) {
-                    leGlasKvmGroup.style.display = 'none';
-                    // Reset värdet när det döljs
-                    document.getElementById('le_kvm').value = '0';
-                    this.updatePriceCalculation();
-                }
-            });
-        });
-        
-        // Hantera ROT-avdrag conditional fields - BÅDA måste vara Ja för delat ROT
-        const rotPropertyRadios = this.form.querySelectorAll('input[name="fastighet_rot_berättigad"]');
-        const rotCustomerRadios = this.form.querySelectorAll('input[name="är_du_berättigad_rot_avdrag"]');
-        const materialkostnadSection = document.getElementById('materialkostnad-section');
-        const delatRotSection = document.getElementById('delat-rot-section');
-        
-        console.log('ROT property radios found:', rotPropertyRadios.length);
-        console.log('ROT customer radios found:', rotCustomerRadios.length);
-        console.log('Materialkostnad section:', materialkostnadSection);
-        console.log('Delat ROT section:', delatRotSection);
-        
-        // Funktion för att kontrollera ROT-sektioner baserat på båda frågorna
-        const checkRotSections = () => {
-            const propertyIsJa = this.form.querySelector('input[name="fastighet_rot_berättigad"]:checked')?.value === 'Ja - Villa/Radhus';
-            const customerIsJa = this.form.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked')?.value === 'Ja - inkludera ROT-avdrag i anbudet';
-            
-            console.log('ROT check - Property Ja:', propertyIsJa, 'Customer Ja:', customerIsJa);
-            
-            if (propertyIsJa && customerIsJa) {
-                // BÅDA är Ja - visa alla ROT-sektioner inklusive delat ROT
-                materialkostnadSection.style.display = 'block';
-                delatRotSection.style.display = 'block';
-                console.log('✅ Visar alla ROT-sektioner (båda Ja)');
-            } else if (customerIsJa && !propertyIsJa) {
-                // Kund Ja men fastighet Nej - visa bara materialkostnad
-                materialkostnadSection.style.display = 'block';
-                delatRotSection.style.display = 'none';
-                // Reset delat ROT till Nej
-                const delatRotRadios = document.querySelectorAll('input[name="delat_rot_avdrag"]');
-                delatRotRadios.forEach(radio => {
-                    radio.checked = radio.value === 'Nej';
-                });
-                console.log('⚠️ Visar bara materialkostnad (kund Ja, fastighet Nej)');
-            } else {
-                // En eller båda är Nej - dölj alla ROT-sektioner
-                materialkostnadSection.style.display = 'none';
-                delatRotSection.style.display = 'none';
-                // Reset värden
-                document.getElementById('materialkostnad').value = '0';
-                const delatRotRadios = document.querySelectorAll('input[name="delat_rot_avdrag"]');
-                delatRotRadios.forEach(radio => {
-                    radio.checked = radio.value === 'Nej';
-                });
-                console.log('❌ Döljer alla ROT-sektioner');
-            }
-            
-            this.updatePriceCalculation();
-        };
-        
-        // Event listeners för BÅDA ROT-frågorna
-        rotPropertyRadios.forEach(radio => {
-            radio.addEventListener('change', checkRotSections);
-        });
-        
-        rotCustomerRadios.forEach(radio => {
-            radio.addEventListener('change', checkRotSections);
-        });
-        
-        // Event listeners för delat ROT-avdrag radiobuttons
-        const delatRotRadios = document.querySelectorAll('input[name="delat_rot_avdrag"]');
-        console.log('Delat ROT radios found:', delatRotRadios.length);
-        delatRotRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                console.log('🔄 Delat ROT-avdrag ändrat till:', radio.value);
-                this.updatePriceCalculation();
-            });
-        });
-    }
-    
-    initializeTabs() {
-        console.log('🔧 Initializing tabs...');
-        
-        // Get tab elements
-        this.tabButtons = document.querySelectorAll('.tab-button');
-        this.tabContents = document.querySelectorAll('.tab-content');
-        
-        console.log('Tab buttons found:', this.tabButtons.length);
-        console.log('Tab contents found:', this.tabContents.length);
-        
-        // Add click event listeners to tab buttons
-        this.tabButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetTab = button.getAttribute('data-tab');
-                this.switchTab(targetTab);
-                
-                // Copy customer data when switching to arbetsbeskrivning
-                if (targetTab === 'arbetsbeskrivning') {
-                    this.copyCustomerData();
-                }
-            });
-        });
-        
-        // Load data from localStorage on init
-        this.loadTabData();
-        
-        // Save data on form changes
-        this.initializeDataSaving();
-    }
-    
-    switchTab(targetTab) {
-        console.log('🔄 Switching to tab:', targetTab);
-        
-        // Update active states
-        this.tabButtons.forEach(btn => {
-            if (btn.getAttribute('data-tab') === targetTab) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        
-        this.tabContents.forEach(content => {
-            if (content.id === targetTab + '-tab') {
-                content.classList.add('active');
-            } else {
-                content.classList.remove('active');
-            }
-        });
-    }
-    
-    copyCustomerData() {
-        console.log('📋 Copying customer data to arbetsbeskrivning tab...');
-        
-        // Customer info mapping
-        const dataMapping = [
-            ['company', 'arb_company'],
-            ['email', 'arb_email'],
-            ['phone', 'arb_phone'],
-            ['address', 'arb_address']
-        ];
-        
-        dataMapping.forEach(([sourceId, targetId]) => {
-            const sourceElement = document.getElementById(sourceId);
-            const targetElement = document.getElementById(targetId);
-            
-            if (sourceElement && targetElement) {
-                targetElement.value = sourceElement.value || '';
-                console.log(`✓ Copied ${sourceId} -> ${targetId}:`, sourceElement.value);
-            }
-        });
-    }
-    
-    loadTabData() {
-        console.log('📥 Loading tab data from localStorage...');
-        
-        try {
-            // Load anbud data
-            const anbudData = localStorage.getItem('sternbecks_anbud_data');
-            if (anbudData) {
-                const data = JSON.parse(anbudData);
-                this.loadFormData('quote-form', data);
-            }
-            
-            // Load arbetsbeskrivning data
-            const arbetsData = localStorage.getItem('sternbecks_arbetsbeskrivning_data');
-            if (arbetsData) {
-                const data = JSON.parse(arbetsData);
-                this.loadFormData('arbetsbeskrivning-form', data);
-            }
-        } catch (error) {
-            console.error('Error loading tab data:', error);
-        }
-    }
-    
-    saveTabData(tabName) {
-        try {
-            const formId = tabName === 'anbud' ? 'quote-form' : 'arbetsbeskrivning-form';
-            const form = document.getElementById(formId);
-            
-            if (form) {
-                const formData = new FormData(form);
-                const data = {};
-                
-                for (let [key, value] of formData.entries()) {
-                    data[key] = value;
-                }
-                
-                localStorage.setItem(`sternbecks_${tabName}_data`, JSON.stringify(data));
-                console.log(`💾 Saved ${tabName} data:`, data);
-            }
-        } catch (error) {
-            console.error(`Error saving ${tabName} data:`, error);
-        }
-    }
-    
-    loadFormData(formId, data) {
-        const form = document.getElementById(formId);
-        if (!form) return;
-        
-        Object.entries(data).forEach(([key, value]) => {
-            const element = form.querySelector(`[name="${key}"]`);
-            if (element) {
-                if (element.type === 'radio' || element.type === 'checkbox') {
-                    if (element.value === value) {
-                        element.checked = true;
-                    }
-                } else {
-                    element.value = value;
-                }
-            }
-        });
-    }
-    
-    initializeDataSaving() {
-        // Save anbud data on changes
-        const anbudForm = document.getElementById('quote-form');
-        if (anbudForm) {
-            anbudForm.addEventListener('input', () => {
-                this.saveTabData('anbud');
-            });
-            anbudForm.addEventListener('change', () => {
-                this.saveTabData('anbud');
-            });
-        }
-        
-        // Save arbetsbeskrivning data on changes
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        if (arbetsForm) {
-            arbetsForm.addEventListener('input', () => {
-                this.saveTabData('arbetsbeskrivning');
-            });
-            arbetsForm.addEventListener('change', () => {
-                this.saveTabData('arbetsbeskrivning');
-            });
-        }
-        
-        // Add event listener for renoveringstyp dropdown
-        const renovationTypeSelect = document.getElementById('arb_typ_av_renovering');
-        if (renovationTypeSelect) {
-            renovationTypeSelect.addEventListener('change', () => {
-                this.updateMomentChecklista(renovationTypeSelect.value);
-            });
-        }
-    }
-    
-    updateMomentChecklista(renovationType) {
-        console.log('🔄 Updating moment checklista for:', renovationType);
-        
-        const checklistaSection = document.getElementById('moment-checklista-section');
-        const checklistaContainer = document.getElementById('moment-checklista-container');
-        
-        if (!checklistaSection || !checklistaContainer) {
-            console.error('Checklista elements not found');
-            return;
-        }
-        
-        if (!renovationType) {
-            checklistaSection.style.display = 'none';
-            return;
-        }
-        
-        checklistaSection.style.display = 'block';
-        
-        // Get moment data
-        const momentData = this.getMomentData(renovationType);
-        
-        // Clear existing content
-        checklistaContainer.innerHTML = '';
-        
-        // Build checklista HTML
-        Object.entries(momentData).forEach(([category, items]) => {
-            const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'moment-category';
-            
-            const categoryTitle = document.createElement('h4');
-            categoryTitle.textContent = category;
-            categoryDiv.appendChild(categoryTitle);
-            
-            items.forEach((item, index) => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'moment-item';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `moment_${category.replace(/\s/g, '_')}_${index}`;
-                checkbox.name = `moment_${category.replace(/\s/g, '_')}_${index}`;
-                checkbox.value = item;
-                
-                const label = document.createElement('label');
-                label.htmlFor = checkbox.id;
-                label.textContent = item;
-                
-                itemDiv.appendChild(checkbox);
-                itemDiv.appendChild(label);
-                categoryDiv.appendChild(itemDiv);
-            });
-            
-            checklistaContainer.appendChild(categoryDiv);
-        });
-        
-        console.log('✅ Moment checklista updated for:', renovationType);
-    }
-    
-    getMomentData(renovationType) {
-        if (renovationType === 'Traditionell - Linoljebehandling') {
-            return {
-                'Fönsterkarm': [
-                    'Tvättning',
-                    'Skrapning/slipning',
-                    'Färgkanter',
-                    'Demontering beslag/tätningslist',
-                    'Montering ny tätningslist',
-                    'Uppskrapning fönsterbleck',
-                    'Grundning Engwall & Claesson Linoljefärg',
-                    'Fogning',
-                    '2 ggr strykning'
-                ],
-                'Ytterbåge': [
-                    'Rengöring till träyta',
-                    'Kittborttagning',
-                    'Kittning linoljekitt',
-                    'Grundning/strykning Engwall & Claesson'
-                ],
-                'Innerbågens kanter': [
-                    'Skrapning/slipning',
-                    'Grundning/strykning Engwall & Claesson'
-                ],
-                'Mellansidor': [
-                    'Ytterbåge (skrapning, toppförsegling, grundning/strykning Alcro Bestå)',
-                    'Innerbåge (skrapning, grundning Alcro, strykning Alcro Bestå)'
-                ],
-                'Invändigt karm': [
-                    'Ingen åtgärd',
-                    'Alt. skrapning/grundning/strykning Alcro vslip/Vmill'
-                ],
-                'Invändigt fönsterbågar': [
-                    'Ingen åtgärd',
-                    'Alt. skrapning/påspackling/grundning/strykning Alcro'
-                ],
-                'Fönsterfoder': [
-                    'Ingen åtgärd',
-                    'Alt. skrapning/grundning/strykning Engwall & Claesson'
-                ]
-            };
-        } else if (renovationType === 'Modern - Alcro bestå') {
-            return {
-                'Fönsterkarm': [
-                    'Tvättning',
-                    'Skrapning/slipning',
-                    'Färgkanter',
-                    'Demontering beslag/tätningslist',
-                    'Montering ny tätningslist',
-                    'Uppskrapning fönsterbleck',
-                    'Grundning/strykning Alcro/Alcro Bestå Utsikt',
-                    'Fogning',
-                    '2 ggr strykning'
-                ],
-                'Ytterbåge': [
-                    'Rengöring',
-                    'Komplettering kittning',
-                    'Kittning LASeal',
-                    'Grundning/strykning Alcro Bestå'
-                ],
-                'Innerbågens kanter': [
-                    'Skrapning/grundning/strykning Alcro Bestå'
-                ],
-                'Mellansidor': [
-                    'Ytterbåge (skrapning, toppförsegling, grundning/strykning Alcro)',
-                    'Innerbåge (skrapning, grundning Alcro, strykning Alcro)'
-                ],
-                'Invändigt karm': [
-                    'Mer omfattande arbete med Alcro Vslip/V mill'
-                ],
-                'Invändigt fönsterbågar': [
-                    'Skrapning/påspackling/grundning/strykning Alcro'
-                ],
-                'Fönsterfoder': [
-                    'Skrapning/grundning/strykning Alcro Bestå',
-                    'Extra foder enligt samtal'
-                ],
-                'Övrigt': [
-                    'Demontage gamla persienner'
-                ]
-            };
-        }
-        
-        return {};
-    }
-    
-    testBasicCalculation() {
-        console.log('🧪 Testing basic calculation...');
-        
-        // Set a simple test value
-        const testData = {
-            doorSections: 1,
-            kallareGlugg: 0,
-            luftare1: 1,
-            luftare2: 0,
-            luftare3: 0,
-            luftare4: 0,
-            luftare5: 0,
-            luftare6: 0,
-            totalWindows: 1,
-            renovationType: 'Modern - Alcro bestå',
-            workDescription: 'Utvändig renovering',
-            windowOpening: 'Inåtgående',
-            windowType: 'Kopplade standard',
-            priceAdjustmentPlus: 0,
-            priceAdjustmentMinus: 0,
-            materialPercentage: 0,
-            hasSprojs: false,
-            sprojsPerWindow: 0,
-            windowsWithSprojs: 0,
-            hasEGlass: false,
-            eGlassSqm: 0,
-            propertyRotEligible: 'Nej - Hyresrätt/Kommersiell fastighet',
-            customerRotEligible: 'Nej - visa fullpris utan avdrag',
-            hasRotDeduction: false
-        };
-        
-        console.log('🧪 Test data:', testData);
-        const result = this.calculateBaseComponents(testData);
-        console.log('🧪 Test result (should be 9500):', result);
-        
-        if (result === 9500) {
-            console.log('✅ Basic calculation test PASSED');
-        } else {
-            console.error('❌ Basic calculation test FAILED');
-        }
-        
-        // Kör även spröjs-tester
-        this.testSprojsCalculations();
-    }
-    
-    testSprojsCalculations() {
-        console.log('🧪 Testing new Spröjs calculations...');
-        
-        // Test 1: Lågt pris (≤3 spröjs) - 2st 3-luftare, 2 spröjs, 2 fönster med spröjs
-        const testData1 = {
-            luftare1: 0, luftare2: 0, luftare3: 2, luftare4: 0, luftare5: 0, luftare6: 0,
-            hasSprojs: true,
-            sprojsPerWindow: 2,
-            windowsWithSprojs: 2,
-            kallareGlugg: 0
-        };
-        const result1 = this.calculateExtrasCost(testData1);
-        const expected1 = 250 * 2 * 3 * 2; // 250kr × 2 spröjs × 3 luftare/fönster × 2 fönster = 3,000kr
-        console.log(`Test 1 - 2st 3-luftare med 2 spröjs på 2 fönster: ${result1}kr (förväntat: ${expected1}kr) - ${result1 === expected1 ? 'PASS' : 'FAIL'}`);
-        
-        // Test 2: Högt pris (>3 spröjs) - 1st 3-luftare, 4 spröjs, 1 fönster med spröjs  
-        const testData2 = {
-            luftare1: 0, luftare2: 0, luftare3: 1, luftare4: 0, luftare5: 0, luftare6: 0,
-            hasSprojs: true,
-            sprojsPerWindow: 4,
-            windowsWithSprojs: 1,
-            kallareGlugg: 0
-        };
-        const result2 = this.calculateExtrasCost(testData2);
-        const expected2 = 400 * 4 * 3 * 1; // 400kr × 4 spröjs × 3 luftare/fönster × 1 fönster = 4,800kr
-        console.log(`Test 2 - 1st 3-luftare med 4 spröjs på 1 fönster: ${result2}kr (förväntat: ${expected2}kr) - ${result2 === expected2 ? 'PASS' : 'FAIL'}`);
-        
-        // Test 3: Gränsvärde (=3 spröjs) - blandade luftare
-        const testData3 = {
-            luftare1: 0, luftare2: 2, luftare3: 2, luftare4: 0, luftare5: 0, luftare6: 0,
-            hasSprojs: true,
-            sprojsPerWindow: 3,
-            windowsWithSprojs: 1,
-            kallareGlugg: 0
-        };
-        const result3 = this.calculateExtrasCost(testData3);
-        // Genomsnitt: (2×2 + 2×3)/(2+2) = 10/4 = 2.5 luftare/fönster
-        const expected3 = 250 * 3 * 2.5 * 1; // 250kr × 3 spröjs × 2.5 luftare/fönster × 1 fönster = 1,875kr
-        console.log(`Test 3 - Blandade luftare med 3 spröjs på 1 fönster: ${result3}kr (förväntat: ${expected3}kr) - ${result3 === expected3 ? 'PASS' : 'FAIL'}`);
-        
-        // Test 4: Exempel från specifikationen: 3 spröjs på 2st av 4st 3-luftare = 4,500kr
-        const testData4 = {
-            luftare1: 0, luftare2: 0, luftare3: 4, luftare4: 0, luftare5: 0, luftare6: 0,
-            hasSprojs: true,
-            sprojsPerWindow: 3,
-            windowsWithSprojs: 2,
-            kallareGlugg: 0
-        };
-        const result4 = this.calculateExtrasCost(testData4);
-        const expected4 = 250 * 3 * 3 * 2; // 250kr × 3 spröjs × 3 luftare/fönster × 2 fönster = 4,500kr
-        console.log(`Test 4 - Exempel från spec: ${result4}kr (förväntat: ${expected4}kr) - ${result4 === expected4 ? 'PASS' : 'FAIL'}`);
-        
-        console.log('🧪 Spröjs calculation tests completed');
-    }
-    
-    validateParties() {
-        // Fönsterpartier från formuläret
-        const windowSections = parseInt(document.getElementById('window_sections')?.value) || 0;
-        
-        // Totala luftare = vanliga luftare
-        const totalLuftare = 
-            (parseInt(document.getElementById('antal_1_luftare')?.value) || 0) +
-            (parseInt(document.getElementById('antal_2_luftare')?.value) || 0) +
-            (parseInt(document.getElementById('antal_3_luftare')?.value) || 0) +
-            (parseInt(document.getElementById('antal_4_luftare')?.value) || 0) +
-            (parseInt(document.getElementById('antal_5_luftare')?.value) || 0) +
-            (parseInt(document.getElementById('antal_6_luftare')?.value) || 0);
-        
-        // Totala fönsterpartier = dörrpartier + källare/glugg + pardörr balkong + luftare
-        const totalParties = 
-            (parseInt(document.getElementById('antal_dorrpartier')?.value) || 0) +
-            (parseInt(document.getElementById('antal_kallare_glugg')?.value) || 0) +
-            (parseInt(document.getElementById('antal_pardorr_balkong')?.value) || 0) +
-            totalLuftare;
-        
-        // Kontrollera spröjs-validering
-        const windowsWithSprojs = parseInt(document.getElementById('antal_fonster_med_sprojs')?.value) || 0;
-        const hasSprojs = this.form.querySelector('input[name="sprojs_choice"]:checked')?.value === 'Ja';
-        
-        console.log('Validating parties:', { windowSections, totalParties, totalLuftare, windowsWithSprojs, hasSprojs });
-        
-        // Prioriterad validering: Spröjs först (om aktivt)
-        if (hasSprojs && windowsWithSprojs > 0) {
-            if (windowsWithSprojs > windowSections) {
-                this.partiesValidationText.textContent = 
-                    `Fönster med spröjs (${windowsWithSprojs}) kan inte överstiga antal fönsterpartier (${windowSections})`;
-                this.partiesValidation.className = 'validation-message error';
-                this.partiesValidation.style.display = 'block';
-                this.submitBtn.disabled = true;
-                this.submitBtn.style.opacity = '0.5';
-                return false;
-            }
-        }
-        
-        // Sedan validera totala partier vs fönsterpartier
-        if (windowSections > 0 || totalParties > 0) {
-            if (windowSections !== totalParties) {
-                this.partiesValidationText.textContent = 
-                    `Totalt antal partier (${totalParties}) matchar inte antal fönsterpartier (${windowSections})`;
-                this.partiesValidation.className = 'validation-message error';
-                this.partiesValidation.style.display = 'block';
-                this.submitBtn.disabled = true;
-                this.submitBtn.style.opacity = '0.5';
-                return false;
-            } else if (windowSections > 0 && totalParties > 0) {
-                // Visa framgångsmeddelande som inkluderar spröjs-info om relevant
-                let successMessage = `✓ Antal partier (${totalParties}) matchar antal fönsterpartier (${windowSections})`;
-                if (hasSprojs && windowsWithSprojs > 0) {
-                    successMessage += ` • Spröjs på ${windowsWithSprojs} fönster ✓`;
-                }
-                
-                this.partiesValidationText.textContent = successMessage;
-                this.partiesValidation.className = 'validation-message success';
-                this.partiesValidation.style.display = 'block';
-                this.submitBtn.disabled = false;
-                this.submitBtn.style.opacity = '1';
-                return true;
-            }
-        }
-        
-        // Dölj meddelande om inga värden är inmatade
-        this.partiesValidation.style.display = 'none';
-        this.submitBtn.disabled = false;
-        this.submitBtn.style.opacity = '1';
-        
-        return true;
-    }
-    
-    updatePriceCalculation() {
-        console.log('=== STARTING PRICE CALCULATION ===');
-        
-        // Samla in alla värden
-        const data = this.collectPricingData();
-        console.log('Collected data:', data);
-        
-        // Beräkna grundkomponenter (luftare + dörrar)
-        const baseComponentsPrice = this.calculateBaseComponents(data);
-        console.log('Base components price:', baseComponentsPrice);
-        
-        // Beräkna renoveringstyp-tillägg (från dropdown)
-        const renovationTypeCost = this.calculateRenovationTypeCost(data, baseComponentsPrice);
-        console.log('Renovation type cost:', renovationTypeCost);
-        
-        // Beräkna fönstertyp-tillägg
-        const windowTypeCost = this.calculateWindowTypeCost(data, baseComponentsPrice);
-        console.log('Window type cost:', windowTypeCost);
-        
-        // Beräkna spröjs och E-glas
-        const extrasCost = this.calculateExtrasCost(data);
-        console.log('Extras cost:', extrasCost);
-        
-        // Beräkna prisjusteringar
-        const priceAdjustment = data.priceAdjustmentPlus - data.priceAdjustmentMinus;
-        console.log('Price adjustment:', priceAdjustment);
-        
-        // Beräkna summa utan materialkostnad (material bara för ROT-beräkning)
-        const subtotalBeforeMaterial = baseComponentsPrice + renovationTypeCost + windowTypeCost + extrasCost + priceAdjustment;
-        console.log('Subtotal before work markup:', subtotalBeforeMaterial);
-        
-        // Beräkna arbetsbeskrivning-pålägg (utan materialavdrag)
-        const workDescriptionMarkup = this.calculateWorkDescriptionMarkup(data, subtotalBeforeMaterial, priceAdjustment, 0);
-        console.log('Work description markup:', workDescriptionMarkup);
-        
-        // Total summa exklusive moms (utan materialkostnad)
-        const subtotalExclVat = subtotalBeforeMaterial + workDescriptionMarkup;
-        console.log('Subtotal excl VAT:', subtotalExclVat);
-        
-        // Moms
-        const vatCost = subtotalExclVat * CONFIG.EXTRAS.VAT_RATE;
-        console.log('VAT cost:', vatCost);
-        
-        // Total inklusive moms (det kunden betalar utan ROT)
-        const totalInclVat = subtotalExclVat + vatCost;
-        console.log('Total incl VAT (full customer price):', totalInclVat);
-        
-        // Materialkostnad för ROT-beräkning (endast för att identifiera materialandel)
-        const materialCostForRot = totalInclVat * (data.materialPercentage / 100);
-        console.log('Material cost for ROT calculation:', materialCostForRot, '(' + data.materialPercentage + '% of total)');
-        
-        // Arbetskostnad för ROT-beräkning = totalt - material
-        const workCostForRot = totalInclVat - materialCostForRot;
-        console.log('Work cost for ROT calculation:', workCostForRot);
-        
-        // ROT-avdrag beräkning med maxbelopp
-        let rotDeduction = 0;
-        if (data.hasRotDeduction) {
-            const calculatedRotDeduction = workCostForRot * CONFIG.EXTRAS.ROT_DEDUCTION; // 50%
-            const maxRotAmount = data.isSharedRotDeduction ? 100000 : 50000; // 100k för två personer, 50k för en
-            rotDeduction = Math.min(calculatedRotDeduction, maxRotAmount);
-            
-            console.log('ROT calculation details:');
-            console.log('- Work cost for ROT:', workCostForRot);
-            console.log('- 50% of work cost:', calculatedRotDeduction);
-            console.log('- Max ROT amount:', maxRotAmount, data.isSharedRotDeduction ? '(två personer)' : '(en person)');
-            console.log('- Final ROT deduction:', rotDeduction);
-        }
-        
-        // Slutligt kundpris = totalt inkl moms - ROT-avdrag
-        const finalCustomerPrice = totalInclVat - rotDeduction;
-        console.log('Final customer price:', finalCustomerPrice);
-        
-        // Uppdatera alla priselement
-        this.updatePriceDisplay({
-            baseComponentsPrice,
-            windowTypeCost: renovationTypeCost + windowTypeCost,
-            extrasCost,
-            renovationMarkup: workDescriptionMarkup,
-            priceAdjustment,
-            materialCost: materialCostForRot,
-            subtotalExclVat,
-            vatCost,
-            totalInclVat,
-            materialDeduction: materialCostForRot, // För ROT-visning
-            rotDeduction,
-            finalCustomerPrice,
-            hasRotDeduction: data.hasRotDeduction,
-            kallareGluggCount: data.kallareGlugg
-        });
-        
-        console.log('=== PRICE CALCULATION COMPLETE ===');
-    }
-    
-    collectPricingData() {
-        // Hjälpfunktion för att hämta numeriska värden säkert
-        const getNumericValue = (id) => {
-            const element = document.getElementById(id);
-            const value = element?.value?.trim();
-            if (!value || value === '') return 0;
-            
-            // Hantera både komma och punkt som decimalavskiljare
-            const normalizedValue = value.replace(',', '.');
-            const parsedValue = parseFloat(normalizedValue);
-            
-            // Returnera 0 om värdet inte är ett giltigt nummer
-            return isNaN(parsedValue) ? 0 : Math.round(parsedValue);
-        };
-        
-        return {
-            // Antal enheter
-            doorSections: getNumericValue('antal_dorrpartier'),
-            kallareGlugg: getNumericValue('antal_kallare_glugg'),
-            pardorrBalkong: getNumericValue('antal_pardorr_balkong'),
-            luftare1: getNumericValue('antal_1_luftare'),
-            luftare2: getNumericValue('antal_2_luftare'),
-            luftare3: getNumericValue('antal_3_luftare'),
-            luftare4: getNumericValue('antal_4_luftare'),
-            luftare5: getNumericValue('antal_5_luftare'),
-            luftare6: getNumericValue('antal_6_luftare'),
-            
-            // Totalt antal fönster (för vissa beräkningar) - inkluderar fönsterpartier + källare/glugg + pardörr balkong
-            totalWindows: getNumericValue('window_sections') + getNumericValue('antal_kallare_glugg') + getNumericValue('antal_pardorr_balkong'),
-            
-            // Renoveringstyp (dropdown)
-            renovationType: document.getElementById('typ_av_renovering')?.value || '',
-            
-            // Arbetsbeskrivning (radio buttons)
-            workDescription: this.form.querySelector('input[name="arbetsbeskrivning"]:checked')?.value || '',
-            
-            // Fönsteröppning (radio buttons)
-            windowOpening: this.form.querySelector('input[name="fonsteroppning"]:checked')?.value || 'Inåtgående',
-            
-            // Fönstertyp (radio buttons - endast en kan väljas)
-            windowType: this.form.querySelector('input[name="typ_av_fonster"]:checked')?.value || 'Kopplade standard',
-            
-            // Prisjustering och material
-            priceAdjustmentPlus: getNumericValue('price_adjustment_plus'),
-            priceAdjustmentMinus: getNumericValue('price_adjustment_minus'),
-            materialPercentage: getNumericValue('materialkostnad') || 0, // Standardvärde 0 om tomt
-            
-            // Spröjs
-            hasSprojs: this.form.querySelector('input[name="sprojs_choice"]:checked')?.value === 'Ja',
-            sprojsPerWindow: getNumericValue('antal_sprojs_per_bage'),
-            windowsWithSprojs: getNumericValue('antal_fonster_med_sprojs'),
-            
-            // E-glas
-            hasEGlass: this.form.querySelector('input[name="le_glas_choice"]:checked')?.value === 'Ja',
-            eGlassSqm: getNumericValue('le_kvm'),
-            
-            // ROT-avdrag
-            propertyRotEligible: this.form.querySelector('input[name="fastighet_rot_berättigad"]:checked')?.value || '',
-            customerRotEligible: this.form.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked')?.value || '',
-            hasRotDeduction: this.form.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked')?.value === 'Ja - inkludera ROT-avdrag i anbudet',
-            isSharedRotDeduction: this.form.querySelector('input[name="delat_rot_avdrag"]:checked')?.value === 'Ja'
-        };
-    }
-    
-    calculateBaseComponents(data) {
-        console.log('📊 calculateBaseComponents called with data:', data);
-        console.log('📊 CONFIG.UNIT_PRICES:', CONFIG.UNIT_PRICES);
-        
-        let total = 0;
-        
-        // Dörrpartier
-        const doorCost = data.doorSections * CONFIG.UNIT_PRICES['antal_dorrpartier'];
-        console.log(`🚪 Door sections: ${data.doorSections} × ${CONFIG.UNIT_PRICES['antal_dorrpartier']} = ${doorCost}`);
-        total += doorCost;
-        
-        // Källare/Glugg
-        const kallareCost = data.kallareGlugg * CONFIG.UNIT_PRICES['antal_kallare_glugg'];
-        console.log(`🏠 Källare/Glugg: ${data.kallareGlugg} × ${CONFIG.UNIT_PRICES['antal_kallare_glugg']} = ${kallareCost}`);
-        total += kallareCost;
-        
-        // Pardörr balkong/altan
-        const pardorrCost = data.pardorrBalkong * CONFIG.UNIT_PRICES['antal_pardorr_balkong'];
-        console.log(`🚪 Pardörr balkong/altan: ${data.pardorrBalkong} × ${CONFIG.UNIT_PRICES['antal_pardorr_balkong']} = ${pardorrCost}`);
-        total += pardorrCost;
-        
-        // Luftare - med fönsteröppning-multiplikator
-        const windowOpeningMultiplier = CONFIG.WINDOW_OPENING_MULTIPLIERS[data.windowOpening] || 1.0;
-        console.log(`🪟 Fönsteröppning: ${data.windowOpening} (multiplikator: ${windowOpeningMultiplier})`);
-        
-        const luftare1Cost = data.luftare1 * CONFIG.UNIT_PRICES['antal_1_luftare'] * windowOpeningMultiplier;
-        const luftare2Cost = data.luftare2 * CONFIG.UNIT_PRICES['antal_2_luftare'] * windowOpeningMultiplier;
-        const luftare3Cost = data.luftare3 * CONFIG.UNIT_PRICES['antal_3_luftare'] * windowOpeningMultiplier;
-        const luftare4Cost = data.luftare4 * CONFIG.UNIT_PRICES['antal_4_luftare'] * windowOpeningMultiplier;
-        const luftare5Cost = data.luftare5 * CONFIG.UNIT_PRICES['antal_5_luftare'] * windowOpeningMultiplier;
-        const luftare6Cost = data.luftare6 * CONFIG.UNIT_PRICES['antal_6_luftare'] * windowOpeningMultiplier;
-        
-        console.log(`🪟 Luftare 1: ${data.luftare1} × ${CONFIG.UNIT_PRICES['antal_1_luftare']} × ${windowOpeningMultiplier} = ${luftare1Cost}`);
-        console.log(`🪟 Luftare 2: ${data.luftare2} × ${CONFIG.UNIT_PRICES['antal_2_luftare']} × ${windowOpeningMultiplier} = ${luftare2Cost}`);
-        console.log(`🪟 Luftare 3: ${data.luftare3} × ${CONFIG.UNIT_PRICES['antal_3_luftare']} × ${windowOpeningMultiplier} = ${luftare3Cost}`);
-        console.log(`🪟 Luftare 4: ${data.luftare4} × ${CONFIG.UNIT_PRICES['antal_4_luftare']} × ${windowOpeningMultiplier} = ${luftare4Cost}`);
-        console.log(`🪟 Luftare 5: ${data.luftare5} × ${CONFIG.UNIT_PRICES['antal_5_luftare']} × ${windowOpeningMultiplier} = ${luftare5Cost}`);
-        console.log(`🪟 Luftare 6: ${data.luftare6} × ${CONFIG.UNIT_PRICES['antal_6_luftare']} × ${windowOpeningMultiplier} = ${luftare6Cost}`);
-        
-        const totalLuftareCost = luftare1Cost + luftare2Cost + luftare3Cost + luftare4Cost + luftare5Cost + luftare6Cost;
-        total += totalLuftareCost;
-        
-        console.log(`📊 Total base components: ${total}`);
-        return total;
-    }
-    
-    calculateRenovationTypeCost(data, basePrice) {
-        if (!data.renovationType) return 0;
-        
-        const multiplier = CONFIG.RENOVATION_TYPE_MULTIPLIERS[data.renovationType];
-        
-        if (typeof multiplier === 'number') {
-            // Procentuell ökning/minskning
-            return basePrice * (multiplier - 1);
-        }
-        
-        return 0;
-    }
-    
-    calculateWindowTypeCost(data, basePrice) {
-        if (!data.windowType) return 0;
-        
-        // Beräkna totalt antal bågar: (antal 1-luftare × 1) + (antal 2-luftare × 2) + osv
-        const totalBagar = (data.luftare1 || 0) * 1 + (data.luftare2 || 0) * 2 + (data.luftare3 || 0) * 3 + 
-                           (data.luftare4 || 0) * 4 + (data.luftare5 || 0) * 5 + (data.luftare6 || 0) * 6;
-        
-        console.log('📊 Fönstertyp calculation - Total bågar:', totalBagar);
-        console.log('📊 Vald fönstertyp:', data.windowType);
-        
-        // Hämta rabatt per båge för den valda fönstertypen
-        const discountPerBage = CONFIG.WINDOW_TYPE_DISCOUNTS_PER_BAGE[data.windowType] || 0;
-        
-        if (discountPerBage !== 0) {
-            const totalDiscount = discountPerBage * totalBagar;
-            console.log(`📊 ${data.windowType}: ${discountPerBage}kr × ${totalBagar} bågar = ${totalDiscount}kr (rabatt)`);
-            return totalDiscount; // Returnerar negativ värde för rabatter
-        } else {
-            console.log(`📊 ${data.windowType}: Ingen rabatt (standardpris)`);
-            return 0;
-        }
-    }
-    
-    calculateExtrasCost(data) {
-        console.log('💎 calculateExtrasCost called with data:', data);
-        console.log('💎 CONFIG.EXTRAS:', CONFIG.EXTRAS);
-        
-        let total = 0;
-        
-        // Spröjs: Ny beräkningslogik baserad på antal luftare och antal fönster med spröjs
-        if (data.hasSprojs && data.sprojsPerWindow > 0 && data.windowsWithSprojs > 0) {
-            let sprojsCost = 0;
-            
-            // Beräkna genomsnittligt antal luftare per fönster
-            const totalWindowCount = (data.luftare1 || 0) + (data.luftare2 || 0) + (data.luftare3 || 0) + 
-                                   (data.luftare4 || 0) + (data.luftare5 || 0) + (data.luftare6 || 0);
-            const totalLuftare = (data.luftare1 || 0) * 1 + (data.luftare2 || 0) * 2 + (data.luftare3 || 0) * 3 + 
-                                (data.luftare4 || 0) * 4 + (data.luftare5 || 0) * 5 + (data.luftare6 || 0) * 6;
-            
-            // Om vi har fönster och fönster med spröjs
-            if (totalWindowCount > 0 && data.windowsWithSprojs > 0) {
-                // Beräkna genomsnittligt antal luftare per fönster
-                const avgLuftarePerWindow = totalLuftare / totalWindowCount;
-                
-                // Ny tierad beräkning (inte kumulativ)
-                let sprojsLowTier = Math.min(data.sprojsPerWindow, CONFIG.EXTRAS.SPROJS_THRESHOLD); // Första 1-3 spröjs
-                let sprojsHighTier = Math.max(0, data.sprojsPerWindow - CONFIG.EXTRAS.SPROJS_THRESHOLD); // 4+ spröjs
-                
-                // Beräkna kostnad för varje tier
-                const lowTierCost = sprojsLowTier * CONFIG.EXTRAS.SPROJS_LOW_PRICE * avgLuftarePerWindow * data.windowsWithSprojs;
-                const highTierCost = sprojsHighTier * CONFIG.EXTRAS.SPROJS_HIGH_PRICE * avgLuftarePerWindow * data.windowsWithSprojs;
-                
-                sprojsCost = lowTierCost + highTierCost;
-                
-                console.log(`🖼️ Spröjs-beräkning (tierad):`);
-                console.log(`   Tier 1 (1-3): ${sprojsLowTier} × ${CONFIG.EXTRAS.SPROJS_LOW_PRICE}kr × ${avgLuftarePerWindow.toFixed(1)} × ${data.windowsWithSprojs} = ${lowTierCost}kr`);
-                console.log(`   Tier 2 (4+): ${sprojsHighTier} × ${CONFIG.EXTRAS.SPROJS_HIGH_PRICE}kr × ${avgLuftarePerWindow.toFixed(1)} × ${data.windowsWithSprojs} = ${highTierCost}kr`);
-                console.log(`   Total: ${sprojsCost}kr`);
-            }
-            
-            console.log(`🖼️ Total spröjs-kostnad: ${sprojsCost}kr (tierad: 1-3 = 250kr/ruta, 4+ = 400kr/ruta)`);
-            total += sprojsCost;
-        }
-        
-        // E-glas: 2500kr/kvm
-        if (data.hasEGlass && data.eGlassSqm > 0) {
-            const eGlassCost = CONFIG.EXTRAS.E_GLASS_PER_SQM * data.eGlassSqm;
-            console.log(`✨ LE-glas: ${data.eGlassSqm} kvm × ${CONFIG.EXTRAS.E_GLASS_PER_SQM} = ${eGlassCost}`);
-            total += eGlassCost;
-        }
-        
-        console.log(`💎 Total extras cost: ${total}`);
-        return total;
-    }
-    
-    calculateWorkDescriptionMarkup(data, subtotal, priceAdjustment, materialCost) {
-        if (!data.workDescription) return 0;
-        
-        const multiplier = CONFIG.WORK_DESCRIPTION_MULTIPLIERS[data.workDescription];
-        
-        // Pålägg på allt utom prisjustering och material
-        const baseForMarkup = subtotal - priceAdjustment - materialCost;
-        return baseForMarkup * (multiplier - 1);
-    }
-    
-    calculateMaterialCost(data, subtotal, priceAdjustment) {
-        // Materialkostnad som procent av subtotal (innan priceAdjustment)
-        const baseForMaterial = subtotal - priceAdjustment;
-        const materialCost = baseForMaterial * (data.materialPercentage / 100);
-        console.log(`Material cost calculation: ${baseForMaterial} × ${data.materialPercentage}% = ${materialCost}`);
-        return Math.round(materialCost);
-    }
-    
-    updatePriceDisplay(prices) {
-        // Uppdatera alla priselement
-        this.baseComponentsPriceElement.textContent = this.formatPrice(prices.baseComponentsPrice);
-        this.windowTypeCostElement.textContent = this.formatPrice(prices.windowTypeCost);
-        this.extrasCostElement.textContent = this.formatPrice(prices.extrasCost);
-        this.renovationMarkupElement.textContent = this.formatPrice(prices.renovationMarkup);
-        this.materialCostDisplayElement.textContent = this.formatPrice(prices.materialCost);
-        this.subtotalPriceElement.innerHTML = `<strong>${this.formatPrice(prices.subtotalExclVat)}</strong>`;
-        this.subtotalPriceDisplayElement.textContent = this.formatPrice(prices.subtotalExclVat);
-        this.vatCostElement.textContent = this.formatPrice(prices.vatCost);
-        this.totalWithVatElement.innerHTML = `<strong>${this.formatPrice(prices.totalInclVat)}</strong>`;
-        this.finalCustomerPriceElement.innerHTML = `<strong>${this.formatPrice(prices.finalCustomerPrice)}</strong>`;
-        this.materialDeductionElement.textContent = this.formatPrice(prices.materialDeduction);
-        
-        // Källare/Glugg - dölj separata prisvisningar (ingår i totalpriset)
-        this.kallareGluggRowElement.style.display = 'none';
-        
-        // ROT-avdrag - visa/dölj beroende på om det är valt
-        const rotPreliminaryTextElement = document.getElementById('rot-preliminary-text');
-        if (prices.hasRotDeduction && prices.rotDeduction > 0) {
-            this.rotRowElement.style.display = 'block';
-            this.rotDeductionElement.textContent = `-${this.formatPrice(prices.rotDeduction)}`;
-            
-            // Visa preliminär text
-            if (rotPreliminaryTextElement) {
-                rotPreliminaryTextElement.style.display = 'block';
-            }
-            
-            // Uppdatera text beroende på om det är begränsat av maxbelopp
-            const data = this.collectPricingData();
-            const workCostForRot = prices.totalInclVat - (prices.totalInclVat * (data.materialPercentage / 100));
-            const calculatedRotDeduction = workCostForRot * CONFIG.EXTRAS.ROT_DEDUCTION;
-            const maxRotAmount = data.isSharedRotDeduction ? 100000 : 50000;
-            const isLimitedByMax = calculatedRotDeduction > maxRotAmount;
-            
-            const rotLabel = this.rotRowElement.querySelector('span:first-child');
-            if (isLimitedByMax) {
-                const maxText = data.isSharedRotDeduction ? '100 000 kr' : '50 000 kr';
-                const persons = data.isSharedRotDeduction ? 'två personer' : 'en person';
-                rotLabel.textContent = `ROT-avdrag (max ${maxText} för ${persons}):`;
-            } else {
-                rotLabel.textContent = 'ROT-avdrag (50% på arbetskostnad):';
-            }
-        } else {
-            this.rotRowElement.style.display = 'none';
-            // Dölj preliminär text
-            if (rotPreliminaryTextElement) {
-                rotPreliminaryTextElement.style.display = 'none';
-            }
-        }
-        
-        // Materialkostnad avdrag - visa ENDAST om ROT-avdrag är aktivt
-        if (prices.hasRotDeduction) {
-            this.materialRowElement.style.display = 'block';
-            this.materialDeductionElement.textContent = this.formatPrice(prices.materialDeduction);
-        } else {
-            this.materialRowElement.style.display = 'none';
-        }
-    }
-    
-    formatPrice(amount) {
-        return new Intl.NumberFormat('sv-SE', {
-            style: 'currency',
-            currency: 'SEK',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(amount)
-          .replace('SEK', 'kr')
-          .replace(/\u00A0/g, ' '); // Replace non-breaking spaces with regular spaces
-    }
-    
-    showGdprModal() {
-        if (this.gdprModal) {
-            this.gdprModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent background scroll
-        }
-    }
-    
-    hideGdprModal() {
-        if (this.gdprModal) {
-            this.gdprModal.style.display = 'none';
-            document.body.style.overflow = ''; // Restore scroll
-        }
-    }
-    
-    validateField(field) {
-        const fieldGroup = field.closest('.form-group');
-        const errorElement = fieldGroup.querySelector('.error-message');
-        let isValid = true;
-        let errorMessage = '';
-        
-        // Kontrollera obligatoriska fält
-        if (field.hasAttribute('required') && !field.value.trim()) {
-            isValid = false;
-            errorMessage = 'Detta fält är obligatoriskt';
-        }
-        
-        // Specifik validering baserat på fälttyp
-        if (field.value.trim()) {
-            switch (field.type) {
-                case 'email':
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(field.value)) {
-                        isValid = false;
-                        errorMessage = 'Ange en giltig e-postadress';
-                    }
-                    break;
-                    
-                case 'tel':
-                    const phoneRegex = /^[\d\s\-\+\(\)]{8,}$/;
-                    if (!phoneRegex.test(field.value.replace(/\s/g, ''))) {
-                        isValid = false;
-                        errorMessage = 'Ange ett giltigt telefonnummer';
-                    }
-                    break;
-                    
-                default:
-                    if (field.name === 'postal_code') {
-                        const postalRegex = /^[0-9]{5}$/;
-                        if (!postalRegex.test(field.value)) {
-                            isValid = false;
-                            errorMessage = 'Ange ett giltigt postnummer (5 siffror)';
-                        }
-                    }
-                    break;
-            }
-        }
-        
-        // Validera radio buttons separat
-        if (field.type === 'radio' && field.hasAttribute('required')) {
-            const radioGroup = this.form.querySelectorAll(`input[name="${field.name}"]`);
-            const isRadioSelected = Array.from(radioGroup).some(radio => radio.checked);
-            if (!isRadioSelected) {
-                isValid = false;
-                errorMessage = 'Vänligen välj ett alternativ';
-            }
-        }
-        
-        // Visa eller dölj felmeddelande
-        if (!isValid) {
-            fieldGroup.classList.add('error');
-            if (errorElement) {
-                errorElement.textContent = errorMessage;
-                errorElement.classList.add('show');
-            }
-        } else {
-            fieldGroup.classList.remove('error');
-            if (errorElement) {
-                errorElement.textContent = '';
-                errorElement.classList.remove('show');
-            }
-        }
-        
-        return isValid;
-    }
-    
-    clearFieldError(field) {
-        const fieldGroup = field.closest('.form-group') || field.closest('.radio-group')?.closest('.form-group');
-        const errorElement = fieldGroup?.querySelector('.error-message');
-        
-        if (fieldGroup) {
-            fieldGroup.classList.remove('error');
-        }
-        
-        if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.classList.remove('show');
-        }
-    }
-    
-    validateForm() {
-        let isFormValid = true;
-        
-        // Kontrollera att minst ett antal-fält har värde > 0
-        const quantityFields = [
-            'window_sections', 'antal_dorrpartier', 'antal_kallare_glugg', 'antal_1_luftare', 'antal_2_luftare',
-            'antal_3_luftare', 'antal_4_luftare', 'antal_5_luftare', 'antal_6_luftare'
-        ];
-        
-        const hasQuantityValues = quantityFields.some(fieldId => {
-            const field = document.getElementById(fieldId);
-            return field && parseInt(field.value) > 0;
-        });
-        
-        if (!hasQuantityValues) {
-            // Visa felmeddelande för partier
-            this.partiesValidationText.textContent = 
-                'Du måste ange minst ett antal för fönsterpartier, dörrpartier eller luftare';
-            this.partiesValidation.className = 'validation-message error';
-            this.partiesValidation.style.display = 'block';
-            isFormValid = false;
-        }
-        
-        // Validera alla obligatoriska textfält
-        const requiredFields = this.form.querySelectorAll('input[required], textarea[required]');
-        requiredFields.forEach(field => {
-            if (!this.validateField(field)) {
-                isFormValid = false;
-            }
-        });
-        
-        // Validera dropdown och radio buttons
-        const requiredSelects = [
-            { name: 'typ_av_renovering', message: 'Vänligen välj typ av renovering' }
-        ];
-        
-        requiredSelects.forEach(select => {
-            const element = document.getElementById(select.name);
-            if (!element || !element.value) {
-                isFormValid = false;
-                const groupElement = element?.closest('.form-group');
-                const errorElement = groupElement?.querySelector('.error-message');
-                if (groupElement) groupElement.classList.add('error');
-                if (errorElement) {
-                    errorElement.textContent = select.message;
-                    errorElement.classList.add('show');
-                }
-            }
-        });
-        
-        const radioGroups = [
-            { name: 'arbetsbeskrivning', message: 'Vänligen välj arbetsbeskrivning' },
-            { name: 'fastighet_rot_berättigad', message: 'Vänligen ange om fastigheten är berättigad ROT-avdrag' },
-            { name: 'är_du_berättigad_rot_avdrag', message: 'Vänligen ange om kunden är berättigad ROT-avdrag' }
-        ];
-        
-        radioGroups.forEach(group => {
-            const radios = this.form.querySelectorAll(`input[name="${group.name}"]`);
-            const isSelected = Array.from(radios).some(radio => radio.checked);
-            if (!isSelected) {
-                isFormValid = false;
-                const groupElement = radios[0].closest('.form-group');
-                const errorElement = groupElement.querySelector('.error-message');
-                groupElement.classList.add('error');
-                if (errorElement) {
-                    errorElement.textContent = group.message;
-                    errorElement.classList.add('show');
-                }
-            }
-        });
-        
-        // Validera GDPR-godkännande
-        if (this.gdprConsent && !this.gdprConsent.checked) {
-            isFormValid = false;
-            if (this.gdprConsentError) {
-                this.gdprConsentError.textContent = 'Du måste godkänna behandling av personuppgifter för att skicka förfrågan';
-                this.gdprConsentError.classList.add('show');
-            }
-            const gdprSection = this.gdprConsent.closest('.form-group');
-            if (gdprSection) {
-                gdprSection.classList.add('error');
-            }
-        }
-        
-        return isFormValid;
-    }
-    
-    async handleFormSubmission() {
-        // Validera formuläret
-        if (!this.validateForm()) {
-            this.scrollToFirstError();
-            return;
-        }
-        
-        // Visa loading state
-        this.setSubmitButtonLoading(true);
-        this.hideMessages();
-        
-        try {
-            // Skicka till Netlify function som hanterar Zapier webhook säkert
-            await this.submitToNetlifyFunction();
-            
-            // Visa framgångsmeddelande
-            this.showSuccessMessage();
-            this.resetForm();
-            
-        } catch (error) {
-            console.error('Fel vid skickning av formulär:', error);
-            this.showErrorMessage();
-        } finally {
-            this.setSubmitButtonLoading(false);
-        }
-    }
-    
-    // BORTTAGET: collectFormData() ersatt med webhook-funktionalitet
-    /*collectFormData() {
-        const formData = new FormData();
-        
-        // Auto-fill fastighetsbeteckning om tomt
-        const fastighetsbeteckningField = document.getElementById('fastighetsbeteckning');
-        if (fastighetsbeteckningField && !fastighetsbeteckningField.value.trim()) {
-            fastighetsbeteckningField.value = '-';
-        }
-        
-        // Auto-fill alla numeriska fält med 0 om de är tomma
-        const numericFields = [
-            'window_sections',
-            'antal_dorrpartier', 
-            'antal_1_luftare',
-            'antal_2_luftare',
-            'antal_3_luftare', 
-            'antal_4_luftare',
-            'antal_5_luftare',
-            'antal_6_luftare',
-            'antal_sprojs_per_bage',
-            'antal_fonster_med_sprojs',
-            'le_kvm',
-            'price_adjustment_plus',
-            'price_adjustment_minus'
-        ];
-        
-        numericFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field && (!field.value || field.value.trim() === '')) {
-                field.value = '0';
-            }
-        });
-        
-        // Samla in alla formulärfält
-        Object.keys(CONFIG.FORM_FIELDS).forEach(fieldName => {
-            // Special hantering för typ_av_fonster radiobuttons
-            if (fieldName === 'typ_av_fonster') {
-                const checkedRadio = this.form.querySelector(`input[name="typ_av_fonster"]:checked`);
-                if (checkedRadio) {
-                    formData.append(CONFIG.FORM_FIELDS[fieldName], checkedRadio.value);
-                }
-                return;
-            }
-            
-            // Hoppa över fält som inte finns i formuläret (nya mappade fält)
-            if (['fukt', 'våning', 'fastighetstyp'].includes(fieldName)) {
-                return;
-            }
-            
-            const field = this.form.querySelector(`[name="${fieldName}"]`);
-            let value = '';
-            
-            if (field) {
-                if (field.type === 'checkbox') {
-                    value = field.checked ? 'Ja' : 'Nej';
-                } else if (field.type === 'radio') {
-                    const selectedRadio = this.form.querySelector(`input[name="${fieldName}"]:checked`);
-                    value = selectedRadio ? selectedRadio.value : '';
-                } else {
-                    value = field.value;
-                }
-                
-                // Endast lägg till fält med värden (undvik tomma radio buttons)
-                if (value !== '') {
-                    formData.append(CONFIG.FORM_FIELDS[fieldName], value);
-                }
-            } else {
-                // Hantera radio buttons som kanske inte hittas med querySelector direkt
-                if (fieldName === 'fastighet_rot_berättigad' || fieldName === 'är_du_berättigad_rot_avdrag') {
-                    const selectedRadio = this.form.querySelector(`input[name="${fieldName}"]:checked`);
-                    if (selectedRadio) {
-                        formData.append(CONFIG.FORM_FIELDS[fieldName], selectedRadio.value);
-                    }
-                }
-            }
-        });
-        
-        // Lägg till detaljerad prisberäkning och ROT-avdrag information
-        const data = this.collectPricingData();
-        const baseComponentsPrice = this.calculateBaseComponents(data);
-        const renovationTypeCost = this.calculateRenovationTypeCost(data, baseComponentsPrice);
-        const windowTypeCost = this.calculateWindowTypeCost(data, baseComponentsPrice);
-        const extrasCost = this.calculateExtrasCost(data);
-        const subtotalBeforeMaterial = baseComponentsPrice + renovationTypeCost + windowTypeCost + extrasCost;
-        const workDescriptionMarkup = this.calculateWorkDescriptionMarkup(data, subtotalBeforeMaterial, 0, 0);
-        const subtotalExclVat = subtotalBeforeMaterial + workDescriptionMarkup;
-        const vatCost = subtotalExclVat * CONFIG.EXTRAS.VAT_RATE;
-        const totalInclVat = subtotalExclVat + vatCost;
-        const materialCostForRot = totalInclVat * (data.materialPercentage / 100);
-        const workCostForRot = totalInclVat - materialCostForRot;
-        // ROT-avdrag med maxbelopp-logik
-        let rotDeduction = 0;
-        if (data.hasRotDeduction) {
-            const calculatedRotDeduction = workCostForRot * CONFIG.EXTRAS.ROT_DEDUCTION;
-            const maxRotAmount = data.isSharedRotDeduction ? 100000 : 50000;
-            rotDeduction = Math.min(calculatedRotDeduction, maxRotAmount);
-        }
-        const finalCustomerPrice = totalInclVat - rotDeduction;
-        
-        // Lägg till beräknat ROT-avdrag som separat fält
-        if (data.hasRotDeduction && rotDeduction > 0) {
-            formData.append('entry.ROT_CALCULATED_AMOUNT', this.formatPrice(rotDeduction));
-        }
-        
-        // Skapa detaljerad prissammanfattning för Google Forms
-        const priceBreakdown = `
-PRISBERÄKNING:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Grundkomponenter:
-- Luftare och dörrar: ${this.formatPrice(baseComponentsPrice)}
-- Renoveringstyp (${data.renovationType}): ${this.formatPrice(renovationTypeCost)}
-- Fönsteröppning (${data.windowOpening}): Inkluderat i grundpris
-- Fönstertyp (${data.windowType || 'Ingen vald'}): ${this.formatPrice(windowTypeCost)}
-- Spröjs/E-glas: ${this.formatPrice(extrasCost)}
-- Material (endast för ROT-beräkning): -
-- Arbetsbeskrivning (${data.workDescription}): ${this.formatPrice(workDescriptionMarkup)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Summa exkl. moms: ${this.formatPrice(subtotalExclVat)}
-Moms (25%): ${this.formatPrice(vatCost)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Totalt inkl. moms: ${this.formatPrice(totalInclVat)}
-
-ROT-AVDRAG INFORMATION:
-- Fastighet berättigad: ${data.propertyRotEligible}
-- Kund berättigad: ${data.customerRotEligible}
-${data.hasRotDeduction ? `- Materialkostnad (${data.materialPercentage}%): ${this.formatPrice(materialCostForRot)}\n- Arbetskostnad: ${this.formatPrice(workCostForRot)}\n- ROT-avdrag (50% på arbetskostnad): -${this.formatPrice(rotDeduction)}` : '- ROT-avdrag: Ej tillämpligt'}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-KUNDEN BETALAR: ${this.formatPrice(finalCustomerPrice)}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-        
-        formData.append('entry.calculated_price', priceBreakdown);
-        
-        return formData;
-    }*/
-    
-    async submitToNetlifyFunction() {
-        // Hämta alla beräknade värden
-        const data = this.collectPricingData();
-        const baseComponentsPrice = this.calculateBaseComponents(data);
-        const renovationTypeCost = this.calculateRenovationTypeCost(data, baseComponentsPrice);
-        const windowTypeCost = this.calculateWindowTypeCost(data, baseComponentsPrice);
-        const extrasCost = this.calculateExtrasCost(data);
-        const subtotalBeforeMaterial = baseComponentsPrice + renovationTypeCost + windowTypeCost + extrasCost;
-        const workDescriptionMarkup = this.calculateWorkDescriptionMarkup(data, subtotalBeforeMaterial, 0, 0);
-        const subtotalExclVat = subtotalBeforeMaterial + workDescriptionMarkup;
-        const vatCost = subtotalExclVat * CONFIG.EXTRAS.VAT_RATE;
-        const totalInclVat = subtotalExclVat + vatCost;
-        const materialCostForRot = totalInclVat * (data.materialPercentage / 100);
-        const workCostForRot = totalInclVat - materialCostForRot;
-        
-        // ROT-avdrag med maxbelopp-logik
-        let rotDeduction = 0;
-        if (data.hasRotDeduction) {
-            const calculatedRotDeduction = workCostForRot * CONFIG.EXTRAS.ROT_DEDUCTION;
-            const maxRotAmount = data.isSharedRotDeduction ? 100000 : 50000;
-            rotDeduction = Math.min(calculatedRotDeduction, maxRotAmount);
-        }
-        const finalCustomerPrice = totalInclVat - rotDeduction;
-
-        // Bygg webhook data-struktur för Netlify function
-        const webhookData = {
-            // Kunduppgifter
-            kundNamn: document.getElementById('company').value || '',
-            kontaktperson: document.getElementById('contact_person').value || '',
-            adress: document.getElementById('address').value || '',
-            telefon: document.getElementById('phone').value || '',
-            email: document.getElementById('email').value || '',
-            ort: document.getElementById('city').value || '',
-            postnummer: document.getElementById('postal_code').value || '',
-            fastighetsbeteckning: document.getElementById('fastighetsbeteckning').value || '',
-            
-            // Projektuppgifter
-            renoveringsTyp: data.renovationType,
-            arbetsbeskrivning: data.workDescription,
-            fönsteröppning: data.windowOpening,
-            fönstertyp: data.windowType,
-            materialkostnadProcent: data.materialPercentage,
-            
-            // Kvantiteter
-            antalDörrpartier: data.doorSections,
-            antalKällareGlugg: data.kallareGlugg,
-            antal1Luftare: data.luftare1,
-            antal2Luftare: data.luftare2,
-            antal3Luftare: data.luftare3,
-            antal4Luftare: data.luftare4,
-            antal5Luftare: data.luftare5,
-            antal6Luftare: data.luftare6,
-            antalFönsterpartier: data.totalWindows,
-            
-            // Spröjs
-            harSpröjs: data.hasSprojs,
-            antalSpröjsPerBåge: data.sprojsPerWindow,
-            antalFönsterMedSpröjs: data.windowsWithSprojs,
-            
-            // E-glas
-            harEGlas: data.hasEGlass,
-            eGlasKvm: data.eGlassSqm,
-            
-            // ROT-avdrag
-            fastighetRotBerättigad: data.propertyRotEligible,
-            kundRotBerättigad: data.customerRotEligible,
-            harRotAvdrag: data.hasRotDeduction,
-            delatRotAvdrag: data.isSharedRotDeduction,
-            
-            // BERÄKNADE PRISER (alla värden i SEK)
-            grundprisExklMoms: Math.round(baseComponentsPrice),
-            renoveringsPålägg: Math.round(renovationTypeCost),
-            fönsterTypKostnad: Math.round(windowTypeCost),
-            extraKostnad: Math.round(extrasCost),
-            arbetsbeskrivningsPålägg: Math.round(workDescriptionMarkup),
-            delsummaExklMoms: Math.round(subtotalExclVat),
-            moms: Math.round(vatCost),
-            totaltInklMoms: Math.round(totalInclVat),
-            materialkostnadForRot: Math.round(materialCostForRot),
-            rotAvdrag: Math.round(rotDeduction),
-            slutprisKund: Math.round(finalCustomerPrice),
-            
-            // Metadata
-            timestamp: new Date().toISOString(),
-            anbudsNummer: `SB-${Date.now()}`,
-            källa: 'Sternbecks Anbudsapp'
-        };
-
-        console.log('📊 Skickar anbudsdata till Netlify function...');
-        console.log('💰 Beräknade priser:', {
-            totaltInklMoms: Math.round(totalInclVat),
-            rotAvdrag: Math.round(rotDeduction),
-            slutpris: Math.round(finalCustomerPrice)
-        });
-
-        // POST till Netlify function som hanterar webhook säkert
-        const response = await fetch('/.netlify/functions/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(webhookData)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            throw new Error(`Netlify function error: ${response.status} - ${errorData.error || 'Unknown error'}`);
-        }
-
-        const result = await response.json();
-        console.log('✅ Netlify function response:', result);
-        
-        return result;
-    }
-    
-    async handleArbetsbeskrivningSubmission() {
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        if (!arbetsForm) return;
-        
-        // Validera formuläret
-        if (!this.validateArbetsbeskrivningForm()) {
-            return;
-        }
-        
-        const submitBtn = document.getElementById('arb-submit-btn');
-        const loadingSpinner = document.getElementById('arb-loading-spinner');
-        
-        this.setSubmitButtonLoading(true, submitBtn, loadingSpinner);
-        
-        try {
-            // BORTTAGET: Google Forms arbetsbeskrivning submission
-            // TODO: Implementera webhook för arbetsbeskrivningar om behövs
-            /*
-            const formData = this.collectArbetsbeskrivningData();
-            await this.submitArbetsbeskrivningToGoogleForms(formData);
-            */
-            
-            // Visa framgångsmeddelande
-            this.showArbetsbeskrivningSuccessMessage();
-            this.resetBothForms();
-            
-        } catch (error) {
-            console.error('Fel vid skickning av arbetsbeskrivning:', error);
-            this.showArbetsbeskrivningErrorMessage();
-        } finally {
-            this.setSubmitButtonLoading(false, submitBtn, loadingSpinner);
-        }
-    }
-    
-    validateArbetsbeskrivningForm() {
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        if (!arbetsForm) return false;
-        
-        let isValid = true;
-        
-        // Validera obligatoriska fält
-        const requiredFields = [
-            { id: 'arb_typ_av_renovering', message: 'Vänligen välj renoveringstyp' },
-            { id: 'arb-gdpr-consent', message: 'Du måste godkänna behandling av personuppgifter', type: 'checkbox' }
-        ];
-        
-        requiredFields.forEach(field => {
-            const element = document.getElementById(field.id);
-            const errorElement = document.getElementById(field.id + '-error');
-            
-            if (!element) return;
-            
-            let hasError = false;
-            
-            if (field.type === 'checkbox') {
-                hasError = !element.checked;
-            } else {
-                hasError = !element.value || element.value.trim() === '';
-            }
-            
-            if (hasError) {
-                isValid = false;
-                if (errorElement) {
-                    errorElement.textContent = field.message;
-                    errorElement.classList.add('show');
-                }
-                element.closest('.form-group')?.classList.add('error');
-            } else {
-                if (errorElement) {
-                    errorElement.textContent = '';
-                    errorElement.classList.remove('show');
-                }
-                element.closest('.form-group')?.classList.remove('error');
-            }
-        });
-        
-        // Validera arbetsbeskrivning radio buttons
-        const arbetsRadios = arbetsForm.querySelectorAll('input[name="arb_arbetsbeskrivning"]');
-        const arbetsSelected = Array.from(arbetsRadios).some(radio => radio.checked);
-        const arbetsErrorElement = document.getElementById('arb_arbetsbeskrivning-error');
-        
-        if (!arbetsSelected) {
-            isValid = false;
-            if (arbetsErrorElement) {
-                arbetsErrorElement.textContent = 'Vänligen välj arbetsbeskrivning';
-                arbetsErrorElement.classList.add('show');
-            }
-        } else {
-            if (arbetsErrorElement) {
-                arbetsErrorElement.textContent = '';
-                arbetsErrorElement.classList.remove('show');
-            }
-        }
-        
-        return isValid;
-    }
-    
-    // BORTTAGET: Google Forms arbetsbeskrivning data collection
-    /*collectArbetsbeskrivningData() {
-        const formData = new FormData();
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        
-        if (!arbetsForm) return formData;
-        
-        // Samla in alla arbetsbeskrivning fält
-        Object.keys(CONFIG.ARBETSBESKRIVNING_FIELDS).forEach(fieldName => {
-            let value = '';
-            
-            if (fieldName === 'arb-gdpr-consent') {
-                const field = document.getElementById('arb-gdpr-consent');
-                value = field && field.checked ? 'Ja' : 'Nej';
-            } else {
-                const field = arbetsForm.querySelector(`[name="${fieldName}"]`);
-                
-                if (field) {
-                    if (field.type === 'radio') {
-                        const selectedRadio = arbetsForm.querySelector(`input[name="${fieldName}"]:checked`);
-                        value = selectedRadio ? selectedRadio.value : '';
-                    } else {
-                        value = field.value || '';
-                    }
-                }
-            }
-            
-            if (value !== '') {
-                formData.append(CONFIG.ARBETSBESKRIVNING_FIELDS[fieldName], value);
-            }
-        });
-        
-        // Samla in moment checklista data
-        const momentData = this.collectMomentChecklistaData();
-        if (momentData) {
-            formData.append('entry.MOMENT_CHECKLISTA', momentData);
-        }
-        
-        return formData;
-    }*/
-    
-    collectMomentChecklistaData() {
-        const checklistaContainer = document.getElementById('moment-checklista-container');
-        if (!checklistaContainer) return '';
-        
-        const checkedItems = [];
-        const checkboxes = checklistaContainer.querySelectorAll('input[type="checkbox"]:checked');
-        
-        checkboxes.forEach(checkbox => {
-            checkedItems.push(checkbox.value);
-        });
-        
-        return checkedItems.length > 0 ? checkedItems.join('\n') : '';
-    }
-    
-    // BORTTAGET: Google Forms arbetsbeskrivning submission
-    /*async submitArbetsbeskrivningToGoogleForms(formData) {
-        // Hämta renoveringstyp för att välja rätt form
-        const renovationTypeSelect = document.getElementById('arb_typ_av_renovering');
-        const renovationType = renovationTypeSelect ? renovationTypeSelect.value : '';
-        
-        // Välj rätt Google Forms URL
-        let formUrl = CONFIG.ARBETSBESKRIVNING_FORMS[renovationType];
-        
-        if (!formUrl || formUrl.includes('EXAMPLE_')) {
-            throw new Error('Google Forms URL är inte konfigurerad för denna renoveringstyp');
-        }
-        
-        const response = await fetch(formUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formData
-        });
-        
-        return true;
-    }*/
-    
-    showArbetsbeskrivningSuccessMessage() {
-        const successMessage = document.getElementById('arb-success-message');
-        if (successMessage) {
-            successMessage.style.display = 'block';
-            successMessage.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-    
-    showArbetsbeskrivningErrorMessage() {
-        const errorMessage = document.getElementById('arb-error-message');
-        if (errorMessage) {
-            errorMessage.style.display = 'block';
-            errorMessage.scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-    
-    resetBothForms() {
-        // Reset both forms
-        this.resetForm();
-        
-        const arbetsForm = document.getElementById('arbetsbeskrivning-form');
-        if (arbetsForm) {
-            arbetsForm.reset();
-        }
-        
-        // Clear localStorage data
-        localStorage.removeItem('sternbecks_anbud_data');
-        localStorage.removeItem('sternbecks_arbetsbeskrivning_data');
-        
-        // Hide moment checklista
-        const checklistaSection = document.getElementById('moment-checklista-section');
-        if (checklistaSection) {
-            checklistaSection.style.display = 'none';
-        }
-        
-        // Switch back to anbud tab
-        this.switchTab('anbud');
-        
-        console.log('✅ Both forms reset and data cleared');
-    }
-    
-    setSubmitButtonLoading(loading, submitBtn = null, loadingSpinner = null) {
-        // Använd specifika knappar om angivna, annars använd default anbud-knappen
-        const btn = submitBtn || this.submitBtn;
-        const spinner = loadingSpinner || document.getElementById('loading-spinner');
-        
-        if (loading) {
-            btn.classList.add('loading');
-            btn.disabled = true;
-            if (spinner) {
-                spinner.style.display = 'block';
-            }
-        } else {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-            if (spinner) {
-                spinner.style.display = 'none';
-            }
-        }
-    }
-    
-
-    showSuccessMessage() {
-        this.successMessage.style.display = 'block';
-        this.form.style.display = 'none';
-        this.successMessage.scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    showErrorMessage() {
-        this.errorMessage.style.display = 'block';
-        this.errorMessage.scrollIntoView({ behavior: 'smooth' });
-    }
-    
-    hideMessages() {
-        this.successMessage.style.display = 'none';
-        this.errorMessage.style.display = 'none';
-    }
-    
-    resetForm() {
-        this.form.reset();
-        
-        // Återställ materialkostnad till 0% (visas bara vid ROT)
-        document.getElementById('materialkostnad').value = '0';
-        
-        this.updatePriceCalculation();
-        
-        // Rensa alla felmeddelanden
-        const errorElements = this.form.querySelectorAll('.error-message');
-        const errorGroups = this.form.querySelectorAll('.form-group.error');
-        
-        errorElements.forEach(el => {
-            el.textContent = '';
-            el.classList.remove('show');
-        });
-        
-        errorGroups.forEach(group => {
-            group.classList.remove('error');
-        });
-        
-        // Visa formuläret igen efter 3 sekunder för att ge användaren tid att läsa meddelandet
-        setTimeout(() => {
-            this.successMessage.style.display = 'none';
-            this.form.style.display = 'block';
-            
-            // Scrolla tillbaka till toppen av formuläret
-            this.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 3000);
-    }
-    
-    scrollToFirstError() {
-        const firstError = this.form.querySelector('.form-group.error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-}
-
-// Lösenordsskydd klass
 class PasswordProtection {
     constructor() {
         console.log('🔐 PasswordProtection konstruktor startar...');
@@ -2044,15 +592,7 @@ class PasswordProtection {
         this.passwordForm = document.getElementById('password-form');
         this.passwordInput = document.getElementById('password-input');
         this.passwordError = document.getElementById('password-error');
-        this.mainApp = document.getElementById('main-app');
-        
-        // Debug: Logga alla element
-        console.log('📋 DOM-element kontroll:');
-        console.log('  passwordOverlay:', this.passwordOverlay);
-        console.log('  passwordForm:', this.passwordForm);
-        console.log('  passwordInput:', this.passwordInput);
-        console.log('  passwordError:', this.passwordError);
-        console.log('  mainApp:', this.mainApp);
+        this.mainApp = document.getElementById('mainContainer');
         
         // Kontrollera att alla element finns
         const missingElements = [];
@@ -2060,36 +600,26 @@ class PasswordProtection {
         if (!this.passwordForm) missingElements.push('password-form');
         if (!this.passwordInput) missingElements.push('password-input');
         if (!this.passwordError) missingElements.push('password-error');
-        if (!this.mainApp) missingElements.push('main-app');
+        if (!this.mainApp) missingElements.push('mainContainer');
         
         if (missingElements.length > 0) {
             console.error('❌ Saknade DOM-element:', missingElements);
             return;
-        } else {
-            console.log('✅ Alla nödvändiga DOM-element hittades');
         }
         
-        // Försöksräknare
         this.attempts = 0;
         this.isLocked = false;
         
-        console.log('🚀 Initialiserar lösenordsskydd...');
         this.initializePasswordProtection();
     }
     
     initializePasswordProtection() {
-        console.log('🔍 Kontrollerar befintlig session...');
-        
         // Kontrollera om användaren redan är inloggad
         const hasExistingSession = this.checkExistingSession();
-        console.log('📊 Befintlig session:', hasExistingSession);
         
         if (hasExistingSession) {
-            console.log('✅ Giltig session hittad - ger åtkomst automatiskt');
             this.grantAccess();
             return;
-        } else {
-            console.log('❌ Ingen giltig session - visar lösenordsskärm');
         }
         
         // Lyssna på formulärinlämning
@@ -2098,60 +628,16 @@ class PasswordProtection {
             this.validatePassword();
         });
         
-        // Lyssna på Enter-tangent i lösenordsfältet
-        this.passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                this.validatePassword();
-            }
-        });
-        
-        // Fokusera på lösenordsfältet när sidan laddas
+        // Fokusera på lösenordsfältet
         setTimeout(() => {
             this.passwordInput.focus();
         }, 500);
     }
     
     checkExistingSession() {
-        console.log('🔎 checkExistingSession() körs...');
-        
-        // NYTT: Rensa session vid varje ny flik/fönster för säkerhet
-        console.log('🔒 Rensar sessions för säkerhet - kräver nytt lösenord');
+        // Rensa session vid varje ny flik/fönster för säkerhet
         localStorage.removeItem(PASSWORD_CONFIG.SESSION_KEY);
         return false;
-        
-        /* URSPRUNGLIG SESSION-HANTERING (inaktiverad för säkerhet):
-        try {
-            const session = localStorage.getItem(PASSWORD_CONFIG.SESSION_KEY);
-            console.log('📦 localStorage session:', session);
-            
-            if (session) {
-                const sessionData = JSON.parse(session);
-                console.log('📋 Session data:', sessionData);
-                
-                // Kontrollera session-timeout (24 timmar)
-                const sessionAge = Date.now() - (sessionData.timestamp || 0);
-                const maxAge = 24 * 60 * 60 * 1000; // 24 timmar
-                
-                if (sessionAge > maxAge) {
-                    console.log('⏰ Session för gammal, rensar...');
-                    localStorage.removeItem(PASSWORD_CONFIG.SESSION_KEY);
-                    return false;
-                }
-                
-                const isValid = sessionData.authenticated === true && sessionData.password === PASSWORD_CONFIG.CORRECT_PASSWORD;
-                console.log('🔐 Session giltig?', isValid, '(ålder:', Math.round(sessionAge / 1000 / 60), 'min)');
-                
-                return isValid;
-            } else {
-                console.log('📭 Ingen session i localStorage');
-            }
-        } catch (error) {
-            console.warn('❌ Fel vid kontroll av befintlig session:', error);
-            localStorage.removeItem(PASSWORD_CONFIG.SESSION_KEY);
-        }
-        return false;
-        */
     }
     
     validatePassword() {
@@ -2160,7 +646,6 @@ class PasswordProtection {
         const enteredPassword = this.passwordInput.value;
         
         if (enteredPassword === PASSWORD_CONFIG.CORRECT_PASSWORD) {
-            // Spara session i localStorage
             this.saveSession();
             this.grantAccess();
         } else {
@@ -2187,30 +672,25 @@ class PasswordProtection {
     }
     
     grantAccess() {
-        console.log('🚪 grantAccess() körs - ger användaren åtkomst...');
-        
-        // Dölj lösenordsskärm med animering
-        console.log('🎭 Animerar bort lösenordsskärm...');
         this.passwordOverlay.style.animation = 'fadeOut 0.5s ease-out';
         
         setTimeout(() => {
-            console.log('⏰ setTimeout i grantAccess körs (efter 500ms)...');
-            
             this.passwordOverlay.style.display = 'none';
             this.mainApp.style.display = 'block';
             this.mainApp.style.animation = 'fadeIn 0.5s ease-out';
             
-            console.log('👁️ Visibility ändrat:');
-            console.log('  - passwordOverlay display:', this.passwordOverlay.style.display);
-            console.log('  - mainApp display:', this.mainApp.style.display);
+            // Show navigation bar
+            const navigationBar = document.querySelector('.navigation-bar');
+            if (navigationBar) {
+                navigationBar.classList.add('visible');
+            }
             
-            // Nollställ hela appen vid varje inloggning
-            console.log('🔄 Nollställer appen...');
-            this.resetApp();
-            
-            // Initialisera huvudapplikationen efter framgångsrik inloggning
-            console.log('🚀 Initialiserar huvudapplikation...');
-            this.initializeMainApplication();
+            // Initialisera huvudapplikation
+            if (window.quoteCalculator) {
+                window.quoteCalculator.init();
+            } else {
+                window.quoteCalculator = new QuoteCalculator();
+            }
         }, 500);
     }
     
@@ -2234,7 +714,7 @@ class PasswordProtection {
         this.isLocked = true;
         this.passwordInput.disabled = true;
         
-        // Kontrollera om reset-knappen redan finns
+        // Ta bort befintlig reset-knapp om den finns
         let resetButton = document.getElementById('password-reset-btn');
         if (resetButton) {
             resetButton.remove();
@@ -2258,19 +738,10 @@ class PasswordProtection {
             transition: background-color 0.3s ease;
         `;
         
-        resetButton.addEventListener('mouseenter', () => {
-            resetButton.style.backgroundColor = '#5a6268';
-        });
-        
-        resetButton.addEventListener('mouseleave', () => {
-            resetButton.style.backgroundColor = '#6c757d';
-        });
-        
         resetButton.addEventListener('click', () => {
             this.resetPassword();
         });
         
-        // Lägg till knappen efter lösenordsfältet
         this.passwordInput.parentNode.appendChild(resetButton);
     }
     
@@ -2281,586 +752,1333 @@ class PasswordProtection {
         this.passwordError.style.display = 'none';
         this.passwordInput.focus();
         
-        // Ta bort resetknappen
         const resetButton = document.getElementById('password-reset-btn');
         if (resetButton) {
             resetButton.remove();
         }
-    }
-    
-    resetApp() {
-        console.log('🔄 Nollställer hela applikationen...');
-        
-        // Rensa alla textinput-fält med KORREKTA ID:n
-        const textInputs = [
-            'company', 'contact_person', 'address', 'phone', 'email', 'city', 'postal_code', 
-            'fastighetsbeteckning', 'window_sections', 'antal_dorrpartier', 'antal_kallare_glugg', 
-            'antal_pardorr_balkong', 'antal_1_luftare', 'antal_2_luftare', 
-            'antal_3_luftare', 'antal_4_luftare', 'antal_5_luftare', 
-            'antal_6_luftare', 'antal_sprojs_per_bage', 'antal_fonster_med_sprojs', 'le_kvm', 
-            'price_adjustment_plus', 'price_adjustment_minus'
-        ];
-        
-        console.log('📝 Rensar text/number input-fält...');
-        let clearedFields = 0;
-        textInputs.forEach(id => {
-            const field = document.getElementById(id);
-            if (field) {
-                const oldValue = field.value;
-                field.value = '';
-                clearedFields++;
-                if (oldValue) {
-                    console.log(`  ✅ Rensade ${id}: "${oldValue}" → ""`);
-                }
-            } else {
-                console.log(`  ❌ Hittade inte fält: ${id}`);
-            }
-        });
-        console.log(`📊 Rensade ${clearedFields} av ${textInputs.length} fält`);
-        
-        // Återställ dropdown till standardval
-        console.log('🔽 Återställer dropdown-menyer...');
-        const typAvRenovering = document.getElementById('typ_av_renovering');
-        if (typAvRenovering) {
-            const oldValue = typAvRenovering.value;
-            typAvRenovering.value = 'Modern - Alcro bestå';
-            console.log(`  ✅ typ_av_renovering: "${oldValue}" → "Modern - Alcro bestå"`);
-        } else {
-            console.log('  ❌ typ_av_renovering hittades inte');
-        }
-        
-        const materialkostnad = document.getElementById('materialkostnad');
-        if (materialkostnad) {
-            const oldValue = materialkostnad.value;
-            materialkostnad.value = '0';
-            console.log(`  ✅ materialkostnad: "${oldValue}" → "0"`);
-        }
-        
-        // Återställ radiobuttons till standardval
-        console.log('🔘 Återställer radiobuttons...');
-        
-        // Arbetsbeskrivning - Utvändig renovering (standard)
-        const arbetsbeskrivningRadios = document.querySelectorAll('input[name="arbetsbeskrivning"]');
-        console.log(`  🔍 Hittade ${arbetsbeskrivningRadios.length} arbetsbeskrivning radiobuttons`);
-        arbetsbeskrivningRadios.forEach(radio => {
-            radio.checked = radio.value === 'Utvändig renovering';
-            if (radio.checked) console.log(`  ✅ Valde arbetsbeskrivning: ${radio.value}`);
-        });
-        
-        // Fönsteröppning - Inåtgående (standard)  
-        const fonsteroppningRadios = document.querySelectorAll('input[name="fonsteroppning"]');
-        console.log(`  🔍 Hittade ${fonsteroppningRadios.length} fönsteröppning radiobuttons`);
-        fonsteroppningRadios.forEach(radio => {
-            radio.checked = radio.value === 'Inåtgående';
-            if (radio.checked) console.log(`  ✅ Valde fönsteröppning: ${radio.value}`);
-        });
-        
-        // Fönstertyp - Kopplade standard (standard)
-        const fonsterTypRadios = document.querySelectorAll('input[name="typ_av_fonster"]');
-        console.log(`  🔍 Hittade ${fonsterTypRadios.length} fönstertyp radiobuttons`);
-        fonsterTypRadios.forEach(radio => {
-            radio.checked = radio.value === 'Kopplade standard';
-            if (radio.checked) console.log(`  ✅ Valde fönstertyp: ${radio.value}`);
-        });
-        
-        // ROT-avdrag radiobuttons - Sätt standardval till "Nej"
-        const rotFastighetRadios = document.querySelectorAll('input[name="fastighet_rot_berättigad"]');
-        console.log(`  🔍 Hittade ${rotFastighetRadios.length} ROT fastighet radiobuttons`);
-        rotFastighetRadios.forEach(radio => {
-            radio.checked = radio.value === 'Nej - Hyresrätt/Kommersiell fastighet';
-            if (radio.checked) console.log(`  ✅ Valde ROT fastighet: ${radio.value}`);
-        });
-        
-        const rotKundRadios = document.querySelectorAll('input[name="är_du_berättigad_rot_avdrag"]');
-        console.log(`  🔍 Hittade ${rotKundRadios.length} ROT kund radiobuttons`);
-        rotKundRadios.forEach(radio => {
-            radio.checked = radio.value === 'Nej - visa fullpris utan avdrag';
-            if (radio.checked) console.log(`  ✅ Valde ROT kund: ${radio.value}`);
-        });
-        
-        // Delat ROT-avdrag radiobuttons - Sätt till "Nej"
-        const delatRotRadios = document.querySelectorAll('input[name="delat_rot_avdrag"]');
-        console.log(`  🔍 Hittade ${delatRotRadios.length} delat ROT radiobuttons`);
-        delatRotRadios.forEach(radio => {
-            radio.checked = radio.value === 'Nej';
-            if (radio.checked) console.log(`  ✅ Valde delat ROT: ${radio.value}`);
-        });
-        
-        // Spröjs och LE-glas radiobuttons
-        const sprojsRadios = document.querySelectorAll('input[name="sprojs_choice"]');
-        console.log(`  🔍 Hittade ${sprojsRadios.length} spröjs radiobuttons`);
-        sprojsRadios.forEach(radio => {
-            radio.checked = radio.value === 'Nej';
-            if (radio.checked) console.log(`  ✅ Valde spröjs: ${radio.value}`);
-        });
-        
-        const leGlasRadios = document.querySelectorAll('input[name="le_glas_choice"]');
-        console.log(`  🔍 Hittade ${leGlasRadios.length} LE-glas radiobuttons`);
-        leGlasRadios.forEach(radio => {
-            radio.checked = radio.value === 'Nej';
-            if (radio.checked) console.log(`  ✅ Valde LE-glas: ${radio.value}`);
-        });
-        
-        // Nollställ prisberäkningar
-        console.log('💰 Nollställer prisvisning...');
-        this.resetPriceDisplays();
-        
-        // Dölj villkorliga sektioner
-        console.log('👁️ Döljer villkorliga sektioner...');
-        const sectionsToHide = [
-            { id: 'materialkostnad-section', name: 'Materialkostnad' },
-            { id: 'material-row', name: 'Material-rad i prisuppdelning' },
-            { id: 'sprojs-section', name: 'Spröjs-sektion' },
-            { id: 'le-glas-section', name: 'LE-glas-sektion' }
-        ];
-        
-        sectionsToHide.forEach(section => {
-            const element = document.getElementById(section.id);
-            if (element) {
-                element.style.display = 'none';
-                console.log(`  ✅ Dolde ${section.name}`);
-            }
-        });
-        
-        // Återställ tab till Anbud
-        console.log('📑 Återställer tab-navigation till Anbud...');
-        const anbudTab = document.querySelector('[data-tab="anbud"]');
-        const arbetsbeskrivningTab = document.querySelector('[data-tab="arbetsbeskrivning"]');
-        const anbudContent = document.getElementById('anbud-tab');
-        const arbetsbeskrivningContent = document.getElementById('arbetsbeskrivning-tab');
-        
-        if (anbudTab && arbetsbeskrivningTab && anbudContent && arbetsbeskrivningContent) {
-            anbudTab.classList.add('active');
-            arbetsbeskrivningTab.classList.remove('active');
-            anbudContent.classList.add('active');
-            arbetsbeskrivningContent.classList.remove('active');
-            console.log('  ✅ Återställde tab-navigation till Anbud');
-        } else {
-            console.log('  ❌ Kunde inte hitta alla tab-element');
-            console.log(`    anbudTab: ${!!anbudTab}, arbetsbeskrivningTab: ${!!arbetsbeskrivningTab}`);
-            console.log(`    anbudContent: ${!!anbudContent}, arbetsbeskrivningContent: ${!!arbetsbeskrivningContent}`);
-        }
-        
-        // Trigga ny prisberäkning efter reset (med längre delay)
-        console.log('🔄 Triggar ny prisberäkning...');
-        setTimeout(() => {
-            // Säkerställ att alla priser fortfarande är 0 innan triggeringen
-            this.resetPriceDisplays();
-            
-            // Hitta QuoteCalculator-instans och kör updatePriceCalculation
-            const quoteForm = document.getElementById('quote-form');
-            if (quoteForm) {
-                // Trigga change event för att starta om prisberäkningen
-                const event = new Event('input', { bubbles: true });
-                quoteForm.dispatchEvent(event);
-                console.log('  ✅ Prisberäkning startad');
-            }
-        }, 200);
-        
-        console.log('✅ App nollställd komplett - alla fält ska nu vara rensade!');
-    }
-    
-    resetPriceDisplays() {
-        console.log('💰 resetPriceDisplays() körs...');
-        
-        // Nollställ alla priselement
-        const priceElements = [
-            'base-components-price',
-            'window-type-cost', 
-            'extras-cost',
-            'subtotal-price',
-            'subtotal-price-display',
-            'vat-amount',
-            'vat-cost',
-            'total-price',
-            'total-with-vat',
-            'material-deduction',
-            'rot-deduction',
-            'rot-deduction-amount',
-            'final-customer-price',
-            'renovation-markup',
-            'material-cost-display'
-        ];
-        
-        let resetPrices = 0;
-        priceElements.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                const oldValue = element.textContent;
-                
-                // Speciell hantering för olika element-typer
-                let newValue = '0 kr';
-                if (id === 'rot-deduction') {
-                    newValue = '-0 kr';
-                }
-                
-                // Vissa element använder innerHTML med <strong>-taggar
-                if (['subtotal-price', 'total-with-vat', 'final-customer-price'].includes(id)) {
-                    element.innerHTML = `<strong>${newValue}</strong>`;
-                } else {
-                    element.textContent = newValue;
-                }
-                resetPrices++;
-                if (oldValue && oldValue !== newValue && oldValue !== '0' && oldValue !== '0 kr') {
-                    console.log(`  ✅ Nollställde ${id}: "${oldValue}" → "${newValue}"`);
-                }
-            } else {
-                console.log(`  ❌ Hittade inte priselement: ${id}`);
-            }
-        });
-        console.log(`📊 Nollställde ${resetPrices} av ${priceElements.length} priselement`);
-        
-        // Rensa prisuppdelnings-textarea
-        const priceBreakdown = document.getElementById('price-breakdown');
-        if (priceBreakdown) {
-            const oldValue = priceBreakdown.value;
-            priceBreakdown.value = '';
-            if (oldValue) {
-                console.log('  ✅ Rensade prisuppdelning textarea');
-            }
-        } else {
-            console.log('  ❌ Hittade inte price-breakdown textarea');
-        }
-    }
-    
-    resetFormOnly() {
-        console.log('🔄 Återställer formuläret (behåller användaren inloggad)...');
-        
-        // Använd samma resetApp-logik men utan att påverka inloggningsstatus
-        this.resetApp();
-        
-        // Visa bekräftelse för användaren
-        this.showResetConfirmation();
-    }
-    
-    showResetConfirmation() {
-        // Skapa temporär bekräftelse-notifikation
-        const notification = document.createElement('div');
-        notification.className = 'reset-notification';
-        notification.innerHTML = `
-            <div class="reset-notification-content">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="20,6 9,17 4,12"></polyline>
-                </svg>
-                <span>Formuläret har återställts!</span>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Animera in notifikationen
-        setTimeout(() => notification.classList.add('show'), 10);
-        
-        // Ta bort notifikationen efter 3 sekunder
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => document.body.removeChild(notification), 300);
-        }, 3000);
-    }
-    
-    logout() {
-        console.log('🚪 Logout metod körs...');
-        
-        // Rensa gamla event listeners och instanser
-        if (window.currentThemeToggleInstance) {
-            window.currentThemeToggleInstance.cleanup();
-            window.currentThemeToggleInstance = null;
-            console.log('🧹 Rensade ThemeToggle-instans vid logout');
-        }
-        
-        // Rensa localStorage session
-        localStorage.removeItem(PASSWORD_CONFIG.SESSION_KEY);
-        console.log('✅ localStorage session borttagen');
-        
-        // Dölj navigationsknappar
-        this.hideNavigationBar();
-        
-        // Visa lösenordsskärmen igen
-        this.mainApp.style.display = 'none';
-        this.passwordOverlay.style.display = 'flex';
-        console.log('✅ Visa lösenordsskärm');
-        
-        // Återställ lösenordshantering
-        this.attempts = 0;
-        this.isLocked = false;
-        this.passwordInput.disabled = false;
-        this.passwordInput.value = '';
-        this.passwordError.style.display = 'none';
-        
-        // Ta bort eventuell resetknapp
-        const resetButton = document.getElementById('password-reset-btn');
-        if (resetButton) {
-            resetButton.remove();
-        }
-        
-        // Fokusera på lösenordsfält
-        setTimeout(() => {
-            this.passwordInput.focus();
-        }, 100);
-        
-        console.log('🚪 Logout slutförd');
-    }
-    
-    initializeMainApplication() {
-        console.log('🚀 initializeMainApplication() startar...');
-        
-        // Kontrollera att alla nödvändiga element finns
-        const requiredElements = [
-            'quote-form',
-            'base-components-price',
-            'window-type-cost',
-            'extras-cost',
-            'submit-btn'
-        ];
-        
-        console.log('🔍 Kontrollerar nödvändiga element...');
-        console.log('📋 Söker efter element:', requiredElements);
-        
-        // Detaljerad kontroll av varje element
-        requiredElements.forEach(id => {
-            const element = document.getElementById(id);
-            console.log(`  - ${id}: ${element ? '✅ HITTAT' : '❌ SAKNAS'}`);
-            if (!element) {
-                console.log(`    🔍 Sökning efter '${id}':`, document.querySelectorAll(`#${id}, [id*="${id}"], [name="${id}"]`));
-            }
-        });
-        
-        const missingElements = requiredElements.filter(id => !document.getElementById(id));
-        
-        if (missingElements.length > 0) {
-            console.error('❌ KRITISKA ELEMENT SAKNAS:', missingElements);
-            console.log('🔍 Alla form-element:', document.querySelectorAll('form'));
-            console.log('🔍 Alla input-element:', document.querySelectorAll('input'));
-            console.log('🔍 Alla element med ID:', document.querySelectorAll('[id]'));
-            console.log('🔍 main-app innehåll:', this.mainApp ? this.mainApp.innerHTML.substring(0, 500) + '...' : 'main-app saknas');
-            return;
-        }
-        
-        // Initialisera huvudklasser först
-        new QuoteCalculator();
-        new AccessibilityEnhancer();
-        new ThemeToggle();
-        
-        // Visa och initialisera navigationsknappar (logout och reset)
-        this.showNavigationBar();
-        this.initializeNavigationButtons();
-        
-        console.log('Sternbecks Anbudsapplikation initialiserad framgångsrikt efter lösenordsvalidering!');
-    }
-    
-    showNavigationBar() {
-        console.log('🔄 showNavigationBar() anropad');
-        const navigationBar = document.querySelector('.navigation-bar');
-        if (navigationBar) {
-            console.log('📍 Navigation bar element hittat:', navigationBar);
-            navigationBar.classList.add('visible');
-            console.log('✅ Navigationsknappar visas - klass "visible" tillagd');
-            
-            // Dubbelkontroll att klassen faktiskt lades till
-            if (navigationBar.classList.contains('visible')) {
-                console.log('✅ Bekräftat: "visible" klass finns på navigationsbaren');
-            } else {
-                console.error('❌ "visible" klass kunde inte läggas till!');
-            }
-        } else {
-            console.error('❌ Navigationsbaren hittades inte!');
-            console.log('🔍 Alla nav element:', document.querySelectorAll('nav'));
-            console.log('🔍 Alla .navigation-bar element:', document.querySelectorAll('.navigation-bar'));
-        }
-    }
-    
-    hideNavigationBar() {
-        const navigationBar = document.querySelector('.navigation-bar');
-        if (navigationBar) {
-            navigationBar.classList.remove('visible');
-            console.log('✅ Navigationsknappar dolda');
-        }
-    }
-    
-    initializeNavigationButtons() {
-        console.log('🎯 Initialiserar navigationsknappar...');
-        
-        // Skapa referenser till PasswordProtection-instansen
-        const passwordProtection = window.passwordProtectionInstance || this;
-        
-        // Vänta en kort stund för att säkerställa att DOM är redo
-        setTimeout(() => {
-            console.log('⏰ setTimeout för navigationsknappar körs...');
-            
-            // Logout-knapp
-            const logoutBtn = document.getElementById('logout-btn');
-            console.log('🔍 Letar efter logout-btn:', logoutBtn);
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    console.log('🚪 Logout-knapp klickad');
-                    if (confirm('Är du säker på att du vill logga ut?')) {
-                        passwordProtection.logout();
-                    }
-                });
-                console.log('✅ Logout event listener tillagd för element:', logoutBtn);
-            } else {
-                console.error('❌ Logout-knapp hittades inte!');
-                console.log('🔍 Alla element med ID logout-btn:', document.querySelectorAll('#logout-btn'));
-                console.log('🔍 Alla nav-btn element:', document.querySelectorAll('.nav-btn'));
-            }
-            
-            // Reset-knapp (NY FUNKTION)
-            const resetBtn = document.getElementById('reset-btn');
-            console.log('🔍 Letar efter reset-btn:', resetBtn);
-            if (resetBtn) {
-                resetBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    console.log('🔄 Reset-knapp klickad');
-                    if (confirm('Är du säker på att du vill återställa alla formulärfält?')) {
-                        passwordProtection.resetFormOnly();
-                    }
-                });
-                console.log('✅ Reset event listener tillagd för element:', resetBtn);
-            } else {
-                console.error('❌ Reset-knapp hittades inte!');
-                console.log('🔍 Alla element med ID reset-btn:', document.querySelectorAll('#reset-btn'));
-            }
-            
-            console.log('🎯 Navigationsknappar (logout + reset) initialiserade');
-        }, 100);
     }
 }
 
-// Tema toggle klass
 class ThemeToggle {
     constructor() {
-        // Ta bort tidigare instanser och event listeners
-        this.cleanup();
-        
+        this.init();
+    }
+
+    init() {
+        this.setupThemeToggle();
+        this.loadSavedTheme();
+    }
+
+    setupThemeToggle() {
         this.themeToggle = document.getElementById('theme-toggle');
-        this.body = document.body;
-        this.lightIcon = this.themeToggle?.querySelector('.theme-icon-light');
-        this.darkIcon = this.themeToggle?.querySelector('.theme-icon-dark');
+        if (this.themeToggle) {
+            this.themeToggle.addEventListener('click', () => this.toggleTheme());
+        }
+    }
+
+    loadSavedTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const isDark = savedTheme === 'dark';
         
-        // Bind metoden så den kan användas som event listener
-        this.handleToggleClick = this.handleToggleClick.bind(this);
-        
-        // Ladda sparat tema från localStorage
-        const savedTheme = localStorage.getItem('sternbecks-theme');
-        console.log(`🎨 Laddar sparat tema: ${savedTheme}`);
-        if (savedTheme === 'dark') {
-            this.body.classList.add('dark');
-            this.body.setAttribute('data-theme', 'dark');
+        if (isDark) {
+            document.body.setAttribute('data-theme', 'dark');
         } else {
-            this.body.classList.remove('dark');
-            this.body.setAttribute('data-theme', 'light');
+            document.body.setAttribute('data-theme', 'light');
         }
         
-        this.initializeThemeToggle();
-        
-        // Spara referens till denna instans globalt för cleanup
-        window.currentThemeToggleInstance = this;
+        this.updateThemeIcons(isDark);
     }
-    
-    cleanup() {
-        // Ta bort tidigare instans och event listeners
-        if (window.currentThemeToggleInstance && window.currentThemeToggleInstance.themeToggle) {
-            const oldToggle = window.currentThemeToggleInstance.themeToggle;
-            const oldHandler = window.currentThemeToggleInstance.handleToggleClick;
-            if (oldToggle && oldHandler) {
-                oldToggle.removeEventListener('click', oldHandler);
-                console.log('🧹 Rensade gammal ThemeToggle event listener');
+
+    toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        this.updateThemeIcons(newTheme === 'dark');
+    }
+
+    updateThemeIcons(isDark) {
+        const lightIcon = document.querySelector('.theme-icon-light');
+        const darkIcon = document.querySelector('.theme-icon-dark');
+        
+        if (lightIcon && darkIcon) {
+            if (isDark) {
+                lightIcon.style.display = 'none';
+                darkIcon.style.display = 'block';
+            } else {
+                lightIcon.style.display = 'block';
+                darkIcon.style.display = 'none';
             }
         }
     }
-    
-    handleToggleClick(e) {
-        e.preventDefault();
-        this.toggleTheme();
-    }
-    
-    initializeThemeToggle() {
-        if (this.themeToggle) {
-            this.themeToggle.addEventListener('click', this.handleToggleClick);
-            console.log('🎨 ThemeToggle initialiserad med event listener');
-        } else {
-            console.error('❌ Theme toggle button hittades inte!');
-        }
-    }
-    
-    toggleTheme() {
-        this.body.classList.toggle('dark');
-        
-        // Uppdatera data-theme attribut för CSS
-        const isDark = this.body.classList.contains('dark');
-        this.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        
-        // Spara tema i localStorage
-        localStorage.setItem('sternbecks-theme', isDark ? 'dark' : 'light');
-        
-        console.log(`🎨 Tema växlat till: ${isDark ? 'mörkt' : 'ljust'}`);
-    }
 }
 
-// Utility functions för tillgänglighet och användbarhet
-class AccessibilityEnhancer {
+class QuoteCalculator {
     constructor() {
-        this.addKeyboardNavigation();
-        this.addAriaLabels();
+        this.init();
     }
-    
-    addKeyboardNavigation() {
-        // Lägg till keyboard navigation för radio buttons och checkboxes
-        const customInputs = document.querySelectorAll('.radio-label, .checkbox-label');
+
+    init() {
+        console.log('🎨 QuoteCalculator initialiserad');
         
-        customInputs.forEach(label => {
-            label.setAttribute('tabindex', '0');
+        this.waitForDOMReady(() => {
+            this.setupElectricalServiceListeners();
+            this.setupTabNavigation();
+            this.setupFormSubmission();
+            this.setupNavigationButtons();
+            console.log('✅ Alla event listeners konfigurerade');
+        });
+    }
+
+    waitForDOMReady(callback) {
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', callback);
+        } else if (document.readyState === 'interactive') {
+            setTimeout(callback, 100);
+        } else {
+            callback();
+        }
+    }
+
+    setupElectricalServiceListeners() {
+        console.log('🎯 Sätter upp event listeners för elinstallationer');
+        
+        // Lyssna på alla elinstallations-checkboxes
+        const serviceCheckboxes = document.querySelectorAll('input[name="elinstallationer"]');
+        serviceCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.handleElectricalServiceSelection(checkbox);
+                this.calculateElectricalQuote();
+                this.updateWorkDescription();
+            });
+        });
+
+        // Lyssna på alla dropdown-menyer för elinstallationer
+        const serviceDropdowns = document.querySelectorAll('.service-dropdown');
+        serviceDropdowns.forEach(dropdown => {
+            dropdown.addEventListener('change', () => {
+                this.calculateElectricalQuote();
+                this.updateWorkDescription();
+            });
+        });
+
+        // Lyssna på alla antal-inputfält
+        const serviceInputs = document.querySelectorAll('.service-input');
+        serviceInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                this.calculateElectricalQuote();
+                this.updateWorkDescription();
+            });
+        });
+
+        // Lyssna på ROT-avdrag radio buttons
+        const rotRadios = document.querySelectorAll('input[name="fastighet_rot_berättigad"], input[name="är_du_berättigad_rot_avdrag"], input[name="delat_rot_avdrag"]');
+        rotRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                this.handleROTAvdragChange();
+                this.calculateElectricalQuote();
+            });
+        });
+
+        // Lyssna på Grön Teknik-avdrag checkbox
+        const greenTechCheckbox = document.getElementById('green_tech_eligible');
+        if (greenTechCheckbox) {
+            greenTechCheckbox.addEventListener('change', () => {
+                this.handleGreenTechChange();
+                this.calculateElectricalQuote();
+            });
+        }
+
+        // Lyssna på Grön Teknik personer-dropdown
+        const greenTechPersons = document.getElementById('green_tech_persons');
+        if (greenTechPersons) {
+            greenTechPersons.addEventListener('change', () => {
+                this.calculateElectricalQuote();
+            });
+        }
+
+        // Materialkostnad hanteras nu automatiskt från produktval
+
+        // Lyssna på kundinformation för arbetsbeskrivning
+        const customerFields = [
+            'customer-company', 'customer-contact', 'customer-email', 'customer-phone',
+            'customer-address', 'customer-postal-code', 'customer-city'
+        ];
+        
+        customerFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', () => {
+                    this.updateWorkDescription();
+                    this.copyCustomerDataToWorkDescription();
+                });
+            }
+        });
+    }
+
+    handleElectricalServiceSelection(checkbox) {
+        const serviceOptions = checkbox.closest('.service-item').querySelector('.service-options');
+        
+        if (serviceOptions) {
+            if (checkbox.checked) {
+                serviceOptions.style.display = 'flex';
+            } else {
+                serviceOptions.style.display = 'none';
+                // Rensa dropdown och input när tjänsten avmarkeras
+                const dropdown = serviceOptions.querySelector('.service-dropdown');
+                const input = serviceOptions.querySelector('.service-input');
+                
+                if (dropdown) dropdown.selectedIndex = 0;
+                if (input) input.value = '';
+            }
+        }
+    }
+
+    handleROTAvdragChange() {
+        const fastighetROT = document.querySelector('input[name="fastighet_rot_berättigad"]:checked');
+        const kundROT = document.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked');
+        
+        const delatRotSection = document.getElementById('delat-rot-section');
+        
+        // Visa/dölj ROT-relaterade sektioner
+        const showROTSections = fastighetROT?.value === 'Ja - Villa/Radhus' && 
+                               kundROT?.value === 'Ja - inkludera ROT-avdrag i anbudet';
+        
+        if (delatRotSection) {
+            delatRotSection.style.display = showROTSections ? 'block' : 'none';
+        }
+        
+        // Uppdatera även grön teknik-synlighet
+        this.updateGreenTechVisibility();
+    }
+
+    updateGreenTechVisibility() {
+        const selectedServices = this.getSelectedElectricalServices();
+        const hasGreenTechProducts = selectedServices.some(service => service.greenTech);
+        
+        const greenTechSection = document.getElementById('green-tech-section');
+        if (greenTechSection) {
+            greenTechSection.style.display = hasGreenTechProducts ? 'block' : 'none';
+        }
+    }
+
+    handleGreenTechChange() {
+        const greenTechCheckbox = document.getElementById('green_tech_eligible');
+        const greenTechPersonsSection = document.getElementById('green-tech-persons-section');
+        
+        if (greenTechPersonsSection) {
+            greenTechPersonsSection.style.display = greenTechCheckbox?.checked ? 'block' : 'none';
+        }
+    }
+
+    collectGreenTechData() {
+        const eligible = document.getElementById('green_tech_eligible')?.checked || false;
+        const persons = document.getElementById('green_tech_persons')?.value || '1';
+        
+        return {
+            eligible,
+            maxAmount: persons === '1' ? 50000 : 100000
+        };
+    }
+
+    categorizeServices(selectedServices) {
+        const greenTechServices = [];
+        const regularServices = [];
+        
+        selectedServices.forEach(service => {
+            if (service.greenTech) {
+                greenTechServices.push(service);
+            } else {
+                regularServices.push(service);
+            }
+        });
+        
+        return { greenTechServices, regularServices };
+    }
+
+    calculateElectricalQuote() {
+        console.log('💰 Beräknar elinstallationer-pris med ROT/Grön Teknik dubbla avdrag');
+        
+        const selectedServices = this.getSelectedElectricalServices();
+        this.updateGreenTechVisibility(); // Uppdatera grön teknik-synlighet
+        
+        if (selectedServices.length === 0) {
+            this.updatePricingDisplay(0, 0, 0, 0, 0, 0, {});
+            return { subtotal: 0, finalTotal: 0, services: [] };
+        }
+
+        // Kategorisera tjänster i grön teknik och vanliga
+        const { greenTechServices, regularServices } = this.categorizeServices(selectedServices);
+        
+        // Beräkna totalkostnader
+        let totalMaterial = 0;
+        let totalLabor = 0;
+        let greenTechMaterial = 0;
+        let greenTechLabor = 0;
+        let regularMaterial = 0;
+        let regularLabor = 0;
+
+        selectedServices.forEach(service => {
+            totalMaterial += service.totalMaterial;
+            totalLabor += service.totalLabor;
             
-            label.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    const input = label.querySelector('input');
-                    if (input) {
-                        input.checked = !input.checked;
-                        input.dispatchEvent(new Event('change'));
+            if (service.greenTech) {
+                greenTechMaterial += service.totalMaterial;
+                greenTechLabor += service.totalLabor;
+            } else {
+                regularMaterial += service.totalMaterial;
+                regularLabor += service.totalLabor;
+            }
+        });
+
+        const subtotal = totalMaterial + totalLabor;
+        const vatAmount = subtotal * 0.25;
+        const totalWithVat = subtotal + vatAmount;
+
+        // Beräkna med moms för avdragskategorier
+        const regularMaterialWithVat = regularMaterial * 1.25;
+        const regularLaborWithVat = regularLabor * 1.25;
+        const greenTechMaterialWithVat = greenTechMaterial * 1.25;
+        const greenTechLaborWithVat = greenTechLabor * 1.25;
+
+        // SCENARIO 1: Bara grön teknik-produkter
+        if (greenTechServices.length > 0 && regularServices.length === 0) {
+            const greenTechData = this.collectGreenTechData();
+            let greenTechDeduction = 0;
+            
+            if (greenTechData.eligible) {
+                // Grön teknik-avdrag på hela kostnaden (material + arbete)
+                greenTechServices.forEach(service => {
+                    const serviceTotal = (service.totalMaterial + service.totalLabor) * 1.25;
+                    greenTechDeduction += serviceTotal * (service.greenTechRate / 100);
+                });
+                
+                // Begränsa enligt maxbelopp
+                if (greenTechDeduction > greenTechData.maxAmount) {
+                    greenTechDeduction = greenTechData.maxAmount;
+                }
+            }
+            
+            const finalTotal = totalWithVat - greenTechDeduction;
+            this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, 0, greenTechDeduction, finalTotal, {
+                totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+                scenario: 'greenOnly'
+            });
+            
+            return {
+                subtotal, totalWithVat, greenTechDeduction, finalTotal, services: selectedServices,
+                scenario: 'greenOnly'
+            };
+        }
+        
+        // SCENARIO 2: Bara vanliga produkter
+        if (regularServices.length > 0 && greenTechServices.length === 0) {
+            const rotData = this.collectROTData();
+            let rotDeduction = 0;
+            
+            if (this.isROTEligible(rotData)) {
+                rotDeduction = regularLaborWithVat * CONFIG.ROT_DEDUCTION.RATE;
+                
+                const maxROTDeduction = rotData.delatROT === 'Ja' ? 
+                    CONFIG.ROT_DEDUCTION.MAX_SHARED : CONFIG.ROT_DEDUCTION.MAX_PER_PERSON;
+                
+                if (rotDeduction > maxROTDeduction) {
+                    rotDeduction = maxROTDeduction;
+                }
+            }
+            
+            const finalTotal = totalWithVat - rotDeduction;
+            this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, 0, finalTotal, {
+                totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+                scenario: 'rotOnly'
+            });
+            
+            return {
+                subtotal, totalWithVat, rotDeduction, finalTotal, services: selectedServices,
+                scenario: 'rotOnly'
+            };
+        }
+        
+        // SCENARIO 3: Blandade produkter - båda avdragen
+        const rotData = this.collectROTData();
+        const greenTechData = this.collectGreenTechData();
+        let rotDeduction = 0;
+        let greenTechDeduction = 0;
+        
+        // ROT-avdrag på vanliga produkters arbetskostnad
+        if (this.isROTEligible(rotData)) {
+            rotDeduction = regularLaborWithVat * CONFIG.ROT_DEDUCTION.RATE;
+            
+            const maxROTDeduction = rotData.delatROT === 'Ja' ? 
+                CONFIG.ROT_DEDUCTION.MAX_SHARED : CONFIG.ROT_DEDUCTION.MAX_PER_PERSON;
+            
+            if (rotDeduction > maxROTDeduction) {
+                rotDeduction = maxROTDeduction;
+            }
+        }
+        
+        // Grön Teknik-avdrag på grön teknik-produkter (material + arbete)
+        if (greenTechData.eligible) {
+            greenTechServices.forEach(service => {
+                const serviceTotal = (service.totalMaterial + service.totalLabor) * 1.25;
+                greenTechDeduction += serviceTotal * (service.greenTechRate / 100);
+            });
+            
+            if (greenTechDeduction > greenTechData.maxAmount) {
+                greenTechDeduction = greenTechData.maxAmount;
+            }
+        }
+        
+        const finalTotal = totalWithVat - rotDeduction - greenTechDeduction;
+        this.updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, {
+            totalMaterial, totalLabor, regularMaterial, regularLabor, greenTechMaterial, greenTechLabor,
+            scenario: 'mixed'
+        });
+        
+        return {
+            subtotal, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, services: selectedServices,
+            scenario: 'mixed'
+        };
+    }
+
+    getSelectedElectricalServices() {
+        const services = [];
+        
+        // Gå igenom alla tjänstekategorier
+        Object.keys(CONFIG.ELECTRICAL_PRICING).forEach(serviceId => {
+            const checkbox = document.getElementById(serviceId);
+            
+            if (checkbox && checkbox.checked) {
+                const serviceConfig = CONFIG.ELECTRICAL_PRICING[serviceId];
+                const dropdown = document.getElementById(`${serviceId}_type`);
+                const quantityInput = document.getElementById(`${serviceId}_antal`) || 
+                                    document.getElementById(`${serviceId}_meter`) || 
+                                    document.getElementById(`${serviceId}_kvm`);
+                
+                let productData = null;
+                let quantity = 1;
+                
+                // Hämta kvantitet
+                if (quantityInput && quantityInput.value) {
+                    quantity = parseInt(quantityInput.value) || 1;
+                }
+                
+                // Hämta produktdata från dropdown
+                if (dropdown && dropdown.value && serviceConfig[dropdown.value]) {
+                    productData = serviceConfig[dropdown.value];
+                }
+                
+                if (productData && quantity > 0) {
+                    const totalMaterial = productData.materialCost * quantity;
+                    const totalLabor = productData.laborCost * quantity;
+                    const totalPrice = totalMaterial + totalLabor;
+                    
+                    services.push({
+                        id: serviceId,
+                        name: checkbox.labels[0].textContent,
+                        productName: productData.description,
+                        productKey: dropdown.value,
+                        quantity: quantity,
+                        unitMaterial: productData.materialCost,
+                        unitLabor: productData.laborCost,
+                        unitTotal: productData.materialCost + productData.laborCost,
+                        totalMaterial: totalMaterial,
+                        totalLabor: totalLabor,
+                        totalPrice: totalPrice,
+                        laborHours: productData.laborHours,
+                        greenTech: productData.greenTech || false,
+                        greenTechRate: productData.greenTechRate || 0
+                    });
+                }
+            }
+        });
+        
+        return services;
+    }
+
+    isROTEligible(rotData) {
+        return rotData.fastighetBerättigad === 'Ja - Villa/Radhus' && 
+               rotData.kundBerättigad === 'Ja - inkludera ROT-avdrag i anbudet';
+    }
+
+    collectROTData() {
+        const fastighetROT = document.querySelector('input[name="fastighet_rot_berättigad"]:checked');
+        const kundROT = document.querySelector('input[name="är_du_berättigad_rot_avdrag"]:checked');
+        const delatROT = document.querySelector('input[name="delat_rot_avdrag"]:checked');
+        
+        return {
+            fastighetBerättigad: fastighetROT?.value || 'Nej - Lägenhet/Kontor/Annat',
+            kundBerättigad: kundROT?.value || 'Nej - visa pris utan ROT-avdrag',
+            delatROT: delatROT?.value || 'Nej'
+        };
+    }
+
+    updatePricingDisplay(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, finalTotal, extras = {}) {
+        const { 
+            totalMaterial = 0, 
+            totalLabor = 0, 
+            regularMaterial = 0, 
+            regularLabor = 0, 
+            greenTechMaterial = 0, 
+            greenTechLabor = 0,
+            scenario = 'rotOnly'
+        } = extras;
+
+        // Format numbers with proper spacing (Swedish standard)
+        const formatPrice = (amount) => {
+            return new Intl.NumberFormat('sv-SE', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(Math.round(amount)).replace(/\s/g, ' ') + ' kr';
+        };
+
+        // Get or create main price container
+        let priceContainer = document.querySelector('.clean-price-overview');
+        if (!priceContainer) {
+            // Find existing price section and replace content
+            const priceSection = document.querySelector('.price-section');
+            if (priceSection) {
+                priceSection.innerHTML = `
+                    <h3>Prisöversikt</h3>
+                    <div class="clean-price-overview"></div>
+                    <div class="price-details" style="display: none;">
+                        <div class="details-content"></div>
+                    </div>
+                `;
+                priceContainer = priceSection.querySelector('.clean-price-overview');
+            }
+        }
+
+        if (!priceContainer) return;
+
+        // Build clean core pricing display
+        let coreHtml = `
+            <div class="price-core">
+                <div class="price-line excl-vat-price">
+                    <span class="price-label">Pris exkl. moms:</span>
+                    <span class="price-value">${formatPrice(subtotal)}</span>
+                </div>
+                <div class="price-line material-cost">
+                    <span class="price-label">Varav materialkostnad:</span>
+                    <span class="price-value">${formatPrice(totalMaterial)}</span>
+                </div>
+                <div class="price-line main-price">
+                    <span class="price-label">Pris inkl. moms:</span>
+                    <span class="price-value">${formatPrice(totalWithVat)}</span>
+                </div>
+        `;
+
+        // Add ROT deduction if applicable
+        if (rotDeduction > 0) {
+            coreHtml += `
+                <div class="price-line deduction-line">
+                    <span class="price-label">ROT-avdrag:</span>
+                    <span class="price-value deduction-amount">–${formatPrice(rotDeduction)}</span>
+                </div>
+            `;
+        }
+
+        // Add Green Tech deduction if applicable  
+        if (greenTechDeduction > 0) {
+            coreHtml += `
+                <div class="price-line deduction-line">
+                    <span class="price-label">Grön teknik-avdrag:</span>
+                    <span class="price-value deduction-amount">–${formatPrice(greenTechDeduction)}</span>
+                </div>
+            `;
+        }
+
+        // Add final amount to pay
+        coreHtml += `
+                <div class="price-line final-price">
+                    <span class="price-label final-label">Att betala:</span>
+                    <span class="price-value final-amount">${formatPrice(finalTotal)}</span>
+                </div>
+            </div>
+        `;
+
+        // Add show details button
+        coreHtml += `
+            <button class="show-details-btn" id="show-details-btn">
+                Visa detaljer
+            </button>
+        `;
+
+        // Add disclaimer
+        coreHtml += `
+            <div class="price-disclaimer">
+                Avdragen är preliminära. Slutligt avdrag beslutas av Skatteverket.
+            </div>
+        `;
+
+        priceContainer.innerHTML = coreHtml;
+        
+        // Add event listener for details toggle button
+        const showDetailsBtn = document.getElementById('show-details-btn');
+        if (showDetailsBtn) {
+            showDetailsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const priceDetails = document.querySelector('.price-details');
+                if (priceDetails) {
+                    const isHidden = priceDetails.style.display === 'none';
+                    priceDetails.style.display = isHidden ? 'block' : 'none';
+                    showDetailsBtn.textContent = isHidden ? 'Dölj detaljer' : 'Visa detaljer';
+                }
+            });
+        }
+
+        // Build detailed breakdown (hidden by default)
+        this.updateDetailedBreakdown(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, extras, formatPrice);
+    }
+
+    updateDetailedBreakdown(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, extras, formatPrice) {
+        const { 
+            totalMaterial = 0, 
+            totalLabor = 0, 
+            regularMaterial = 0, 
+            regularLabor = 0, 
+            greenTechMaterial = 0, 
+            greenTechLabor = 0,
+            scenario = 'rotOnly'
+        } = extras;
+
+        const detailsContainer = document.querySelector('.details-content');
+        if (!detailsContainer) return;
+
+        let detailsHtml = '<div class="detailed-breakdown">';
+
+        // Material and labor breakdown (excl VAT)
+        detailsHtml += '<div class="breakdown-section"><h4>Delpriser exkl. moms</h4>';
+        
+        if (scenario === 'mixed') {
+            detailsHtml += `
+                <div class="detail-line">Vanligt material: ${formatPrice(regularMaterial)}</div>
+                <div class="detail-line">Vanligt arbete: ${formatPrice(regularLabor)}</div>
+                <div class="detail-line">Grön teknik material: ${formatPrice(greenTechMaterial)}</div>
+                <div class="detail-line">Grön teknik arbete: ${formatPrice(greenTechLabor)}</div>
+            `;
+        } else {
+            detailsHtml += `
+                <div class="detail-line">Material: ${formatPrice(totalMaterial)}</div>
+                <div class="detail-line">Arbete: ${formatPrice(totalLabor)}</div>
+            `;
+        }
+        
+        detailsHtml += '</div>';
+
+        // VAT section
+        detailsHtml += `
+            <div class="breakdown-section">
+                <div class="detail-line">Momsbelopp (25%): ${formatPrice(vatAmount)}</div>
+                <div class="detail-line total-line">Mellansumma inkl. moms: ${formatPrice(totalWithVat)}</div>
+            </div>
+        `;
+
+        // Calculation explanation
+        let explanationText = '';
+        if (rotDeduction > 0 && greenTechDeduction > 0) {
+            explanationText = 'ROT beräknas på arbetskostnad inkl. moms. Grön teknik-avdrag beräknas på totalkostnad enligt Skatteverkets procentsatser: solceller 19,4%, laddboxar/batterier 48,5%.';
+        } else if (rotDeduction > 0) {
+            explanationText = 'ROT-avdrag beräknas på 50% av arbetskostnad inkl. moms.';
+        } else if (greenTechDeduction > 0) {
+            explanationText = 'Grön teknik-avdrag beräknas på totalkostnad enligt Skatteverkets procentsatser: solceller 19,4%, laddboxar/batterier 48,5%.';
+        }
+
+        if (explanationText) {
+            detailsHtml += `
+                <div class="breakdown-section">
+                    <div class="calculation-note">${explanationText}</div>
+                </div>
+            `;
+        }
+
+        detailsHtml += '</div>';
+        detailsContainer.innerHTML = detailsHtml;
+    }
+
+    updateWorkDescription() {
+        const workDescriptionTextarea = document.getElementById('arb-beskrivning');
+        if (!workDescriptionTextarea) return;
+
+        let workDescription = 'ELINSTALLATIONER - ARBETSBESKRIVNING\n\n';
+        workDescription += 'Solida Elinstallationer AB\n';
+        workDescription += 'Organisationsnummer: 559123-4567\n';
+        workDescription += 'Telefon: 073-123 45 67\n';
+        workDescription += 'E-post: info@solidaelinstallationer.se\n\n';
+        
+        workDescription += '**VALDA ELINSTALLATIONER**\n\n';
+
+        const selectedServices = this.getSelectedElectricalServices();
+        
+        if (selectedServices.length === 0) {
+            workDescription += 'Inga tjänster valda ännu.\n\n';
+        } else {
+            let totalMaterial = 0;
+            let totalLabor = 0;
+            
+            selectedServices.forEach((service, index) => {
+                workDescription += `${index + 1}. ${service.name.toUpperCase()}\n`;
+                workDescription += `   Produkt: ${service.productName}\n`;
+                workDescription += `   Antal: ${service.quantity} st\n\n`;
+                
+                // Lägg till detaljerad arbetsbeskrivning
+                const description = this.getServiceWorkDescription(service.id, service.productKey);
+                if (description) {
+                    workDescription += `   ARBETSBESKRIVNING:\n   ${description.split('\n').join('\n   ')}\n\n`;
+                }
+                
+                // Lägg till materialspecifikation
+                const materialInfo = this.getServiceMaterials(service.id, service.productKey, service.quantity);
+                if (materialInfo) {
+                    workDescription += `   MATERIAL:\n   ${materialInfo.split('\n').join('\n   ')}\n\n`;
+                }
+            });
+        }
+
+        // Lägg till allmän information
+        workDescription += '**ALLMÄN INFORMATION**\n\n';
+        workDescription += '• Alla installationer utförs enligt gällande standarder (SS-EN)\n';
+        workDescription += '• Besiktning och certifiering ingår\n';
+        workDescription += '• Garantitid: 5 år på utfört arbete\n';
+        workDescription += '• Säkerhet: Alla elektriker är behöriga och certifierade\n\n';
+
+        workDescription += 'Tack för förtroendet!\n';
+        workDescription += 'Solida Elinstallationer AB';
+
+        workDescriptionTextarea.value = workDescription;
+    }
+
+    getServiceWorkDescription(serviceId, serviceType) {
+        const descriptions = CONFIG.WORK_DESCRIPTIONS[serviceId];
+        
+        if (!descriptions) return '';
+        
+        if (typeof descriptions === 'string') {
+            return descriptions;
+        } else if (typeof descriptions === 'object' && serviceType) {
+            // Hitta matchande beskrivning baserat på serviceType
+            const key = Object.keys(descriptions).find(k => 
+                descriptions[k] && serviceType.toLowerCase().includes(k.toLowerCase())
+            );
+            return descriptions[key] || Object.values(descriptions)[0] || '';
+        }
+        
+        return '';
+    }
+
+    getServiceMaterials(serviceId, productKey, quantity) {
+        const serviceConfig = CONFIG.ELECTRICAL_PRICING[serviceId];
+        if (!serviceConfig || !productKey) return '';
+        
+        const productData = serviceConfig[productKey];
+        if (!productData) return '';
+        
+        let materialInfo = '';
+        
+        // Lägg till produktbeskrivning
+        if (productData.description) {
+            materialInfo += `• ${productData.description}`;
+            if (quantity > 1) {
+                materialInfo += ` - ${quantity} st`;
+            }
+            materialInfo += '\n';
+        }
+        
+        // Lägg till ytterligare material baserat på tjänsttyp
+        const additionalMaterials = this.getAdditionalMaterials(serviceId, productKey);
+        if (additionalMaterials) {
+            materialInfo += additionalMaterials;
+        }
+        
+        return materialInfo.trim();
+    }
+
+    getAdditionalMaterials(serviceId, productKey) {
+        // Definiera ytterligare material baserat på tjänsttyp
+        const additionalMaterials = {
+            'extra_eluttag': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Gipsskruv och spackel\n• Väggfäste',
+            'strombrytare': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Kopplingsklämma\n• Väggfäste',
+            'byte_elcentral': '• Automatsäkringar 10-16A\n• Jordfelsbrytare 30mA\n• Märkskylt\n• Kabelsko och märkband',
+            'dragning_ny_el': '• Installationsrör\n• Dragstål\n• Kabelklämma\n• Tätningsmassa',
+            'inkoppling_hushallsmaskin': '• Anslutningskabel\n• Säkringsautomat\n• Jordfelsbrytare\n• Kopplingsplint',
+            'belysning': '• Installationsrör\n• Kabel 3G1,5mm²\n• Ljuskälla (LED)\n• Väggfäste/takfäste',
+            'lamputtag': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Lamppropp\n• Takfäste',
+            'installation_dator': '• Nätverkskabel Cat6\n• Keystone uttag\n• Vägguttag\n• Patchkabel',
+            'installation_tv': '• Koaxialkabel\n• TV-uttag\n• Väggfäste\n• F-kontakt',
+            'installation_larm': '• Alarmkabel\n• Detektor\n• Magnetkontakt\n• Kopplingsbox',
+            'solceller': productKey?.includes('monokristallin') ? 
+                '• Monteringsrail\n• Klämma och skruv\n• DC-kabel\n• Säkringar DC' :
+                productKey?.includes('polykristallin') ?
+                '• Monteringsrail\n• Klämma och skruv\n• DC-kabel\n• Säkringar DC' :
+                '• Mikroinverterare\n• Monteringsrail\n• AC-kabel\n• Säkringar',
+            'laddbox_elbil': '• Jordfelsbrytare Typ A\n• Säkringsautomat 16-32A\n• Kabel 5G6-10mm²\n• Väggfäste',
+            'batterilagring': '• DC-säkringar\n• Batterikabel\n• Övervakningssystem\n• Ventilation'
+        };
+        
+        return additionalMaterials[serviceId] || '';
+    }
+
+    copyCustomerDataToWorkDescription() {
+        const mappings = {
+            'customer-company': 'arb-company',
+            'customer-contact': 'arb-contact_person', 
+            'customer-email': 'arb-email',
+            'customer-phone': 'arb-phone',
+            'customer-address': 'arb-address',
+            'customer-postal-code': 'arb-postal_code',
+            'customer-city': 'arb-city'
+        };
+        
+        Object.entries(mappings).forEach(([sourceId, targetId]) => {
+            const sourceField = document.getElementById(sourceId);
+            const targetField = document.getElementById(targetId);
+            
+            if (sourceField && targetField) {
+                targetField.value = sourceField.value;
+            }
+        });
+    }
+
+    setupTabNavigation() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.dataset.tab;
+                
+                // Uppdatera tab-knappar
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Uppdatera tab-innehåll
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTab) {
+                        content.classList.add('active');
                     }
+                });
+                
+                // Kopiera kundinformation när vi går till arbetsbeskrivning
+                if (targetTab === 'arbetsbeskrivning') {
+                    this.copyCustomerDataToWorkDescription();
+                    this.updateWorkDescription();
                 }
             });
         });
     }
-    
-    addAriaLabels() {
-        // Lägg till aria-labels för bättre tillgänglighet
-        const priceSection = document.querySelector('.price-section');
-        if (priceSection) {
-            priceSection.setAttribute('aria-label', 'Prisberäkning');
+
+    setupFormSubmission() {
+        // Implementera formulärinlämning för olika tabs här
+        console.log('📝 Form submission setup placeholder');
+    }
+
+    setupNavigationButtons() {
+        // Reset-knapp
+        const resetBtn = document.getElementById('reset-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                this.resetApp();
+            });
+        }
+
+        // Logout-knapp
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+        }
+
+        // Mobile optimization: Add touch feedback
+        this.addTouchFeedback();
+        
+        // Mobile optimization: Handle orientation change
+        this.handleOrientationChange();
+        
+        // Setup signature functionality
+        this.setupSignatureFunctionality();
+    }
+
+    addTouchFeedback() {
+        // Add touch feedback for better mobile UX
+        const touchElements = document.querySelectorAll('.radio-label, .checkbox-label, .service-header, .tab-button, .nav-btn, .submit-btn');
+        
+        touchElements.forEach(element => {
+            element.addEventListener('touchstart', () => {
+                element.style.opacity = '0.7';
+            });
+            
+            element.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                }, 150);
+            });
+            
+            element.addEventListener('touchcancel', () => {
+                element.style.opacity = '1';
+            });
+        });
+    }
+
+    handleOrientationChange() {
+        // Handle mobile orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                // Recalculate layout after orientation change
+                this.updateGreenTechVisibility();
+                
+                // Handle signature modal if open
+                const modal = document.getElementById('signature-fullscreen-modal');
+                if (modal && modal.style.display !== 'none') {
+                    // Save current signature data before reinitializing
+                    const canvas = document.getElementById('signature-fullscreen-canvas');
+                    let imageData = null;
+                    if (canvas && this.signatureContext) {
+                        imageData = canvas.toDataURL();
+                    }
+                    
+                    // Reinitialize canvas with new dimensions
+                    this.initializeSignatureCanvas();
+                    
+                    // Restore signature if it existed
+                    if (imageData && imageData !== 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==') {
+                        const img = new Image();
+                        img.onload = () => {
+                            this.signatureContext.drawImage(img, 0, 0);
+                        };
+                        img.src = imageData;
+                    }
+                    
+                    // Update orientation notice
+                    this.showOrientationNotice();
+                }
+                
+                // Scroll to top if needed on landscape
+                if (window.orientation === 90 || window.orientation === -90) {
+                    const header = document.querySelector('.header');
+                    if (header) {
+                        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 300);
+        });
+    }
+
+    setupSignatureFunctionality() {
+        // Initialize signature canvas
+        this.signatureCanvas = null;
+        this.signatureContext = null;
+        this.isDrawing = false;
+        this.currentSignatureType = null; // 'main' or 'tillagg'
+
+        // Setup event listeners for signature buttons
+        this.setupSignatureEventListeners();
+    }
+
+    setupSignatureEventListeners() {
+        // Main signature button
+        const mainSignatureBtn = document.getElementById('signature-fullscreen-btn');
+        if (mainSignatureBtn) {
+            mainSignatureBtn.addEventListener('click', () => {
+                this.openSignatureModal('main');
+            });
+        }
+
+        // Tilläggstjänst signature button  
+        const tillaggSignatureBtn = document.getElementById('tillagg-signature-fullscreen-btn');
+        if (tillaggSignatureBtn) {
+            tillaggSignatureBtn.addEventListener('click', () => {
+                this.openSignatureModal('tillagg');
+            });
+        }
+
+        // Clear signature buttons
+        const clearSignatureBtn = document.getElementById('clear-signature');
+        if (clearSignatureBtn) {
+            clearSignatureBtn.addEventListener('click', () => {
+                this.clearSignature('main');
+            });
+        }
+
+        const tillaggClearSignatureBtn = document.getElementById('tillagg-clear-signature');
+        if (tillaggClearSignatureBtn) {
+            tillaggClearSignatureBtn.addEventListener('click', () => {
+                this.clearSignature('tillagg');
+            });
+        }
+
+        // Modal control buttons
+        const saveBtn = document.getElementById('signature-fullscreen-save');
+        const clearBtn = document.getElementById('signature-fullscreen-clear');
+        const cancelBtn = document.getElementById('signature-fullscreen-cancel');
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.saveSignature();
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                this.clearCanvas();
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                this.closeSignatureModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        const modal = document.getElementById('signature-fullscreen-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeSignatureModal();
+                }
+            });
+        }
+    }
+
+    openSignatureModal(type) {
+        this.currentSignatureType = type;
+        const modal = document.getElementById('signature-fullscreen-modal');
+        const canvas = document.getElementById('signature-fullscreen-canvas');
+        
+        if (modal && canvas) {
+            modal.style.display = 'flex';
+            
+            // Initialize canvas
+            setTimeout(() => {
+                this.initializeSignatureCanvas();
+            }, 100);
+            
+            // Show orientation notice on mobile
+            this.showOrientationNotice();
+        }
+    }
+
+    closeSignatureModal() {
+        const modal = document.getElementById('signature-fullscreen-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            this.currentSignatureType = null;
+        }
+    }
+
+    initializeSignatureCanvas() {
+        const canvas = document.getElementById('signature-fullscreen-canvas');
+        if (!canvas) return;
+
+        this.signatureCanvas = canvas;
+        this.signatureContext = canvas.getContext('2d');
+
+        // Initial layout
+        this.layoutSignature();
+        
+        // Setup canvas styling with higher resolution
+        this.signatureContext.lineWidth = 2;
+        this.signatureContext.lineCap = 'round';
+        this.signatureContext.lineJoin = 'round';
+        this.signatureContext.strokeStyle = '#000000';
+        this.signatureContext.imageSmoothingEnabled = true;
+        if (this.signatureContext.imageSmoothingQuality) {
+            this.signatureContext.imageSmoothingQuality = 'high';
+        }
+
+        // Add event listeners for drawing
+        this.setupCanvasDrawing();
+        
+        // Attach layout handlers
+        this.attachSignatureLayoutHandlers();
+    }
+
+    layoutSignature() {
+        const vvH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+        
+        const header = document.querySelector('.signature-fullscreen-header');
+        const footer = document.querySelector('.signature-fullscreen-controls');
+        const wrap = document.querySelector('.sign-canvas-wrap');
+        const canvas = document.querySelector('#signature-fullscreen-canvas');
+        
+        if (!wrap || !canvas || !footer) return;
+        
+        const headerH = isLandscape ? 0 : (header ? header.offsetHeight : 0);
+        const footerH = footer ? footer.offsetHeight : 0;
+        
+        // Safe area bottom om CSS-variabel saknas
+        let safeBottom = 0;
+        try {
+            const sb = getComputedStyle(footer).getPropertyValue('padding-bottom');
+            safeBottom = parseInt((sb || '0').replace('px',''), 10) || 0;
+        } catch(e) {}
+        
+        const verticalGaps = 16; // liten buffert för paddings/marginaler
+        const available = Math.max(120, vvH - headerH - footerH - safeBottom - verticalGaps);
+        
+        // Sätt höjd på canvasens wrapper
+        wrap.style.height = available + 'px';
+        
+        // Sätt faktiska canvas-pixlar med device pixel ratio
+        const dpr = window.devicePixelRatio || 1;
+        const displayWidth = wrap.clientWidth;
+        const displayHeight = wrap.clientHeight;
+        
+        // Viktigt: width/height attribut, inte bara CSS
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+        canvas.style.width = displayWidth + 'px';
+        canvas.style.height = displayHeight + 'px';
+        
+        // Scale the context to match device pixel ratio
+        if (this.signatureContext) {
+            this.signatureContext.scale(dpr, dpr);
+            
+            // Restore canvas styling after scaling
+            this.signatureContext.lineWidth = 2;
+            this.signatureContext.lineCap = 'round';
+            this.signatureContext.lineJoin = 'round';
+            this.signatureContext.strokeStyle = '#000000';
+            this.signatureContext.imageSmoothingEnabled = true;
+            if (this.signatureContext.imageSmoothingQuality) {
+                this.signatureContext.imageSmoothingQuality = 'high';
+            }
+        }
+    }
+
+    attachSignatureLayoutHandlers() {
+        // Resize handler
+        window.addEventListener('resize', () => this.layoutSignature(), { passive: true });
+        
+        // Orientation change handler
+        window.addEventListener('orientationchange', () => {
+            // liten timeout för att vänta in omflöde i iOS
+            setTimeout(() => this.layoutSignature(), 150);
+        });
+        
+        // Visual viewport handler for mobile keyboards
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                setTimeout(() => this.layoutSignature(), 50);
+            }, { passive: true });
+        }
+    }
+
+    setupCanvasDrawing() {
+        if (!this.signatureCanvas) return;
+
+        // Mouse events
+        this.signatureCanvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+        this.signatureCanvas.addEventListener('mousemove', (e) => this.draw(e));
+        this.signatureCanvas.addEventListener('mouseup', () => this.stopDrawing());
+        this.signatureCanvas.addEventListener('mouseout', () => this.stopDrawing());
+
+        // Touch events for mobile
+        this.signatureCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.startDrawing(e.touches[0]);
+        });
+        this.signatureCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            this.draw(e.touches[0]);
+        });
+        this.signatureCanvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.stopDrawing();
+        });
+    }
+
+    startDrawing(e) {
+        this.isDrawing = true;
+        const rect = this.signatureCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        this.signatureContext.beginPath();
+        this.signatureContext.moveTo(x, y);
+    }
+
+    draw(e) {
+        if (!this.isDrawing) return;
+        
+        const rect = this.signatureCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        this.signatureContext.lineTo(x, y);
+        this.signatureContext.stroke();
+    }
+
+    stopDrawing() {
+        this.isDrawing = false;
+    }
+
+    clearCanvas() {
+        if (this.signatureCanvas && this.signatureContext) {
+            this.signatureContext.clearRect(0, 0, this.signatureCanvas.width, this.signatureCanvas.height);
+        }
+    }
+
+    saveSignature() {
+        if (!this.signatureCanvas || !this.currentSignatureType) return;
+
+        // Convert canvas to image
+        const imageData = this.signatureCanvas.toDataURL('image/png');
+        
+        // Update the appropriate preview
+        if (this.currentSignatureType === 'main') {
+            this.updateSignaturePreview('signature', imageData);
+        } else if (this.currentSignatureType === 'tillagg') {
+            this.updateSignaturePreview('tillagg-signature', imageData);
+        }
+
+        // Close modal
+        this.closeSignatureModal();
+    }
+
+    updateSignaturePreview(prefix, imageData) {
+        const previewImage = document.getElementById(`${prefix}-image`);
+        const placeholder = document.querySelector(`#${prefix}-preview .signature-placeholder`);
+        const clearBtn = document.getElementById(`${prefix === 'signature' ? 'clear-signature' : 'tillagg-clear-signature'}`);
+
+        if (previewImage) {
+            previewImage.src = imageData;
+            previewImage.style.display = 'block';
+        }
+
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+
+        if (clearBtn) {
+            clearBtn.style.display = 'inline-block';
+        }
+    }
+
+    clearSignature(type) {
+        const prefix = type === 'main' ? 'signature' : 'tillagg-signature';
+        const previewImage = document.getElementById(`${prefix}-image`);
+        const placeholder = document.querySelector(`#${prefix}-preview .signature-placeholder`);
+        const clearBtn = document.getElementById(`${prefix === 'signature' ? 'clear-signature' : 'tillagg-clear-signature'}`);
+
+        if (previewImage) {
+            previewImage.src = '';
+            previewImage.style.display = 'none';
+        }
+
+        if (placeholder) {
+            placeholder.style.display = 'block';
+        }
+
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    showOrientationNotice() {
+        const notice = document.getElementById('signature-orientation-notice');
+        const header = document.querySelector('.signature-fullscreen-header');
+        
+        if (notice) {
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile && isPortrait) {
+                notice.style.display = 'block';
+                notice.style.visibility = 'visible';
+                if (header) header.style.display = 'block';
+            } else {
+                // In landscape mode or desktop, aggressively hide
+                notice.style.display = 'none';
+                notice.style.visibility = 'hidden';
+                if (header && isMobile) header.style.display = 'none';
+            }
+        }
+    }
+
+    resetApp() {
+        // Rensa alla formulärfält
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => form.reset());
+        
+        // Dölj alla service-options
+        const serviceOptions = document.querySelectorAll('.service-options');
+        serviceOptions.forEach(option => {
+            option.style.display = 'none';
+        });
+        
+        // Dölj ROT-sektioner
+        const rotSections = ['delat-rot-section', 'materialkostnad-section'];
+        rotSections.forEach(sectionId => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = 'none';
+            }
+        });
+        
+        // Nollställ prisvisning
+        this.updatePricingDisplay(0, 0, 0, 0, 0, 0, {});
+        
+        // Rensa signaturer
+        this.clearSignature('main');
+        this.clearSignature('tillagg');
+        
+        // Rensa arbetsbeskrivning
+        const workDescriptionTextarea = document.getElementById('arb-beskrivning');
+        if (workDescriptionTextarea) {
+            workDescriptionTextarea.value = '';
         }
         
-        const form = document.getElementById('quote-form');
-        if (form) {
-            form.setAttribute('aria-label', 'Anbudsförfrågan formulär');
+        console.log('✅ Applikationen återställd');
+    }
+
+    logout() {
+        // Rensa session
+        localStorage.removeItem(PASSWORD_CONFIG.SESSION_KEY);
+        
+        // Nollställ appen
+        this.resetApp();
+        
+        // Visa lösenordsskärmen igen
+        const passwordOverlay = document.getElementById('password-overlay');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        if (passwordOverlay && mainContainer) {
+            passwordOverlay.style.display = 'flex';
+            mainContainer.style.display = 'none';
+        }
+        
+        // Hide navigation bar
+        const navigationBar = document.querySelector('.navigation-bar');
+        if (navigationBar) {
+            navigationBar.classList.remove('visible');
+        }
+        
+        // Fokusera på lösenordsfältet
+        const passwordInput = document.getElementById('password-input');
+        if (passwordInput) {
+            passwordInput.value = '';
+            passwordInput.focus();
         }
     }
 }
 
-// Initialisera applikationen när DOM är redo
+// Initialisera applikationen när DOM är laddat
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 DOM Content Loaded - Starting application...');
+    console.log('🚀 Initialiserar Solida Elinstallationer App...');
     
-    // DEBUG: Omfattande felsökning aktiverad - se console för detaljerade loggar
+    // Starta lösenordsskyddet
+    window.passwordProtection = new PasswordProtection();
     
-    // Starta med lösenordsskydd och spara global referens
-    window.passwordProtectionInstance = new PasswordProtection();
+    // Starta tema-toggle
+    window.themeToggle = new ThemeToggle();
     
-    // QuoteCalculator och ThemeToggle initialiseras i initializeMainApplication() efter lyckad inloggning
-    
-    // Lägg till smooth scrolling för alla interna länkar
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
+    console.log('✅ App initialiserad');
 });
