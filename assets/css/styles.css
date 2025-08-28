@@ -1780,8 +1780,8 @@ input::placeholder {
     }
     
     .service-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         gap: var(--spacing-sm);
     }
     
@@ -1981,7 +1981,11 @@ input::placeholder {
 }
 
 .signature-controls {
-    margin-top: 12px;
+    margin-top: 20px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .clear-signature-btn {
@@ -2127,9 +2131,9 @@ input::placeholder {
     
     .nav-btn {
         padding: var(--spacing-sm);
-        min-width: 44px;
-        min-height: 44px;
-        border-radius: 50%;
+        min-width: 50px;
+        min-height: 46px;
+        border-radius: 8px;
     }
     
     .nav-icon {
@@ -3152,8 +3156,10 @@ body[data-theme="dark"] .nav-btn::before {
         display: none !important;
     }
     
-    .signature-orientation-notice {
+    .signature-orientation-notice,
+    #signature-orientation-notice {
         display: none !important;
+        visibility: hidden !important;
     }
     
     .signature-fullscreen-body {
@@ -3166,12 +3172,14 @@ body[data-theme="dark"] .nav-btn::before {
     .signature-fullscreen-canvas {
         max-height: calc(100vh - 80px);
         height: calc(100vh - 80px);
-        width: 100%;
-        max-width: 100%;
+        width: calc(100% - 20px);
+        max-width: calc(100% - 20px);
         border-radius: 0;
         border: none;
-        margin: 0;
+        margin: 10px;
         display: block;
+        position: relative;
+        z-index: 1;
     }
     
     .signature-fullscreen-controls {
