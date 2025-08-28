@@ -1779,16 +1779,20 @@ class QuoteCalculator {
         this.signatureCanvas = canvas;
         this.signatureContext = canvas.getContext('2d');
 
-        // High-resolution canvas setup
+        // High-resolution canvas setup with dynamic viewport
         const rect = canvas.parentElement.getBoundingClientRect();
         const isLandscape = window.innerWidth > window.innerHeight;
         const isMobile = window.innerWidth < 768;
         const dpr = window.devicePixelRatio || 1;
         
+        // Use visualViewport when available for better mobile handling
+        const viewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        
         if (isMobile && isLandscape) {
             // Landscape mode on mobile - use full available space
-            const displayWidth = Math.min(rect.width - 20, window.innerWidth - 20);
-            const displayHeight = Math.min(rect.height - 100, window.innerHeight - 150);
+            const displayWidth = Math.min(rect.width - 20, viewportWidth - 20);
+            const displayHeight = Math.min(rect.height - 100, viewportHeight - 150);
             
             canvas.width = displayWidth * dpr;
             canvas.height = displayHeight * dpr;
