@@ -545,13 +545,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform: translateY(-2px);
 }
 
-.demo-text {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: var(--spacing-sm) 0 0 0;
-    letter-spacing: 0.1em;
-}
 
 .tagline {
     font-size: 1.2rem;
@@ -874,6 +867,24 @@ select, input[type="text"], input[type="number"], input[type="email"], input[typ
     direction: ltr;
 }
 
+/* Demo badge in top right corner */
+.demo-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    z-index: 999;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Konsistent spacing för alla form-sektioner */
 .form-row {
     margin-bottom: var(--spacing-md);
@@ -885,6 +896,145 @@ select, input[type="text"], input[type="number"], input[type="email"], input[typ
 
 .help-text {
     margin-top: var(--spacing-sm);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Clean pricing overview - following the specification */
+.clean-price-overview {
+    background: var(--white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px var(--shadow-subtle);
+    border: 1px solid var(--border-light);
+    margin-bottom: var(--spacing-md);
+}
+
+.price-core {
+    margin-bottom: var(--spacing-lg);
+}
+
+.price-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.price-line.main-price {
+    margin-bottom: 12px;
+}
+
+.price-line.deduction-line {
+    margin-bottom: 12px;
+    background: rgba(34, 197, 94, 0.08);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+.price-line.final-price {
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding-top: 16px;
+    border-top: 2px solid var(--border-light);
+}
+
+.price-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.price-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.deduction-amount {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.final-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.final-amount {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.show-details-btn {
+    background: none;
+    border: 1px solid var(--border-light);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+    margin-top: var(--spacing-md);
+    width: 100%;
+}
+
+.show-details-btn:hover {
+    border-color: var(--primary-dark);
+    color: var(--primary-dark);
+}
+
+.price-disclaimer {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: var(--spacing-md);
+    line-height: 1.4;
+    text-align: center;
+}
+
+.price-details {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-light);
+}
+
+.detailed-breakdown {
+    font-size: 0.9rem;
+}
+
+.breakdown-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.breakdown-section h4 {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.detail-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.detail-line.total-line {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-light);
+}
+
+.calculation-note {
+    background: var(--surface-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
     font-size: 0.85rem;
     color: var(--text-muted);
     line-height: 1.4;
@@ -1953,14 +2103,445 @@ input::placeholder {
     }
     
     .company-logo {
-        height: 49px;
+        height: 40px;
+        max-width: 120px;
     }
     
     .navigation-bar {
-        justify-content: space-around;
-        width: 100%;
+        margin-top: var(--spacing-sm);
+        justify-content: center;
+        gap: var(--spacing-lg);
     }
     
+    .nav-btn {
+        padding: var(--spacing-sm);
+        min-width: 44px;
+        min-height: 44px;
+        border-radius: 50%;
+    }
+    
+    .nav-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    /* Tab navigation for mobile */
+    .tab-navigation {
+        position: sticky;
+        top: 70px;
+        background: var(--white);
+        z-index: 90;
+        padding: var(--spacing-sm) 0;
+        border-bottom: 1px solid var(--border-light);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .tab-button {
+        font-size: 0.9rem;
+        padding: var(--spacing-md) var(--spacing-sm);
+        min-height: 44px;
+        flex: 1;
+        text-align: center;
+    }
+    
+    /* Form sections mobile optimization */
+    .form-section {
+        margin-bottom: var(--spacing-lg);
+        padding: var(--spacing-md);
+        border-radius: var(--border-radius);
+        background: var(--white);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .form-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: var(--spacing-md);
+        text-align: center;
+        color: var(--primary-dark);
+    }
+    
+    /* Service items mobile */
+    .service-item {
+        margin-bottom: var(--spacing-md);
+        border: 1px solid var(--border-light);
+        border-radius: var(--border-radius);
+        background: var(--white);
+    }
+    
+    .service-header {
+        padding: var(--spacing-md);
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+    
+    .service-header label {
+        font-size: 1rem;
+        font-weight: 500;
+        flex: 1;
+        line-height: 1.4;
+    }
+    
+    /* Radio buttons and checkboxes mobile */
+    .radio-label,
+    .checkbox-label {
+        padding: var(--spacing-md);
+        min-height: 56px;
+        font-size: 1rem;
+        border-radius: var(--border-radius);
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .radio-custom,
+    .checkbox-custom {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+    
+    /* Form inputs mobile */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+        font-size: 16px; /* Prevent iOS zoom */
+        padding: var(--spacing-md);
+        min-height: 48px;
+        border-radius: var(--border-radius);
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    /* Service options mobile */
+    .service-options {
+        padding: var(--spacing-md);
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-md);
+    }
+    
+    .service-dropdown {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        font-size: 16px;
+        padding: var(--spacing-md);
+        min-height: 48px;
+    }
+    
+    .service-input {
+        width: 100%;
+        max-width: 120px;
+        font-size: 16px;
+        padding: var(--spacing-md);
+        min-height: 48px;
+        align-self: flex-start;
+    }
+    
+    .unit-info {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-top: var(--spacing-xs);
+    }
+    
+    /* Price section mobile */
+    .price-section {
+        margin-top: var(--spacing-lg);
+        padding: var(--spacing-md);
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        position: sticky;
+        bottom: 0;
+        z-index: 95;
+    }
+    
+    /* Clean price overview mobile */
+    .clean-price-overview {
+        padding: var(--spacing-md);
+    }
+    
+    .price-line {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .final-amount {
+        font-size: 1.2rem;
+    }
+    
+    .final-label {
+        font-size: 1rem;
+    }
+    
+    .deduction-line {
+        margin-left: -var(--spacing-md);
+        margin-right: -var(--spacing-md);
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    /* Sticky final price on scroll */
+    .price-core .final-price {
+        position: sticky;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-md));
+        background: var(--white);
+        margin: 0 -var(--spacing-md);
+        padding: var(--spacing-md);
+        border-top: 2px solid var(--primary-dark);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        z-index: 96;
+    }
+    
+    .price-breakdown {
+        font-size: 0.9rem;
+        padding: var(--spacing-md);
+    }
+    
+    .price-row {
+        padding: var(--spacing-sm) 0;
+        flex-wrap: wrap;
+        font-size: 0.95rem;
+    }
+    
+    .cost-breakdown {
+        margin: var(--spacing-sm) 0;
+    }
+    
+    .cost-line {
+        font-size: 0.9rem;
+        padding: 2px 0;
+    }
+    
+    .cost-total {
+        font-size: 1rem;
+        margin-top: var(--spacing-sm);
+        padding-top: var(--spacing-sm);
+        border-top: 1px solid var(--border-light);
+    }
+    
+    /* Work description mobile */
+    .work-description-section {
+        margin-top: var(--spacing-lg);
+    }
+    
+    #arb-beskrivning {
+        font-size: 14px;
+        line-height: 1.4;
+        min-height: 150px;
+    }
+    
+    /* Submit button mobile */
+    .form-actions {
+        padding: var(--spacing-lg) 0;
+        margin-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-md));
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: var(--spacing-lg);
+        font-size: 1.1rem;
+        font-weight: 600;
+        min-height: 56px;
+        border-radius: var(--border-radius);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-gray) 100%);
+        color: var(--white);
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Password screen mobile */
+    .password-overlay {
+        padding: var(--spacing-md);
+    }
+    
+    .password-container {
+        width: 100%;
+        max-width: none;
+        padding: var(--spacing-xl);
+        border-radius: var(--border-radius-lg);
+    }
+    
+    .password-logo {
+        height: 60px;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .password-input-group input {
+        font-size: 16px;
+        min-height: 48px;
+    }
+    
+    .password-submit-btn {
+        width: 100%;
+        min-height: 48px;
+        font-size: 1rem;
+        margin-top: var(--spacing-md);
+    }
+    
+    /* Safe area handling */
+    .container {
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--spacing-md));
+    }
+    
+    /* Demo badge mobile */
+    .demo-badge {
+        top: 8px;
+        right: 8px;
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+    
+    /* Touch improvements */
+    * {
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    }
+    
+    button, .radio-label, .checkbox-label, .service-header {
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        touch-action: manipulation;
+    }
+    
+    /* Scrolling improvements */
+    .main-content {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* Prevent horizontal scroll */
+    body, .container {
+        overflow-x: hidden;
+    }
+}
+
+/* Tablet optimization (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-md);
+        max-width: 720px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .company-logo {
+        height: 50px;
+    }
+    
+    .service-options {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+    
+    .service-dropdown {
+        flex: 2;
+        min-width: 200px;
+    }
+    
+    .service-input {
+        flex: 1;
+        max-width: 150px;
+    }
+    
+    .form-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .radio-group,
+    .checkbox-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .price-section {
+        position: relative;
+        bottom: auto;
+    }
+}
+
+/* Large mobile (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+    .form-section h2 {
+        font-size: 1.4rem;
+    }
+    
+    .service-dropdown,
+    .service-input {
+        font-size: 16px;
+    }
+    
+    .radio-label,
+    .checkbox-label {
+        font-size: 1rem;
+    }
+}
+
+/* Small mobile (up to 375px) */
+@media (max-width: 375px) {
+    .container {
+        padding: 0 var(--spacing-xs);
+    }
+    
+    .form-section {
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .form-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    .service-header {
+        padding: var(--spacing-sm);
+        min-height: 52px;
+    }
+    
+    .service-header label {
+        font-size: 0.95rem;
+    }
+    
+    .service-options {
+        padding: var(--spacing-sm);
+    }
+    
+    .radio-label,
+    .checkbox-label {
+        padding: var(--spacing-sm);
+        min-height: 52px;
+        font-size: 0.95rem;
+    }
+    
+    .price-breakdown {
+        font-size: 0.85rem;
+        padding: var(--spacing-sm);
+    }
+    
+    .submit-btn {
+        font-size: 1rem;
+        padding: var(--spacing-md);
+    }
+}
+
     .nav-btn {
         min-width: 50px;
         padding: 6px 8px;

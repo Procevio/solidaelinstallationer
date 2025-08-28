@@ -1003,137 +1003,154 @@ class QuoteCalculator {
             scenario = 'rotOnly'
         } = extras;
 
-        // Uppdatera subtotal med kategoriserade kostnader
-        const subtotalDisplay = document.getElementById('subtotal-price-display');
-        if (subtotalDisplay) {
-            let breakdownHtml = '<div class="cost-breakdown">';
-            
-            if (scenario === 'mixed') {
-                breakdownHtml += `
-                    <div class="cost-line">Vanlig material: ${new Intl.NumberFormat('sv-SE').format(Math.round(regularMaterial))} kr</div>
-                    <div class="cost-line">Vanligt arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(regularLabor))} kr</div>
-                    <div class="cost-line">Grön teknik material: ${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechMaterial))} kr</div>
-                    <div class="cost-line">Grön teknik arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechLabor))} kr</div>
+        // Format numbers with proper spacing (Swedish standard)
+        const formatPrice = (amount) => {
+            return new Intl.NumberFormat('sv-SE', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(Math.round(amount)).replace(/\s/g, ' ') + ' kr';
+        };
+
+        // Get or create main price container
+        let priceContainer = document.querySelector('.clean-price-overview');
+        if (!priceContainer) {
+            // Find existing price section and replace content
+            const priceSection = document.querySelector('.price-section');
+            if (priceSection) {
+                priceSection.innerHTML = `
+                    <h3>Prisöversikt</h3>
+                    <div class="clean-price-overview"></div>
+                    <div class="price-details" style="display: none;">
+                        <div class="details-content"></div>
+                    </div>
                 `;
-            } else {
-                breakdownHtml += `
-                    <div class="cost-line">Material: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalMaterial))} kr</div>
-                    <div class="cost-line">Arbete: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalLabor))} kr</div>
-                `;
+                priceContainer = priceSection.querySelector('.clean-price-overview');
             }
-            
-            breakdownHtml += `
-                <div class="cost-total"><strong>Subtotal: ${new Intl.NumberFormat('sv-SE').format(Math.round(subtotal))} kr</strong></div>
-                </div>
-            `;
-            
-            subtotalDisplay.innerHTML = breakdownHtml;
         }
 
-        // Uppdatera total med moms
-        const totalWithVatDisplay = document.getElementById('total-with-vat');
-        if (totalWithVatDisplay) {
-            let vatHtml = '<div class="cost-breakdown">';
-            
-            if (scenario === 'mixed') {
-                vatHtml += `
-                    <div class="cost-line">Vanliga produkter (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round((regularMaterial + regularLabor) * 1.25))} kr</div>
-                    <div class="cost-line">Grön teknik (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round((greenTechMaterial + greenTechLabor) * 1.25))} kr</div>
-                `;
-            } else {
-                const materialWithVat = totalMaterial * 1.25;
-                const laborWithVat = totalLabor * 1.25;
-                vatHtml += `
-                    <div class="cost-line">Material (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round(materialWithVat))} kr</div>
-                    <div class="cost-line">Arbete (inkl moms): ${new Intl.NumberFormat('sv-SE').format(Math.round(laborWithVat))} kr</div>
-                `;
-            }
-            
-            vatHtml += `
-                <div class="cost-total"><strong>Total inkl moms: ${new Intl.NumberFormat('sv-SE').format(Math.round(totalWithVat))} kr</strong></div>
+        if (!priceContainer) return;
+
+        // Build clean core pricing display
+        let coreHtml = `
+            <div class="price-core">
+                <div class="price-line main-price">
+                    <span class="price-label">Pris inkl. moms:</span>
+                    <span class="price-value">${formatPrice(totalWithVat)}</span>
                 </div>
-            `;
-            
-            totalWithVatDisplay.innerHTML = vatHtml;
-        }
+        `;
 
-        // Uppdatera avdrag
-        const rotDeductionEl = document.getElementById('rot-deduction');
-        const rotRow = document.getElementById('rot-row');
-        const rotPreliminaryText = document.getElementById('rot-preliminary-text');
-
-        // Uppdatera ROT-avdrag display
+        // Add ROT deduction if applicable
         if (rotDeduction > 0) {
-            if (rotDeductionEl) {
-                rotDeductionEl.innerHTML = `
-                    <div class="rot-breakdown">
-                        <div class="rot-line">ROT-avdrag (50% på arbetskostnad vanliga produkter):</div>
-                        <div class="rot-amount">-${new Intl.NumberFormat('sv-SE').format(Math.round(rotDeduction))} kr</div>
-                    </div>
-                `;
-            }
-            if (rotRow) {
-                rotRow.style.display = 'flex';
-            }
-            if (rotPreliminaryText) {
-                rotPreliminaryText.style.display = 'block';
-            }
-        } else {
-            if (rotRow) {
-                rotRow.style.display = 'none';
-            }
-            if (rotPreliminaryText) {
-                rotPreliminaryText.style.display = 'none';
-            }
+            coreHtml += `
+                <div class="price-line deduction-line">
+                    <span class="price-label">ROT-avdrag:</span>
+                    <span class="price-value deduction-amount">–${formatPrice(rotDeduction)}</span>
+                </div>
+            `;
         }
 
-        // Uppdatera Grön Teknik-avdrag (skapa eller uppdatera element)
-        let greenTechRow = document.getElementById('green-tech-row');
-        if (!greenTechRow && greenTechDeduction > 0) {
-            // Skapa Grön Teknik-rad om den inte finns
-            const priceBreakdown = document.querySelector('.price-breakdown');
-            if (priceBreakdown) {
-                greenTechRow = document.createElement('div');
-                greenTechRow.id = 'green-tech-row';
-                greenTechRow.className = 'price-row green-tech-row';
-                greenTechRow.innerHTML = `
-                    <span class="price-label">Grön Teknik-avdrag:</span>
-                    <span class="price-value" id="green-tech-deduction">-0 kr</span>
-                `;
-                // Lägg till efter ROT-raden eller före slutsumman
-                const finalRow = document.getElementById('final-price-row');
-                if (finalRow) {
-                    priceBreakdown.insertBefore(greenTechRow, finalRow);
-                } else {
-                    priceBreakdown.appendChild(greenTechRow);
-                }
-            }
-        }
-
-        const greenTechDeductionEl = document.getElementById('green-tech-deduction');
+        // Add Green Tech deduction if applicable  
         if (greenTechDeduction > 0) {
-            if (greenTechDeductionEl) {
-                greenTechDeductionEl.innerHTML = `
-                    <div class="green-tech-breakdown">
-                        <div class="green-tech-line">Grön Teknik-avdrag (${scenario === 'mixed' ? 'på grön teknik-produkter' : 'laddbox/solceller/batteri'}):</div>
-                        <div class="green-tech-amount">-${new Intl.NumberFormat('sv-SE').format(Math.round(greenTechDeduction))} kr</div>
-                    </div>
-                `;
-            }
-            if (greenTechRow) {
-                greenTechRow.style.display = 'flex';
-            }
-        } else {
-            if (greenTechRow) {
-                greenTechRow.style.display = 'none';
-            }
+            coreHtml += `
+                <div class="price-line deduction-line">
+                    <span class="price-label">Grön teknik-avdrag:</span>
+                    <span class="price-value deduction-amount">–${formatPrice(greenTechDeduction)}</span>
+                </div>
+            `;
         }
 
-        // Uppdatera slutsumma
-        const finalPriceDisplay = document.getElementById('final-customer-price');
-        if (finalPriceDisplay) {
-            finalPriceDisplay.innerHTML = '<strong>' + new Intl.NumberFormat('sv-SE').format(Math.round(finalTotal)) + ' kr</strong>';
+        // Add final amount to pay
+        coreHtml += `
+                <div class="price-line final-price">
+                    <span class="price-label final-label">Att betala:</span>
+                    <span class="price-value final-amount">${formatPrice(finalTotal)}</span>
+                </div>
+            </div>
+        `;
+
+        // Add show details button
+        coreHtml += `
+            <button class="show-details-btn" onclick="this.parentElement.parentElement.querySelector('.price-details').style.display = this.parentElement.parentElement.querySelector('.price-details').style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'Visa detaljer' ? 'Dölj detaljer' : 'Visa detaljer';">
+                Visa detaljer
+            </button>
+        `;
+
+        // Add disclaimer
+        coreHtml += `
+            <div class="price-disclaimer">
+                Avdragen är preliminära. Slutligt avdrag beslutas av Skatteverket.
+            </div>
+        `;
+
+        priceContainer.innerHTML = coreHtml;
+
+        // Build detailed breakdown (hidden by default)
+        this.updateDetailedBreakdown(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, extras, formatPrice);
+    }
+
+    updateDetailedBreakdown(subtotal, vatAmount, totalWithVat, rotDeduction, greenTechDeduction, extras, formatPrice) {
+        const { 
+            totalMaterial = 0, 
+            totalLabor = 0, 
+            regularMaterial = 0, 
+            regularLabor = 0, 
+            greenTechMaterial = 0, 
+            greenTechLabor = 0,
+            scenario = 'rotOnly'
+        } = extras;
+
+        const detailsContainer = document.querySelector('.details-content');
+        if (!detailsContainer) return;
+
+        let detailsHtml = '<div class="detailed-breakdown">';
+
+        // Material and labor breakdown (excl VAT)
+        detailsHtml += '<div class="breakdown-section"><h4>Delpriser exkl. moms</h4>';
+        
+        if (scenario === 'mixed') {
+            detailsHtml += `
+                <div class="detail-line">Vanligt material: ${formatPrice(regularMaterial)}</div>
+                <div class="detail-line">Vanligt arbete: ${formatPrice(regularLabor)}</div>
+                <div class="detail-line">Grön teknik material: ${formatPrice(greenTechMaterial)}</div>
+                <div class="detail-line">Grön teknik arbete: ${formatPrice(greenTechLabor)}</div>
+            `;
+        } else {
+            detailsHtml += `
+                <div class="detail-line">Material: ${formatPrice(totalMaterial)}</div>
+                <div class="detail-line">Arbete: ${formatPrice(totalLabor)}</div>
+            `;
         }
+        
+        detailsHtml += '</div>';
+
+        // VAT section
+        detailsHtml += `
+            <div class="breakdown-section">
+                <div class="detail-line">Momsbelopp (25%): ${formatPrice(vatAmount)}</div>
+                <div class="detail-line total-line">Mellansumma inkl. moms: ${formatPrice(totalWithVat)}</div>
+            </div>
+        `;
+
+        // Calculation explanation
+        let explanationText = '';
+        if (rotDeduction > 0 && greenTechDeduction > 0) {
+            explanationText = 'ROT beräknas på arbetskostnad inkl. moms. Grön teknik-avdrag beräknas på både produkter och arbete inom grön teknik.';
+        } else if (rotDeduction > 0) {
+            explanationText = 'ROT-avdrag beräknas på 50% av arbetskostnad inkl. moms.';
+        } else if (greenTechDeduction > 0) {
+            explanationText = 'Grön teknik-avdrag beräknas på både produkter och arbete inom grön teknik.';
+        }
+
+        if (explanationText) {
+            detailsHtml += `
+                <div class="breakdown-section">
+                    <div class="calculation-note">${explanationText}</div>
+                </div>
+            `;
+        }
+
+        detailsHtml += '</div>';
+        detailsContainer.innerHTML = detailsHtml;
     }
 
     updateWorkDescription() {
@@ -1309,6 +1326,300 @@ class QuoteCalculator {
                 this.logout();
             });
         }
+
+        // Mobile optimization: Add touch feedback
+        this.addTouchFeedback();
+        
+        // Mobile optimization: Handle orientation change
+        this.handleOrientationChange();
+        
+        // Setup signature functionality
+        this.setupSignatureFunctionality();
+    }
+
+    addTouchFeedback() {
+        // Add touch feedback for better mobile UX
+        const touchElements = document.querySelectorAll('.radio-label, .checkbox-label, .service-header, .tab-button, .nav-btn, .submit-btn');
+        
+        touchElements.forEach(element => {
+            element.addEventListener('touchstart', () => {
+                element.style.opacity = '0.7';
+            });
+            
+            element.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                }, 150);
+            });
+            
+            element.addEventListener('touchcancel', () => {
+                element.style.opacity = '1';
+            });
+        });
+    }
+
+    handleOrientationChange() {
+        // Handle mobile orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                // Recalculate layout after orientation change
+                this.updateGreenTechVisibility();
+                
+                // Scroll to top if needed on landscape
+                if (window.orientation === 90 || window.orientation === -90) {
+                    const header = document.querySelector('.header');
+                    if (header) {
+                        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 300);
+        });
+    }
+
+    setupSignatureFunctionality() {
+        // Initialize signature canvas
+        this.signatureCanvas = null;
+        this.signatureContext = null;
+        this.isDrawing = false;
+        this.currentSignatureType = null; // 'main' or 'tillagg'
+
+        // Setup event listeners for signature buttons
+        this.setupSignatureEventListeners();
+    }
+
+    setupSignatureEventListeners() {
+        // Main signature button
+        const mainSignatureBtn = document.getElementById('signature-fullscreen-btn');
+        if (mainSignatureBtn) {
+            mainSignatureBtn.addEventListener('click', () => {
+                this.openSignatureModal('main');
+            });
+        }
+
+        // Tilläggstjänst signature button  
+        const tillaggSignatureBtn = document.getElementById('tillagg-signature-fullscreen-btn');
+        if (tillaggSignatureBtn) {
+            tillaggSignatureBtn.addEventListener('click', () => {
+                this.openSignatureModal('tillagg');
+            });
+        }
+
+        // Clear signature buttons
+        const clearSignatureBtn = document.getElementById('clear-signature');
+        if (clearSignatureBtn) {
+            clearSignatureBtn.addEventListener('click', () => {
+                this.clearSignature('main');
+            });
+        }
+
+        const tillaggClearSignatureBtn = document.getElementById('tillagg-clear-signature');
+        if (tillaggClearSignatureBtn) {
+            tillaggClearSignatureBtn.addEventListener('click', () => {
+                this.clearSignature('tillagg');
+            });
+        }
+
+        // Modal control buttons
+        const saveBtn = document.getElementById('signature-fullscreen-save');
+        const clearBtn = document.getElementById('signature-fullscreen-clear');
+        const cancelBtn = document.getElementById('signature-fullscreen-cancel');
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                this.saveSignature();
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                this.clearCanvas();
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                this.closeSignatureModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        const modal = document.getElementById('signature-fullscreen-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeSignatureModal();
+                }
+            });
+        }
+    }
+
+    openSignatureModal(type) {
+        this.currentSignatureType = type;
+        const modal = document.getElementById('signature-fullscreen-modal');
+        const canvas = document.getElementById('signature-fullscreen-canvas');
+        
+        if (modal && canvas) {
+            modal.style.display = 'flex';
+            
+            // Initialize canvas
+            setTimeout(() => {
+                this.initializeSignatureCanvas();
+            }, 100);
+            
+            // Show orientation notice on mobile
+            this.showOrientationNotice();
+        }
+    }
+
+    closeSignatureModal() {
+        const modal = document.getElementById('signature-fullscreen-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            this.currentSignatureType = null;
+        }
+    }
+
+    initializeSignatureCanvas() {
+        const canvas = document.getElementById('signature-fullscreen-canvas');
+        if (!canvas) return;
+
+        this.signatureCanvas = canvas;
+        this.signatureContext = canvas.getContext('2d');
+
+        // Set canvas size
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width - 40; // Account for padding
+        canvas.height = Math.min(400, rect.height - 40);
+
+        // Setup canvas styling
+        this.signatureContext.lineWidth = 3;
+        this.signatureContext.lineCap = 'round';
+        this.signatureContext.strokeStyle = '#1e40af';
+
+        // Add event listeners for drawing
+        this.setupCanvasDrawing();
+    }
+
+    setupCanvasDrawing() {
+        if (!this.signatureCanvas) return;
+
+        // Mouse events
+        this.signatureCanvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+        this.signatureCanvas.addEventListener('mousemove', (e) => this.draw(e));
+        this.signatureCanvas.addEventListener('mouseup', () => this.stopDrawing());
+        this.signatureCanvas.addEventListener('mouseout', () => this.stopDrawing());
+
+        // Touch events for mobile
+        this.signatureCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.startDrawing(e.touches[0]);
+        });
+        this.signatureCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            this.draw(e.touches[0]);
+        });
+        this.signatureCanvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.stopDrawing();
+        });
+    }
+
+    startDrawing(e) {
+        this.isDrawing = true;
+        const rect = this.signatureCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        this.signatureContext.beginPath();
+        this.signatureContext.moveTo(x, y);
+    }
+
+    draw(e) {
+        if (!this.isDrawing) return;
+        
+        const rect = this.signatureCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        this.signatureContext.lineTo(x, y);
+        this.signatureContext.stroke();
+    }
+
+    stopDrawing() {
+        this.isDrawing = false;
+    }
+
+    clearCanvas() {
+        if (this.signatureCanvas && this.signatureContext) {
+            this.signatureContext.clearRect(0, 0, this.signatureCanvas.width, this.signatureCanvas.height);
+        }
+    }
+
+    saveSignature() {
+        if (!this.signatureCanvas || !this.currentSignatureType) return;
+
+        // Convert canvas to image
+        const imageData = this.signatureCanvas.toDataURL('image/png');
+        
+        // Update the appropriate preview
+        if (this.currentSignatureType === 'main') {
+            this.updateSignaturePreview('signature', imageData);
+        } else if (this.currentSignatureType === 'tillagg') {
+            this.updateSignaturePreview('tillagg-signature', imageData);
+        }
+
+        // Close modal
+        this.closeSignatureModal();
+    }
+
+    updateSignaturePreview(prefix, imageData) {
+        const previewImage = document.getElementById(`${prefix}-image`);
+        const placeholder = document.querySelector(`#${prefix}-preview .signature-placeholder`);
+        const clearBtn = document.getElementById(`${prefix === 'signature' ? 'clear-signature' : 'tillagg-clear-signature'}`);
+
+        if (previewImage) {
+            previewImage.src = imageData;
+            previewImage.style.display = 'block';
+        }
+
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
+
+        if (clearBtn) {
+            clearBtn.style.display = 'inline-block';
+        }
+    }
+
+    clearSignature(type) {
+        const prefix = type === 'main' ? 'signature' : 'tillagg-signature';
+        const previewImage = document.getElementById(`${prefix}-image`);
+        const placeholder = document.querySelector(`#${prefix}-preview .signature-placeholder`);
+        const clearBtn = document.getElementById(`${prefix === 'signature' ? 'clear-signature' : 'tillagg-clear-signature'}`);
+
+        if (previewImage) {
+            previewImage.src = '';
+            previewImage.style.display = 'none';
+        }
+
+        if (placeholder) {
+            placeholder.style.display = 'block';
+        }
+
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+    }
+
+    showOrientationNotice() {
+        const notice = document.getElementById('signature-orientation-notice');
+        if (notice && window.innerWidth < 768) {
+            if (window.innerHeight > window.innerWidth) {
+                notice.style.display = 'block';
+            } else {
+                notice.style.display = 'none';
+            }
+        }
     }
 
     resetApp() {
@@ -1333,6 +1644,10 @@ class QuoteCalculator {
         
         // Nollställ prisvisning
         this.updatePricingDisplay(0, 0, 0, 0, 0, 0, {});
+        
+        // Rensa signaturer
+        this.clearSignature('main');
+        this.clearSignature('tillagg');
         
         // Rensa arbetsbeskrivning
         const workDescriptionTextarea = document.getElementById('arb-beskrivning');
