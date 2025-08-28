@@ -1632,10 +1632,30 @@ class QuoteCalculator {
                 // Recalculate layout after orientation change
                 this.updateGreenTechVisibility();
                 
-                // Reinitialize signature canvas if modal is open
+                // Handle signature modal if open
                 const modal = document.getElementById('signature-fullscreen-modal');
                 if (modal && modal.style.display !== 'none') {
+                    // Save current signature data before reinitializing
+                    const canvas = document.getElementById('signature-fullscreen-canvas');
+                    let imageData = null;
+                    if (canvas && this.signatureContext) {
+                        imageData = canvas.toDataURL();
+                    }
+                    
+                    // Reinitialize canvas with new dimensions
                     this.initializeSignatureCanvas();
+                    
+                    // Restore signature if it existed
+                    if (imageData && imageData !== 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==') {
+                        const img = new Image();
+                        img.onload = () => {
+                            this.signatureContext.drawImage(img, 0, 0);
+                        };
+                        img.src = imageData;
+                    }
+                    
+                    // Update orientation notice
+                    this.showOrientationNotice();
                 }
                 
                 // Scroll to top if needed on landscape
@@ -1759,25 +1779,44 @@ class QuoteCalculator {
         this.signatureCanvas = canvas;
         this.signatureContext = canvas.getContext('2d');
 
-        // Set canvas size based on screen orientation and size
+        // High-resolution canvas setup
         const rect = canvas.parentElement.getBoundingClientRect();
         const isLandscape = window.innerWidth > window.innerHeight;
         const isMobile = window.innerWidth < 768;
+        const dpr = window.devicePixelRatio || 1;
         
         if (isMobile && isLandscape) {
             // Landscape mode on mobile - use full available space
-            canvas.width = Math.min(rect.width - 20, window.innerWidth - 20);
-            canvas.height = Math.min(rect.height - 100, window.innerHeight - 150); // Leave space for controls
+            const displayWidth = Math.min(rect.width - 20, window.innerWidth - 20);
+            const displayHeight = Math.min(rect.height - 100, window.innerHeight - 150);
+            
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
         } else {
             // Portrait mode or desktop
-            canvas.width = rect.width - 40; // Account for padding
-            canvas.height = Math.min(400, rect.height - 40);
+            const displayWidth = rect.width - 40;
+            const displayHeight = Math.min(400, rect.height - 40);
+            
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
         }
-
-        // Setup canvas styling
-        this.signatureContext.lineWidth = 3;
+        
+        // Scale the context to match device pixel ratio
+        this.signatureContext.scale(dpr, dpr);
+        
+        // Setup canvas styling with higher resolution
+        this.signatureContext.lineWidth = 2;
         this.signatureContext.lineCap = 'round';
+        this.signatureContext.lineJoin = 'round';
         this.signatureContext.strokeStyle = '#000000';
+        this.signatureContext.imageSmoothingEnabled = true;
+        if (this.signatureContext.imageSmoothingQuality) {
+            this.signatureContext.imageSmoothingQuality = 'high';
+        }
 
         // Add event listeners for drawing
         this.setupCanvasDrawing();
@@ -1896,17 +1935,22 @@ class QuoteCalculator {
 
     showOrientationNotice() {
         const notice = document.getElementById('signature-orientation-notice');
-        if (notice && window.innerWidth < 768) {
+        const header = document.querySelector('.signature-fullscreen-header');
+        
+        if (notice) {
             const isPortrait = window.innerHeight > window.innerWidth;
-            if (isPortrait) {
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile && isPortrait) {
                 notice.style.display = 'block';
+                notice.style.visibility = 'visible';
+                if (header) header.style.display = 'block';
             } else {
-                // In landscape mode, always hide the notice
+                // In landscape mode or desktop, aggressively hide
                 notice.style.display = 'none';
+                notice.style.visibility = 'hidden';
+                if (header && isMobile) header.style.display = 'none';
             }
-        } else if (notice) {
-            // On desktop, hide the notice
-            notice.style.display = 'none';
         }
     }
 
