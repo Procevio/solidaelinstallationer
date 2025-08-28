@@ -1197,6 +1197,12 @@ class QuoteCalculator {
                 if (description) {
                     workDescription += `   ARBETSBESKRIVNING:\n   ${description.split('\n').join('\n   ')}\n\n`;
                 }
+                
+                // Lägg till materialspecifikation
+                const materialInfo = this.getServiceMaterials(service.id, service.productKey, service.quantity);
+                if (materialInfo) {
+                    workDescription += `   MATERIAL:\n   ${materialInfo.split('\n').join('\n   ')}\n\n`;
+                }
             });
             
             // Lägg till kostnadssummering
@@ -1253,6 +1259,58 @@ class QuoteCalculator {
         }
         
         return '';
+    }
+
+    getServiceMaterials(serviceId, productKey, quantity) {
+        const serviceConfig = CONFIG.ELECTRICAL_PRICING[serviceId];
+        if (!serviceConfig || !productKey) return '';
+        
+        const productData = serviceConfig[productKey];
+        if (!productData) return '';
+        
+        let materialInfo = '';
+        
+        // Lägg till produktbeskrivning
+        if (productData.description) {
+            materialInfo += `• ${productData.description}`;
+            if (quantity > 1) {
+                materialInfo += ` - ${quantity} st`;
+            }
+            materialInfo += '\n';
+        }
+        
+        // Lägg till ytterligare material baserat på tjänsttyp
+        const additionalMaterials = this.getAdditionalMaterials(serviceId, productKey);
+        if (additionalMaterials) {
+            materialInfo += additionalMaterials;
+        }
+        
+        return materialInfo.trim();
+    }
+
+    getAdditionalMaterials(serviceId, productKey) {
+        // Definiera ytterligare material baserat på tjänsttyp
+        const additionalMaterials = {
+            'extra_eluttag': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Gipsskruv och spackel\n• Väggfäste',
+            'strombrytare': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Kopplingsklämma\n• Väggfäste',
+            'byte_elcentral': '• Automatsäkringar 10-16A\n• Jordfelsbrytare 30mA\n• Märkskylt\n• Kabelsko och märkband',
+            'dragning_ny_el': '• Installationsrör\n• Dragstål\n• Kabelklämma\n• Tätningsmassa',
+            'inkoppling_hushallsmaskin': '• Anslutningskabel\n• Säkringsautomat\n• Jordfelsbrytare\n• Kopplingsplint',
+            'belysning': '• Installationsrör\n• Kabel 3G1,5mm²\n• Ljuskälla (LED)\n• Väggfäste/takfäste',
+            'lamputtag': '• Elrör PEX 16mm\n• Kabel 3G1,5mm²\n• Lamppropp\n• Takfäste',
+            'installation_dator': '• Nätverkskabel Cat6\n• Keystone uttag\n• Vägguttag\n• Patchkabel',
+            'installation_tv': '• Koaxialkabel\n• TV-uttag\n• Väggfäste\n• F-kontakt',
+            'installation_larm': '• Alarmkabel\n• Detektor\n• Magnetkontakt\n• Kopplingsbox',
+            'solceller': productKey?.includes('monokristallin') ? 
+                '• Monteringsrail\n• Klämma och skruv\n• DC-kabel\n• Säkringar DC' :
+                productKey?.includes('polykristallin') ?
+                '• Monteringsrail\n• Klämma och skruv\n• DC-kabel\n• Säkringar DC' :
+                '• Mikroinverterare\n• Monteringsrail\n• AC-kabel\n• Säkringar',
+            'laddbox': '• Jordfelsbrytare Typ A\n• Säkringsautomat 16-32A\n• Kabel 5G6-10mm²\n• Väggfäste',
+            'batterilagring': '• DC-säkringar\n• Batterikabel\n• Övervakningssystem\n• Ventilation'
+        };
+        
+        return additionalMaterials[serviceId] || '';
     }
 
     copyCustomerDataToWorkDescription() {
