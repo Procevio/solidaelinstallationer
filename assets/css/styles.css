@@ -344,34 +344,48 @@ body {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-/* Material list section */
-.material-section {
-    margin-top: var(--spacing-xl);
-    padding: var(--spacing-lg);
-    background: var(--white);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-subtle);
+/* Material tab content */
+.material-scanner-content {
+    padding: 0;
 }
 
-.material-section h3 {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+.material-scanner-content .form-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.material-scanner-content .form-section h2 {
     margin-bottom: var(--spacing-lg);
     color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.material-scanner-content .form-section h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 .material-stats {
     display: flex;
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
     background: var(--surface-light);
     border-radius: var(--border-radius);
+    align-items: stretch;
 }
 
 .material-stat {
+    flex: 1;
     text-align: center;
+    min-width: 100px;
+}
+
+.material-stat:last-child {
+    flex: 2;
+    text-align: right;
 }
 
 .material-stat-value {
@@ -379,17 +393,23 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-dark);
+    margin-bottom: 2px;
 }
 
 .material-stat-label {
     font-size: 0.875rem;
     color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .material-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
 }
 
 .material-item {
@@ -397,10 +417,13 @@ body {
     align-items: center;
     gap: var(--spacing-md);
     padding: var(--spacing-md);
-    border: 1px solid var(--border-light);
-    border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-light);
     background: var(--white);
+    transition: background-color var(--transition-fast);
+}
+
+.material-item:last-child {
+    border-bottom: none;
 }
 
 .material-item:hover {
@@ -477,7 +500,26 @@ body {
 .material-empty {
     text-align: center;
     padding: var(--spacing-xl);
+    background: var(--white);
+    border: 2px dashed var(--border-light);
+    border-radius: var(--border-radius);
     color: var(--text-muted);
+}
+
+.material-empty p {
+    margin-bottom: var(--spacing-sm);
+    font-size: 1rem;
+}
+
+.material-empty p:first-child {
+    font-weight: 500;
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.material-empty small {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }
 
 /* Scanner button */
@@ -531,15 +573,20 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-height: 44px; /* Touch-friendly */
 }
 
-.sync-btn:hover {
+.sync-btn:hover:not(:disabled) {
     background: var(--accent-black);
 }
 
 .sync-btn:disabled {
     background: var(--text-muted);
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Sync status indicators */
@@ -585,14 +632,36 @@ body {
         height: 150px;
     }
     
-    .material-qty-controls {
+    /* Material tab mobile optimizations */
+    .material-controls {
         flex-direction: column;
-        gap: var(--spacing-xs);
+        align-items: stretch;
     }
     
     .material-stats {
         flex-direction: column;
         gap: var(--spacing-sm);
+        text-align: center;
+    }
+    
+    .material-stat:last-child {
+        text-align: center;
+    }
+    
+    .material-qty-controls {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .material-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .material-info {
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
     }
 }
 
