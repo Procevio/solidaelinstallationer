@@ -561,6 +561,9 @@ const CONFIG = {
             'inkoppling_befintlig': 'Inkoppling av befintlig värmepump:\n• Anslutning av elmatning\n• Installation av styrsystem\n• Inkoppling av sensorer\n• Test av alla funktioner\n• Programmering och dokumentation',
             'installation_luft_luft': 'Installation av luft-luft värmepump:\n• Montering av inne- och uteenhet\n• Dragning av kylledningar\n• Elinkoppling och styrning\n• Vakuumtest och påfyllning\n• Driftsättning och dokumentation'
         },
+        'bergvarme_elinstallation': {
+            'bergvarmepump_inkoppling': 'Elinstallation för bergvärmepump:\n• Installation av elmatning för kompressor\n• Anslutning av cirkulationspumpar\n• Inkoppling av styrsystem och sensorer\n• Installation av säkerhetskomponenter\n• Test av alla elfunktioner\n• Programmering av styrenheter\n• Dokumentation och driftsättning'
+        },
 
         // Säkerhet & Smarta Hem
         'brandvarnare': {

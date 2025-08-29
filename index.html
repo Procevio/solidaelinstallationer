@@ -133,9 +133,18 @@
                             <div class="error-message" id="customer-address-error"></div>
                         </div>
                         <div class="form-group half-width">
+                            <label for="customer-fastighetsbeteckning">Fastighetsbeteckning</label>
+                            <input type="text" id="customer-fastighetsbeteckning" name="customer-fastighetsbeteckning" placeholder="T.ex. Exempel 1:23">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
                             <label for="customer-postal-code">Postnummer *</label>
                             <input type="text" id="customer-postal-code" name="customer-postal-code" autocomplete="postal-code" pattern="\d{3}\s?\d{2}" inputmode="numeric" required>
                             <div class="error-message" id="customer-postal-code-error"></div>
+                        </div>
+                        <div class="form-group half-width">
                         </div>
                     </div>
 
@@ -755,38 +764,20 @@
                 <section class="form-section">
                     <h2>Materialskanning</h2>
                     
-                    <div class="material-controls">
-                        <button id="scan-material-btn" class="scanner-btn">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                                <polyline points="9,22 9,12 15,12 15,22"/>
+                    <div class="material-scan-container">
+                        <button id="scan-material-btn" class="material-scan-btn">
+                            <svg class="scan-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                                <rect x="9" y="9" width="6" height="6"/>
                             </svg>
-                            Skanna material
+                            <span class="scan-text">Skanna material</span>
                         </button>
-                        <button id="admin-pricebook-btn" class="scanner-btn admin-btn" style="display: none;">
+                        <button id="admin-pricebook-btn" class="admin-btn" style="display: none;">
                             Admin
                         </button>
-                    </div>
-
-                    <div class="material-stats">
-                        <div class="material-stat">
-                            <span id="material-items-count" class="material-stat-value">0</span>
-                            <small class="material-stat-label">Artiklar</small>
-                        </div>
-                        <div class="material-stat">
-                            <span id="material-total-qty" class="material-stat-value">0</span>
-                            <small class="material-stat-label">Totalt antal</small>
-                        </div>
-                        <div class="material-stat">
-                            <button id="sync-materials-btn" class="sync-btn" disabled>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 4 23 10 17 10"/>
-                                    <polyline points="1 20 1 14 7 14"/>
-                                    <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                                </svg>
-                                Synka till systemet
-                            </button>
-                        </div>
                     </div>
                 </section>
 
