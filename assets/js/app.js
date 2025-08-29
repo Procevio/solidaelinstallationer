@@ -1562,14 +1562,15 @@ class QuoteCalculator {
     }
 
     setupTabNavigation() {
-        const tabButtons = document.querySelectorAll('.tab-button');
+        // Support both old .tab-button and new .nav-icon selectors for compatibility
+        const tabButtons = document.querySelectorAll('.tab-button, .nav-icon');
         const tabContents = document.querySelectorAll('.tab-content');
         
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const targetTab = button.dataset.tab;
                 
-                // Uppdatera tab-knappar
+                // Uppdatera tab-knappar (both old and new selectors)
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 
@@ -1624,7 +1625,7 @@ class QuoteCalculator {
 
     addTouchFeedback() {
         // Add touch feedback for better mobile UX
-        const touchElements = document.querySelectorAll('.radio-label, .checkbox-label, .service-header, .tab-button, .nav-btn, .submit-btn');
+        const touchElements = document.querySelectorAll('.radio-label, .checkbox-label, .service-header, .tab-button, .nav-icon, .nav-btn, .submit-btn');
         
         touchElements.forEach(element => {
             element.addEventListener('touchstart', () => {
