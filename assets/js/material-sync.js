@@ -11,7 +11,7 @@ class MaterialSync {
         this.syncHistoryKey = 'solida_sync_history';
         this.maxRetries = 3;
         this.retryDelay = 2000; // 2 sekunder
-        this.webhookUrl = null;
+        this.submitUrl = '/.netlify/functions/submit'; // Använd Netlify serverless
         this.isSyncing = false;
         this.syncQueue = [];
         this.syncHistory = [];
@@ -22,24 +22,12 @@ class MaterialSync {
     }
 
     /**
-     * Konfigurera webhook URL
-     * @param {string} url 
-     */
-    setWebhookUrl(url) {
-        this.webhookUrl = url;
-    }
-
-    /**
-     * Synkronisera material för specifikt jobb till Zapier
+     * Synkronisera material för specifikt jobb via Netlify serverless
      * @param {string} jobId 
      * @param {boolean} immediate - Synka omedelbart eller lägg i kö
      * @returns {Promise<{ok: boolean, added: number, unknown: number}>}
      */
     async syncToWebhook(jobId, immediate = true) {
-        if (!this.webhookUrl) {
-            throw new Error('Webhook URL not configured');
-        }
-
         const data = this.store.exportForSync(jobId);
         if (!data || !data.items.length) {
             throw new Error('No materials to sync');
@@ -54,34 +42,35 @@ class MaterialSync {
     }
 
     /**
-     * Utför själva synkroniseringen till Zapier
+     * Utför själva synkroniseringen via Netlify serverless till Zapier
      * @param {Object} data 
      * @param {number} retryCount 
      * @returns {Promise<{ok: boolean, added: number, unknown: number}>}
      */
     async performSync(data, retryCount = 0) {
         const syncId = this.generateSyncId();
-        // Skicka minimal payload till Zapier - inga extra metadata
+        
+        // Payload för Netlify serverless-funktion (inkluderar type för routing)
         const payload = {
+            type: 'material_sync', // Hjälper servern att identifiera typ av data
             jobId: data.jobId,
             source: data.source,
             items: data.items
         };
 
         try {
-            console.log(`Syncing ${data.items.length} materials to Zapier for job ${data.jobId}:`, payload);
+            console.log(`Syncing ${data.items.length} materials via serverless for job ${data.jobId}:`, payload);
 
-            const response = await fetch(this.webhookUrl, {
+            const response = await fetch(this.submitUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Source': 'solida-elinstallationer-app'
                 },
                 body: JSON.stringify(payload)
             });
 
             if (response.ok) {
-                // Förväntat Zapier custom response format:
+                // Förväntat response från serverless-funktion:
                 // {"status":"ok","added":5,"unknown":1}
                 const result = await response.json().catch(() => ({ 
                     status: 'ok', 
@@ -101,7 +90,8 @@ class MaterialSync {
                     message: `${result.added || data.items.length} rader synkade, ${result.unknown || 0} okända`
                 };
             } else {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const errorText = await response.text().catch(() => 'Unknown error');
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
             }
 
         } catch (error) {
@@ -157,7 +147,7 @@ class MaterialSync {
      * Processar sync-kö
      */
     async processSyncQueue() {
-        if (this.isSyncing || !navigator.onLine || !this.webhookUrl) {
+        if (this.isSyncing || !navigator.onLine) {
             return;
         }
 
@@ -382,34 +372,33 @@ class MaterialSync {
     }
 
     /**
-     * Test webhook-anslutning
+     * Test serverless-funktion anslutning
      * @returns {Promise}
      */
     async testWebhook() {
-        if (!this.webhookUrl) {
-            throw new Error('Webhook URL not configured');
-        }
-
         try {
             const testPayload = {
+                type: 'test',
                 test: true,
                 timestamp: new Date().toISOString(),
                 source: 'solida-elinstallationer-app'
             };
 
-            const response = await fetch(this.webhookUrl, {
+            const response = await fetch(this.submitUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Source': 'solida-elinstallationer-app'
                 },
                 body: JSON.stringify(testPayload)
             });
 
+            const result = response.ok ? await response.json().catch(() => ({})) : {};
+
             return {
                 status: response.ok ? 'success' : 'failed',
                 statusCode: response.status,
-                statusText: response.statusText
+                statusText: response.statusText,
+                result
             };
 
         } catch (error) {

@@ -2001,15 +2001,7 @@ class MaterialManager {
         this.store = new MaterialStore();
         this.sync = new MaterialSync(this.store);
         
-        // Ladda webhook URL från config och localStorage
-        const savedWebhookUrl = localStorage.getItem('material_webhook_url');
-        if (savedWebhookUrl) {
-            // Prioritera sparad URL
-            this.sync.setWebhookUrl(savedWebhookUrl);
-        } else if (window.MATERIAL_CONFIG && window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL) {
-            // Fallback till config
-            this.sync.setWebhookUrl(window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL);
-        }
+        // Sync använder nu Netlify serverless - ingen webhook URL behövs
         
         // Sätt aktuellt jobb-ID (använd timestamp + random för unikhet)
         this.currentJobId = this.generateJobId();
@@ -2603,13 +2595,12 @@ class MaterialManager {
         const status = document.getElementById('webhook-status');
         
         if (input) {
-            const savedUrl = localStorage.getItem('material_webhook_url');
-            const configUrl = window.MATERIAL_CONFIG ? window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL : '';
-            input.value = savedUrl || configUrl || '';
+            input.value = '/.netlify/functions/submit';
+            input.disabled = true; // Inte redigerbar - använder Netlify serverless
         }
         
         if (status) {
-            status.textContent = '';
+            status.innerHTML = '<small style="color: var(--text-secondary);">Använder Netlify serverless-funktion (säker)</small>';
         }
     }
 
@@ -2689,54 +2680,35 @@ class MaterialManager {
     }
 
     async testWebhook() {
-        const input = document.getElementById('webhook-url');
         const button = document.getElementById('test-webhook-btn');
         const status = document.getElementById('webhook-status');
 
-        if (!input || !button || !status) return;
-
-        const url = input.value.trim();
-        if (!url) {
-            alert('Ange webhook URL först');
-            return;
-        }
+        if (!button || !status) return;
 
         try {
             button.disabled = true;
             button.textContent = 'Testar...';
-            status.textContent = '';
-
-            // Set URL temporarily for test
-            this.sync.setWebhookUrl(url);
+            status.innerHTML = '<small style="color: var(--text-secondary);">Testar serverless-funktion...</small>';
 
             const result = await this.sync.testWebhook();
 
             if (result.status === 'success') {
-                status.innerHTML = '<span style="color: var(--success-green);">✅ Webhook fungerar</span>';
+                status.innerHTML = '<span style="color: var(--success-green);">Serverless-funktion fungerar</span>';
             } else {
-                status.innerHTML = `<span style="color: var(--error-red);">❌ ${result.error || 'Test misslyckades'}</span>`;
+                status.innerHTML = `<span style="color: var(--error-red);">Fel: ${result.error || 'Test misslyckades'}</span>`;
             }
 
         } catch (error) {
-            status.innerHTML = `<span style="color: var(--error-red);">❌ ${error.message}</span>`;
+            status.innerHTML = `<span style="color: var(--error-red);">Fel: ${error.message}</span>`;
         } finally {
             button.disabled = false;
-            button.textContent = 'Testa Webhook';
+            button.textContent = 'Testa Anslutning';
         }
     }
 
     saveAdminSettings() {
-        const webhookInput = document.getElementById('webhook-url');
-        
-        if (webhookInput) {
-            const url = webhookInput.value.trim();
-            this.sync.setWebhookUrl(url);
-            
-            // Save to localStorage for persistence
-            localStorage.setItem('material_webhook_url', url);
-        }
-
-        alert('Inställningar sparade!');
+        // Serverless-funktion används - inga inställningar att spara
+        alert('Serverless-konfiguration används - inga ändringar behövs!');
         this.hideAdminPanel();
     }
 

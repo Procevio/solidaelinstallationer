@@ -33,20 +33,35 @@ exports.handler = async (event, context) => {
         console.log('📝 Behandlar POST-begäran...');
         
         // Parse request body
-        let anbudsData;
+        let requestData;
         try {
-            anbudsData = JSON.parse(event.body);
-            console.log('✅ Anbudsdata parsad framgångsrikt');
+            requestData = JSON.parse(event.body);
+            console.log('✅ Request data parsad framgångsrikt');
+            
+            // Log typ av data som mottogs
+            if (requestData.type) {
+                console.log(`📦 Data-typ: ${requestData.type}`);
+            }
         
-        // Log signatur-info if present
-        if (anbudsData.signatur_tillagd) {
-            console.log('🖊️ Signatur-data inkluderat:', {
-                har_signatur: !!anbudsData.signatur_base64,
-                signatur_timestamp: anbudsData.signatur_timestamp,
-                signatur_tillagd: anbudsData.signatur_tillagd,
-                base64_length: anbudsData.signatur_base64 ? anbudsData.signatur_base64.length : 0
-            });
-        }
+            // Log signatur-info if present (för anbudsdata)
+            if (requestData.signatur_tillagd) {
+                console.log('🖊️ Signatur-data inkluderat:', {
+                    har_signatur: !!requestData.signatur_base64,
+                    signatur_timestamp: requestData.signatur_timestamp,
+                    signatur_tillagd: requestData.signatur_tillagd,
+                    base64_length: requestData.signatur_base64 ? requestData.signatur_base64.length : 0
+                });
+            }
+
+            // Log material-info if present (för materialdata)
+            if (requestData.items && Array.isArray(requestData.items)) {
+                console.log('📋 Material-data inkluderat:', {
+                    antal_items: requestData.items.length,
+                    jobId: requestData.jobId,
+                    källa: requestData.source
+                });
+            }
+            
         } catch (parseError) {
             console.error('❌ Fel vid parsning av JSON:', parseError);
             return {
@@ -56,13 +71,43 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Validate required fields
-        if (!anbudsData.kundInfo || (!anbudsData.kundInfo.företag && !anbudsData.kundInfo.namn)) {
-            console.log('❌ Saknade obligatoriska fält');
+        // Validate required fields based on data type
+        if (requestData.type === 'material_sync') {
+            // Validering för materialdata
+            if (!requestData.jobId || !requestData.items || !Array.isArray(requestData.items)) {
+                console.log('❌ Saknade obligatoriska fält för materialdata');
+                return {
+                    statusCode: 400,
+                    headers: headers,
+                    body: JSON.stringify({ error: 'Missing required fields: jobId and items array' })
+                };
+            }
+        } else if (requestData.type === 'test') {
+            // Test-request behöver ingen special validering
+            console.log('🧪 Test-request mottagen');
+        } else {
+            // Standard anbudsdata validering
+            if (!requestData.kundInfo || (!requestData.kundInfo.företag && !requestData.kundInfo.namn)) {
+                console.log('❌ Saknade obligatoriska fält för anbudsdata');
+                return {
+                    statusCode: 400,
+                    headers: headers,
+                    body: JSON.stringify({ error: 'Missing required customer information' })
+                };
+            }
+        }
+
+        // Handle test requests separately
+        if (requestData.type === 'test') {
+            console.log('✅ Test-request behandlad framgångsrikt');
             return {
-                statusCode: 400,
+                statusCode: 200,
                 headers: headers,
-                body: JSON.stringify({ error: 'Missing required customer information' })
+                body: JSON.stringify({
+                    status: 'ok',
+                    message: 'Test successful - Serverless function working',
+                    timestamp: new Date().toISOString()
+                })
             };
         }
 
@@ -73,7 +118,7 @@ exports.handler = async (event, context) => {
             return {
                 statusCode: 500,
                 headers: headers,
-                body: JSON.stringify({ error: 'Webhook configuration missing' })
+                body: JSON.stringify({ error: 'Webhook configuration missing - kontakta administratör' })
             };
         }
 
@@ -81,8 +126,10 @@ exports.handler = async (event, context) => {
 
         // Enhanced data payload
         const enhancedData = {
-            ...anbudsData,
-            källa: 'Solida Elinstallationer AB - Anbudsapp',
+            ...requestData,
+            källa: requestData.type === 'material_sync' ? 
+                'Solida Elinstallationer AB - Materialskanning' : 
+                'Solida Elinstallationer AB - Anbudsapp',
             tidsstämpel: new Date().toISOString(),
             användarAgent: event.headers['user-agent'] || 'Unknown',
             ipAdress: event.headers['x-forwarded-for'] || event.headers['x-bb-ip'] || 'Unknown'
@@ -103,17 +150,45 @@ exports.handler = async (event, context) => {
         if (zapierResponse.ok) {
             console.log('✅ Framgångsrik vidarebefordran till Zapier');
             
-            return {
-                statusCode: 200,
-                headers: headers,
-                body: JSON.stringify({
-                    success: true,
-                    message: 'Anbudsdata skickad till Zapier framgångsrikt',
-                    anbudsNummer: anbudsData.anbudsNummer,
-                    tidsstämpel: enhancedData.tidsstämpel,
-                    zapierStatus: zapierResponse.status
-                })
-            };
+            // Försök att hämta Zapier custom response för material-sync
+            let zapierResult = {};
+            try {
+                const responseText = await zapierResponse.text();
+                if (responseText) {
+                    zapierResult = JSON.parse(responseText);
+                }
+            } catch (e) {
+                // Om parsing misslyckas, använd default values
+            }
+
+            if (requestData.type === 'material_sync') {
+                // Material-sync response i Zapier-format
+                return {
+                    statusCode: 200,
+                    headers: headers,
+                    body: JSON.stringify({
+                        status: 'ok',
+                        added: zapierResult.added || requestData.items.length,
+                        unknown: zapierResult.unknown || 0,
+                        message: `${zapierResult.added || requestData.items.length} material synkade framgångsrikt`,
+                        jobId: requestData.jobId,
+                        timestamp: enhancedData.tidsstämpel
+                    })
+                };
+            } else {
+                // Standard anbud response
+                return {
+                    statusCode: 200,
+                    headers: headers,
+                    body: JSON.stringify({
+                        success: true,
+                        message: 'Anbudsdata skickad till Zapier framgångsrikt',
+                        anbudsNummer: requestData.anbudsNummer,
+                        tidsstämpel: enhancedData.tidsstämpel,
+                        zapierStatus: zapierResponse.status
+                    })
+                };
+            }
         } else {
             const zapierErrorText = await zapierResponse.text().catch(() => 'Unknown error');
             console.error('❌ Zapier webhook fel:', zapierResponse.status, zapierErrorText);

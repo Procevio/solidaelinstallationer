@@ -1207,11 +1207,11 @@
             <!-- Webhook Tab -->
             <div id="admin-webhook" class="admin-tab-content" style="display: none;">
                 <div class="form-group">
-                    <label for="webhook-url">Webhook URL:</label>
-                    <input type="url" id="webhook-url" placeholder="https://hooks.zapier.com/...">
+                    <label for="webhook-url">Serverless Endpoint:</label>
+                    <input type="text" id="webhook-url" placeholder="/.netlify/functions/submit" readonly>
                 </div>
                 <div class="form-group">
-                    <button id="test-webhook-btn" class="sync-btn">Testa Webhook</button>
+                    <button id="test-webhook-btn" class="sync-btn">Testa Anslutning</button>
                     <span id="webhook-status"></span>
                 </div>
             </div>
