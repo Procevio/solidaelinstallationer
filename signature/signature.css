@@ -1,0 +1,279 @@
+/**
+ * Signature Module CSS - Fristående stylesheet för signaturfunktionalitet
+ * Namespacad med sig- prefix för att undvika konflikter
+ * Innehåller alla iOS-fixar: 100dvh/svh, env(safe-area-inset-bottom), visualViewport
+ */
+
+/* CSS-variabler för temanpassning */
+.sig-modal {
+  --sig-bg: #fff;
+  --sig-border: rgba(0,0,0,.12);
+  --sig-header-bg: #2c2c2c;
+  --sig-header-text: #fff;
+  --sig-btn-bg: #2c2c2c;
+  --sig-btn-text: #fff;
+  --sig-btn-hover-bg: #1a1a1a;
+}
+
+/* Yttersta containern för modalen */
+.sig-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: -webkit-fill-available; /* iOS fallback */
+  background: var(--sig-bg); /* förhindra att "bakom" lyser igenom */
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Header-sektion */
+.sig-modal__header {
+  padding: 1rem 2rem;
+  background: var(--sig-header-bg);
+  color: var(--sig-header-text);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sig-modal__header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.sig-orientation-notice {
+  margin-top: 0.5rem;
+}
+
+.sig-orientation-notice p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Body-sektion med canvas */
+.sig-modal__body {
+  flex: 1;
+  min-height: 0; /* krävs för att overflow ska funka i flex */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+/* Canvas-wrapper */
+.sig-canvas-wrap {
+  border: 2px dashed var(--sig-border);
+  border-radius: 8px;
+  background: #fff;
+  /* baseline så det inte kollapsar före JS körs */
+  max-height: 80dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canvas-elementet */
+#signatureCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: white;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* Footer med knappar */
+.sig-modal__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  padding: 0.5rem 0.75rem;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  background: var(--sig-bg); /* matcha modalens bakgrund */
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--sig-border);
+  flex-shrink: 0;
+}
+
+/* Knappar */
+.sig-btn {
+  background: var(--sig-btn-bg);
+  color: var(--sig-btn-text);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.sig-btn:hover {
+  background: var(--sig-btn-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sig-btn:active {
+  transform: translateY(0);
+}
+
+.sig-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Specifika knapp-varianter */
+.sig-btn--clear {
+  background: #6c757d;
+}
+
+.sig-btn--clear:hover {
+  background: #5a6268;
+}
+
+.sig-btn--save {
+  background: #28a745;
+}
+
+.sig-btn--save:hover {
+  background: #218838;
+}
+
+.sig-btn--cancel {
+  background: #dc3545;
+}
+
+.sig-btn--cancel:hover {
+  background: #c82333;
+}
+
+/* Mobile landscape optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sig-modal__body {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .sig-canvas-wrap {
+    margin: 0;
+    border-width: 1px;
+    border-radius: 4px;
+  }
+  
+  .sig-modal__footer {
+    padding: 0.25rem 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .sig-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+}
+
+/* Header döljs i landscape via CSS fallback */
+@media (orientation: landscape) {
+  .sig-modal--auto-hide-header .sig-modal__header {
+    display: none;
+  }
+}
+
+/* iOS safe-area support för landscape */
+@supports (padding: max(0px)) {
+  @media (orientation: landscape) {
+    .sig-modal__footer {
+      padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* Dark theme support */
+.sig-modal--dark {
+  --sig-bg: #1a1a1a;
+  --sig-border: rgba(255,255,255,.12);
+  --sig-header-bg: #2c2c2c;
+  --sig-header-text: #fff;
+  --sig-btn-bg: #444;
+  --sig-btn-text: #fff;
+  --sig-btn-hover-bg: #555;
+}
+
+.sig-modal--dark .sig-modal__body {
+  background: #2a2a2a;
+}
+
+.sig-modal--dark .sig-canvas-wrap {
+  background: #fff;
+  border-color: var(--sig-border);
+}
+
+/* Responsiv design för tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sig-modal__header {
+    padding: 1.5rem 3rem;
+  }
+  
+  .sig-modal__body {
+    padding: 1rem;
+  }
+  
+  .sig-modal__footer {
+    padding: 1rem 2rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+  
+  .sig-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    min-width: 120px;
+  }
+}
+
+/* Desktop optimization */
+@media (min-width: 1025px) {
+  .sig-modal {
+    max-width: 800px;
+    max-height: 600px;
+    margin: 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+  
+  .sig-modal__header {
+    padding: 2rem 3rem;
+  }
+  
+  .sig-modal__body {
+    padding: 2rem;
+  }
+  
+  .sig-modal__footer {
+    padding: 1.5rem 3rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+  
+  .sig-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    min-width: 140px;
+  }
+}

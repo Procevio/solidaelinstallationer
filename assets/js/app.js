@@ -580,6 +580,18 @@ const CONFIG = {
         MAX_PER_PERSON: 50000,
         MAX_SHARED: 100000,
         RATE: 0.50 // 50% avdrag
+    },
+
+    // Material scanner configuration
+    MATERIAL_CONFIG: {
+        WEBHOOK_URL: '', // Fylls i vid runtime från env eller user input
+        PRICEBOOK_SOURCE: 'local',
+        VAT_RATE: 25,
+        GREEN_TECH_ENABLED: true,
+        ROT_ENABLED: true,
+        MAX_RETRY_ATTEMPTS: 3,
+        SYNC_INTERVAL: 30000, // 30 sekunder
+        SUPPORTED_FORMATS: ['EAN_13', 'EAN_8', 'CODE_128', 'CODE_39']
     }
 };
 
@@ -691,6 +703,9 @@ class PasswordProtection {
             } else {
                 window.quoteCalculator = new QuoteCalculator();
             }
+            
+            // Dispatch event för material manager
+            window.dispatchEvent(new CustomEvent('userAuthenticated'));
         }, 500);
     }
     
@@ -828,7 +843,7 @@ class QuoteCalculator {
             this.setupTabNavigation();
             this.setupFormSubmission();
             this.setupNavigationButtons();
-            console.log('✅ Alla event listeners konfigurerade');
+            console.log('Alla event listeners konfigurerade');
         });
     }
 
@@ -1749,198 +1764,91 @@ class QuoteCalculator {
     openSignatureModal(type) {
         this.currentSignatureType = type;
         const modal = document.getElementById('signature-fullscreen-modal');
-        const canvas = document.getElementById('signature-fullscreen-canvas');
         
-        if (modal && canvas) {
+        if (modal) {
             modal.style.display = 'flex';
             
-            // Initialize canvas
-            setTimeout(() => {
-                this.initializeSignatureCanvas();
-            }, 100);
-            
-            // Show orientation notice on mobile
-            this.showOrientationNotice();
+            // Initialize signature module
+            if (window.initSignatureModule && !window.signatureAPI) {
+                window.signatureAPI = window.initSignatureModule(modal);
+                
+                // Store reference to app methods for callbacks
+                window.app = {
+                    saveSignature: (dataUrl) => this.handleSignatureSave(dataUrl),
+                    closeSignatureModal: () => this.closeSignatureModal()
+                };
+            }
         }
     }
 
     closeSignatureModal() {
         const modal = document.getElementById('signature-fullscreen-modal');
         if (modal) {
+            // Clean up signature module
+            if (window.signatureAPI) {
+                window.signatureAPI.destroy();
+                window.signatureAPI = null;
+            }
+            
             modal.style.display = 'none';
             this.currentSignatureType = null;
         }
     }
 
+    // Legacy method - now handled by signature module
     initializeSignatureCanvas() {
-        const canvas = document.getElementById('signature-fullscreen-canvas');
-        if (!canvas) return;
-
-        this.signatureCanvas = canvas;
-        this.signatureContext = canvas.getContext('2d');
-
-        // Initial layout
-        this.layoutSignature();
-        
-        // Setup canvas styling with higher resolution
-        this.signatureContext.lineWidth = 2;
-        this.signatureContext.lineCap = 'round';
-        this.signatureContext.lineJoin = 'round';
-        this.signatureContext.strokeStyle = '#000000';
-        this.signatureContext.imageSmoothingEnabled = true;
-        if (this.signatureContext.imageSmoothingQuality) {
-            this.signatureContext.imageSmoothingQuality = 'high';
-        }
-
-        // Add event listeners for drawing
-        this.setupCanvasDrawing();
-        
-        // Attach layout handlers
-        this.attachSignatureLayoutHandlers();
+        console.warn('initializeSignatureCanvas is deprecated - using signature module instead');
     }
 
+    // Legacy methods - now handled by signature module
     layoutSignature() {
-        const vvH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        const isLandscape = window.matchMedia('(orientation: landscape)').matches;
-        
-        const header = document.querySelector('.signature-fullscreen-header');
-        const footer = document.querySelector('.signature-fullscreen-controls');
-        const wrap = document.querySelector('.sign-canvas-wrap');
-        const canvas = document.querySelector('#signature-fullscreen-canvas');
-        
-        if (!wrap || !canvas || !footer) return;
-        
-        const headerH = isLandscape ? 0 : (header ? header.offsetHeight : 0);
-        const footerH = footer ? footer.offsetHeight : 0;
-        
-        // Safe area bottom om CSS-variabel saknas
-        let safeBottom = 0;
-        try {
-            const sb = getComputedStyle(footer).getPropertyValue('padding-bottom');
-            safeBottom = parseInt((sb || '0').replace('px',''), 10) || 0;
-        } catch(e) {}
-        
-        const verticalGaps = 16; // liten buffert för paddings/marginaler
-        const available = Math.max(120, vvH - headerH - footerH - safeBottom - verticalGaps);
-        
-        // Sätt höjd på canvasens wrapper
-        wrap.style.height = available + 'px';
-        
-        // Sätt faktiska canvas-pixlar med device pixel ratio
-        const dpr = window.devicePixelRatio || 1;
-        const displayWidth = wrap.clientWidth;
-        const displayHeight = wrap.clientHeight;
-        
-        // Viktigt: width/height attribut, inte bara CSS
-        canvas.width = displayWidth * dpr;
-        canvas.height = displayHeight * dpr;
-        canvas.style.width = displayWidth + 'px';
-        canvas.style.height = displayHeight + 'px';
-        
-        // Scale the context to match device pixel ratio
-        if (this.signatureContext) {
-            this.signatureContext.scale(dpr, dpr);
-            
-            // Restore canvas styling after scaling
-            this.signatureContext.lineWidth = 2;
-            this.signatureContext.lineCap = 'round';
-            this.signatureContext.lineJoin = 'round';
-            this.signatureContext.strokeStyle = '#000000';
-            this.signatureContext.imageSmoothingEnabled = true;
-            if (this.signatureContext.imageSmoothingQuality) {
-                this.signatureContext.imageSmoothingQuality = 'high';
-            }
-        }
+        console.warn('layoutSignature is deprecated - using signature module instead');
     }
 
     attachSignatureLayoutHandlers() {
-        // Resize handler
-        window.addEventListener('resize', () => this.layoutSignature(), { passive: true });
-        
-        // Orientation change handler
-        window.addEventListener('orientationchange', () => {
-            // liten timeout för att vänta in omflöde i iOS
-            setTimeout(() => this.layoutSignature(), 150);
-        });
-        
-        // Visual viewport handler for mobile keyboards
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                setTimeout(() => this.layoutSignature(), 50);
-            }, { passive: true });
-        }
+        console.warn('attachSignatureLayoutHandlers is deprecated - using signature module instead');
     }
 
     setupCanvasDrawing() {
-        if (!this.signatureCanvas) return;
-
-        // Mouse events
-        this.signatureCanvas.addEventListener('mousedown', (e) => this.startDrawing(e));
-        this.signatureCanvas.addEventListener('mousemove', (e) => this.draw(e));
-        this.signatureCanvas.addEventListener('mouseup', () => this.stopDrawing());
-        this.signatureCanvas.addEventListener('mouseout', () => this.stopDrawing());
-
-        // Touch events for mobile
-        this.signatureCanvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.startDrawing(e.touches[0]);
-        });
-        this.signatureCanvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            this.draw(e.touches[0]);
-        });
-        this.signatureCanvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.stopDrawing();
-        });
+        console.warn('setupCanvasDrawing is deprecated - using signature module instead');
     }
 
     startDrawing(e) {
-        this.isDrawing = true;
-        const rect = this.signatureCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        this.signatureContext.beginPath();
-        this.signatureContext.moveTo(x, y);
+        console.warn('startDrawing is deprecated - using signature module instead');
     }
 
     draw(e) {
-        if (!this.isDrawing) return;
-        
-        const rect = this.signatureCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        this.signatureContext.lineTo(x, y);
-        this.signatureContext.stroke();
+        console.warn('draw is deprecated - using signature module instead');
     }
 
     stopDrawing() {
-        this.isDrawing = false;
+        console.warn('stopDrawing is deprecated - using signature module instead');
     }
 
     clearCanvas() {
-        if (this.signatureCanvas && this.signatureContext) {
-            this.signatureContext.clearRect(0, 0, this.signatureCanvas.width, this.signatureCanvas.height);
-        }
+        console.warn('clearCanvas is deprecated - using signature module instead');
     }
 
-    saveSignature() {
-        if (!this.signatureCanvas || !this.currentSignatureType) return;
-
-        // Convert canvas to image
-        const imageData = this.signatureCanvas.toDataURL('image/png');
+    handleSignatureSave(dataUrl) {
+        if (!this.currentSignatureType) return;
         
         // Update the appropriate preview
         if (this.currentSignatureType === 'main') {
-            this.updateSignaturePreview('signature', imageData);
+            this.updateSignaturePreview('signature', dataUrl);
         } else if (this.currentSignatureType === 'tillagg') {
-            this.updateSignaturePreview('tillagg-signature', imageData);
+            this.updateSignaturePreview('tillagg-signature', dataUrl);
         }
 
         // Close modal
         this.closeSignatureModal();
+    }
+
+    saveSignature() {
+        // Legacy method - now handled by signature module
+        if (window.signatureAPI) {
+            const dataUrl = window.signatureAPI.getImageData();
+            this.handleSignatureSave(dataUrl);
+        }
     }
 
     updateSignaturePreview(prefix, imageData) {
@@ -2036,7 +1944,7 @@ class QuoteCalculator {
             workDescriptionTextarea.value = '';
         }
         
-        console.log('✅ Applikationen återställd');
+        console.log('Applikationen återställd');
     }
 
     logout() {
@@ -2070,6 +1978,835 @@ class QuoteCalculator {
     }
 }
 
+// Material Manager Class - Hanterar barcode scanning och material lista
+class MaterialManager {
+    constructor() {
+        this.store = null;
+        this.sync = null;
+        this.scanner = null;
+        this.currentJobId = null;
+        this.isScanning = false;
+        this.overlay = null;
+        
+        this.init();
+    }
+
+    async init() {
+        console.log('Initialiserar Material Manager...');
+        
+        // Vänta på att dom-elementen är tillgängliga
+        await this.waitForElements();
+        
+        // Initialisera store och sync
+        this.store = new MaterialStore();
+        this.sync = new MaterialSync(this.store);
+        
+        // Ladda webhook URL från config och localStorage
+        const savedWebhookUrl = localStorage.getItem('material_webhook_url');
+        if (savedWebhookUrl) {
+            // Prioritera sparad URL
+            this.sync.setWebhookUrl(savedWebhookUrl);
+        } else if (window.MATERIAL_CONFIG && window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL) {
+            // Fallback till config
+            this.sync.setWebhookUrl(window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL);
+        }
+        
+        // Sätt aktuellt jobb-ID (använd timestamp + random för unikhet)
+        this.currentJobId = this.generateJobId();
+        this.store.initJob(this.currentJobId);
+        
+        // Setup event listeners
+        this.setupEventListeners();
+        this.setupStoreEventListeners();
+        
+        // Uppdatera UI
+        this.updateUI();
+        
+        // Setup admin easter egg
+        this.setupAdminEasterEgg();
+        
+        console.log('Material Manager initialiserad');
+    }
+
+    async waitForElements() {
+        return new Promise((resolve) => {
+            const check = () => {
+                const scanBtn = document.getElementById('scan-material-btn');
+                const materialTab = document.getElementById('material');
+                
+                if (scanBtn && materialTab) {
+                    resolve();
+                } else {
+                    setTimeout(check, 100);
+                }
+            };
+            check();
+        });
+    }
+
+    generateJobId() {
+        // Använd datum + random för att skapa unikt jobb-ID
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '');
+        const random = Math.random().toString(36).substr(2, 5);
+        return `job_${dateStr}_${timeStr}_${random}`;
+    }
+
+    setupEventListeners() {
+        // Scan material button
+        const scanBtn = document.getElementById('scan-material-btn');
+        if (scanBtn) {
+            scanBtn.addEventListener('click', () => this.startScanning());
+        }
+
+        // Sync button
+        const syncBtn = document.getElementById('sync-materials-btn');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', () => this.syncMaterials());
+        }
+
+        // Scanner controls
+        const stopBtn = document.getElementById('barcode-stop-btn');
+        if (stopBtn) {
+            stopBtn.addEventListener('click', () => this.stopScanning());
+        }
+
+        const torchBtn = document.getElementById('barcode-torch-btn');
+        if (torchBtn) {
+            torchBtn.addEventListener('click', () => this.toggleTorch());
+        }
+
+        const manualBtn = document.getElementById('barcode-manual-btn');
+        if (manualBtn) {
+            manualBtn.addEventListener('click', () => this.showManualInput());
+        }
+
+        // Material detection modal
+        const cancelBtn = document.getElementById('material-cancel-btn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => this.hideDetectionModal());
+        }
+
+        const addBtn = document.getElementById('material-add-btn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => this.addDetectedMaterial());
+        }
+
+        // Admin panel
+        const adminBtn = document.getElementById('admin-pricebook-btn');
+        if (adminBtn) {
+            adminBtn.addEventListener('click', () => this.showAdminPanel());
+        }
+
+        const adminCloseBtn = document.getElementById('admin-close-btn');
+        if (adminCloseBtn) {
+            adminCloseBtn.addEventListener('click', () => this.hideAdminPanel());
+        }
+
+        const adminSaveBtn = document.getElementById('admin-save-btn');
+        if (adminSaveBtn) {
+            adminSaveBtn.addEventListener('click', () => this.saveAdminSettings());
+        }
+
+        // Admin tabs
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.switchAdminTab(e.target.dataset.tab);
+            });
+        });
+
+        // Admin pricebook management
+        const adminAddBtn = document.getElementById('admin-add-btn');
+        if (adminAddBtn) {
+            adminAddBtn.addEventListener('click', () => this.addToPricebookFromAdmin());
+        }
+
+        // Webhook testing
+        const testWebhookBtn = document.getElementById('test-webhook-btn');
+        if (testWebhookBtn) {
+            testWebhookBtn.addEventListener('click', () => this.testWebhook());
+        }
+
+        // Clear sync history
+        const clearSyncBtn = document.getElementById('clear-sync-history-btn');
+        if (clearSyncBtn) {
+            clearSyncBtn.addEventListener('click', () => this.clearSyncHistory());
+        }
+    }
+
+    setupStoreEventListeners() {
+        // Lyssna på store updates
+        window.addEventListener('materialStoreUpdated', (event) => {
+            this.updateUI();
+        });
+
+        // Lyssna på sync events
+        window.addEventListener('materialSync', (event) => {
+            this.handleSyncEvent(event.detail);
+        });
+    }
+
+
+    async startScanning() {
+        console.log('Startar streckkodsskanning...');
+        
+        try {
+            // Kontrollera kameratillstånd
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('Kamera stöds inte i denna webbläsare');
+            }
+
+            // Visa fullscreen scanner
+            const fullscreen = document.getElementById('barcode-fullscreen');
+            const videoElement = document.getElementById('barcode-video');
+            
+            if (!fullscreen || !videoElement) {
+                throw new Error('Scanner UI not found');
+            }
+
+            fullscreen.style.display = 'flex';
+            
+            // Initialisera scanner om det inte redan finns
+            if (!this.scanner) {
+                this.scanner = new BarcodeScanner();
+            }
+
+            // Skapa overlay
+            if (!this.overlay) {
+                this.overlay = new ScannerOverlay(document.querySelector('.barcode-video-container'));
+            }
+            this.overlay.show();
+
+            // Setup detection callback
+            this.scanner.onDetected((barcode, format) => {
+                console.log(`Detected: ${barcode} (${format})`);
+                this.handleBarcodeDetection(barcode, format);
+            });
+
+            // Starta scanning
+            await this.scanner.startScanner(videoElement);
+            this.isScanning = true;
+
+            // Visa torch-knapp om stöds
+            const torchBtn = document.getElementById('barcode-torch-btn');
+            if (torchBtn && this.scanner.torchSupported) {
+                torchBtn.style.display = 'flex';
+            }
+
+        } catch (error) {
+            console.error('Scanner error:', error);
+            alert(`Kunde inte starta kamera: ${error.message}\n\nProva manuell inmatning istället.`);
+            this.showManualInput();
+        }
+    }
+
+    stopScanning() {
+        console.log('Stoppar streckkodsskanning...');
+        
+        if (this.scanner) {
+            this.scanner.stopScanner();
+        }
+        
+        if (this.overlay) {
+            this.overlay.hide();
+        }
+        
+        const fullscreen = document.getElementById('barcode-fullscreen');
+        if (fullscreen) {
+            fullscreen.style.display = 'none';
+        }
+        
+        this.isScanning = false;
+    }
+
+    async toggleTorch() {
+        if (this.scanner) {
+            const enabled = !this.scanner.torchEnabled;
+            const success = await this.scanner.setTorch(enabled);
+            
+            const torchBtn = document.getElementById('barcode-torch-btn');
+            if (torchBtn && success) {
+                torchBtn.classList.toggle('primary', enabled);
+            }
+        }
+    }
+
+    showManualInput() {
+        this.stopScanning();
+        BarcodeScanner.showManualInput((barcode, format, name) => {
+            // För manuell inmatning, lägg till direkt i store utan dialog
+            this.store.addItem({
+                barcode,
+                name: name || null, // null om tomt, annars det inskrivna namnet
+                qty: 1,
+                source: 'manual' // Markera som manuellt inmatad
+            });
+            
+            console.log(`Manuellt material tillagt: ${name || 'Okänd produkt'} (${barcode})`);
+        });
+    }
+
+    handleBarcodeDetection(barcode, format, manualName = null) {
+        console.log(`Processing barcode: ${barcode}`);
+        
+        // Pausa scanning medan vi visar modal
+        if (this.scanner && this.isScanning) {
+            // Pausar inte helt utan bara ignorerar nya detections
+        }
+
+        // Sök i pricebook
+        const pricebookItem = this.store.findInPricebook(barcode);
+        
+        // Visa detection modal
+        this.showDetectionModal(barcode, format, pricebookItem, manualName);
+    }
+
+    showDetectionModal(barcode, format, pricebookItem, manualName) {
+        const modal = document.getElementById('material-detection-modal');
+        const barcodeSpan = document.getElementById('detected-barcode');
+        const nameInput = document.getElementById('material-name');
+        const qtyInput = document.getElementById('material-quantity');
+        const unitSelect = document.getElementById('material-unit');
+
+        if (!modal) return;
+
+        // Sätt barcode
+        if (barcodeSpan) {
+            barcodeSpan.textContent = barcode;
+        }
+
+        // Förifyll namn
+        if (nameInput) {
+            if (manualName) {
+                nameInput.value = manualName;
+            } else if (pricebookItem) {
+                nameInput.value = pricebookItem.name;
+            } else {
+                nameInput.value = '';
+                nameInput.focus();
+            }
+        }
+
+        // Förifyll enhet
+        if (unitSelect && pricebookItem && pricebookItem.unit) {
+            unitSelect.value = pricebookItem.unit;
+        }
+
+        // Reset quantity
+        if (qtyInput) {
+            qtyInput.value = '1';
+        }
+
+        // Spara detection data för senare användning
+        modal.dataset.barcode = barcode;
+        modal.dataset.format = format;
+
+        modal.style.display = 'flex';
+    }
+
+    hideDetectionModal() {
+        const modal = document.getElementById('material-detection-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    addDetectedMaterial() {
+        const modal = document.getElementById('material-detection-modal');
+        const nameInput = document.getElementById('material-name');
+        const qtyInput = document.getElementById('material-quantity');
+        const unitSelect = document.getElementById('material-unit');
+
+        if (!modal || !nameInput || !qtyInput || !unitSelect) return;
+
+        const barcode = modal.dataset.barcode;
+        const name = nameInput.value.trim();
+        const qty = parseInt(qtyInput.value) || 1;
+        const unit = unitSelect.value;
+
+        if (!name) {
+            alert('Produktnamn måste fyllas i');
+            nameInput.focus();
+            return;
+        }
+
+        if (qty <= 0) {
+            alert('Antal måste vara större än 0');
+            qtyInput.focus();
+            return;
+        }
+
+        // Lägg till material i store enligt Zapier-specifikation
+        this.store.addItem({
+            barcode,
+            name: name || null, // null om tomt, annars det inskrivna namnet
+            qty,
+            source: 'scan' // Markera som scannat material
+        });
+
+        // Lägg till i pricebook om det inte finns där redan
+        if (!this.store.findInPricebook(barcode)) {
+            this.store.addToPricebook({
+                barcode,
+                name,
+                unit
+            });
+        }
+
+        console.log(`Material tillagt: ${name} x${qty} ${unit}`);
+
+        // Stäng modal
+        this.hideDetectionModal();
+    }
+
+    updateUI() {
+        const stats = this.store.getStats();
+        
+        // Uppdatera statistik
+        const itemsSpan = document.getElementById('material-items-count');
+        const qtySpan = document.getElementById('material-total-qty');
+        
+        if (itemsSpan) itemsSpan.textContent = stats.items;
+        if (qtySpan) qtySpan.textContent = stats.totalQty;
+
+        // Uppdatera sync knapp
+        const syncBtn = document.getElementById('sync-materials-btn');
+        if (syncBtn) {
+            syncBtn.disabled = stats.items === 0;
+        }
+
+        // Uppdatera lista
+        this.updateMaterialList();
+    }
+
+    updateMaterialList() {
+        const materials = this.store.list();
+        const listElement = document.getElementById('material-list');
+        const emptyElement = document.getElementById('material-empty');
+
+        if (!listElement || !emptyElement) return;
+
+        if (materials.length === 0) {
+            listElement.style.display = 'none';
+            emptyElement.style.display = 'block';
+            return;
+        }
+
+        listElement.style.display = 'block';
+        emptyElement.style.display = 'none';
+
+        // Rensa befintligt innehåll
+        listElement.innerHTML = '';
+
+        // Lägg till material
+        materials.forEach(material => {
+            const li = this.createMaterialListItem(material);
+            listElement.appendChild(li);
+        });
+    }
+
+    createMaterialListItem(material) {
+        const li = document.createElement('li');
+        li.className = 'material-item';
+        
+        li.innerHTML = `
+            <div class="material-info">
+                <div class="material-name">${material.name}</div>
+                <div class="material-details">
+                    ${material.barcode} • ${material.unit} • 
+                    ${new Date(material.scannedAt).toLocaleString('sv-SE')}
+                </div>
+            </div>
+            <div class="material-qty-controls">
+                <button class="qty-btn" data-action="decrease" data-barcode="${material.barcode}">−</button>
+                <input type="number" class="qty-input" value="${material.qty}" min="1" 
+                       data-barcode="${material.barcode}">
+                <button class="qty-btn" data-action="increase" data-barcode="${material.barcode}">+</button>
+            </div>
+            <button class="remove-btn" data-barcode="${material.barcode}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3,6 5,6 21,6"/>
+                    <path d="M19,6V20a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6M8,6V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2V6"/>
+                </svg>
+            </button>
+        `;
+
+        // Event listeners för kvantitet
+        const decreaseBtn = li.querySelector('[data-action="decrease"]');
+        const increaseBtn = li.querySelector('[data-action="increase"]');
+        const qtyInput = li.querySelector('.qty-input');
+        const removeBtn = li.querySelector('.remove-btn');
+
+        if (decreaseBtn) {
+            decreaseBtn.addEventListener('click', () => {
+                const newQty = Math.max(1, material.qty - 1);
+                this.store.updateQty(material.barcode, newQty);
+            });
+        }
+
+        if (increaseBtn) {
+            increaseBtn.addEventListener('click', () => {
+                this.store.updateQty(material.barcode, material.qty + 1);
+            });
+        }
+
+        if (qtyInput) {
+            qtyInput.addEventListener('change', (e) => {
+                const newQty = Math.max(1, parseInt(e.target.value) || 1);
+                this.store.updateQty(material.barcode, newQty);
+            });
+        }
+
+        if (removeBtn) {
+            removeBtn.addEventListener('click', () => {
+                if (confirm(`Ta bort ${material.name}?`)) {
+                    this.store.removeItem(material.barcode);
+                }
+            });
+        }
+
+        return li;
+    }
+
+    async syncMaterials() {
+        const syncBtn = document.getElementById('sync-materials-btn');
+        if (!syncBtn) return;
+
+        try {
+            syncBtn.disabled = true;
+            syncBtn.textContent = 'Synkar...';
+
+            const result = await this.sync.syncToWebhook(this.currentJobId);
+            
+            // Hantera Zapier-response format: {ok: boolean, added: number, unknown: number}
+            if (result.ok) {
+                const message = `Sync slutförd!\n${result.added} rader skickade till systemet${result.unknown > 0 ? `\n${result.unknown} okända produkter` : ''}`;
+                alert(message);
+            } else {
+                throw new Error(result.message || 'Sync misslyckades');
+            }
+
+        } catch (error) {
+            console.error('Sync error:', error);
+            alert(`Kunde inte synka material: ${error.message}`);
+        } finally {
+            syncBtn.disabled = false;
+            syncBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <polyline points="1 20 1 14 7 14"/>
+                    <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                </svg>
+                Synka till systemet
+            `;
+        }
+    }
+
+    handleSyncEvent(detail) {
+        console.log('Sync event:', detail);
+        // Här kan vi uppdatera UI baserat på sync status
+    }
+
+    // ==== ADMIN PANEL METHODS ====
+
+    showAdminPanel() {
+        const modal = document.getElementById('pricebook-admin-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            this.updateAdminPanel();
+        }
+    }
+
+    hideAdminPanel() {
+        const modal = document.getElementById('pricebook-admin-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    switchAdminTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.admin-tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Show selected tab
+        const targetTab = document.getElementById(`admin-${tabName}`);
+        if (targetTab) {
+            targetTab.style.display = 'block';
+        }
+
+        // Add active class to clicked button
+        const targetBtn = document.querySelector(`[data-tab="${tabName}"]`);
+        if (targetBtn) {
+            targetBtn.classList.add('active');
+        }
+
+        // Update content for the selected tab
+        if (tabName === 'pricebook') {
+            this.updatePricebookTab();
+        } else if (tabName === 'webhook') {
+            this.updateWebhookTab();
+        } else if (tabName === 'sync-history') {
+            this.updateSyncHistoryTab();
+        }
+    }
+
+    updateAdminPanel() {
+        // Update all tabs
+        this.updatePricebookTab();
+        this.updateWebhookTab();
+        this.updateSyncHistoryTab();
+    }
+
+    updatePricebookTab() {
+        const list = document.getElementById('admin-pricebook-items');
+        if (!list) return;
+
+        const items = this.store.listPricebook();
+        list.innerHTML = '';
+
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'admin-pricebook-item';
+            
+            li.innerHTML = `
+                <div class="item-info">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-details">${item.barcode} • ${item.unit}</div>
+                </div>
+                <button class="admin-remove-btn" data-barcode="${item.barcode}">×</button>
+            `;
+
+            const removeBtn = li.querySelector('.admin-remove-btn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', () => {
+                    if (confirm(`Ta bort ${item.name} från pricebook?`)) {
+                        this.store.removeFromPricebook(item.barcode);
+                        this.updatePricebookTab();
+                    }
+                });
+            }
+
+            list.appendChild(li);
+        });
+    }
+
+    updateWebhookTab() {
+        const input = document.getElementById('webhook-url');
+        const status = document.getElementById('webhook-status');
+        
+        if (input) {
+            const savedUrl = localStorage.getItem('material_webhook_url');
+            const configUrl = window.MATERIAL_CONFIG ? window.MATERIAL_CONFIG.MATERIAL_WEBHOOK_URL : '';
+            input.value = savedUrl || configUrl || '';
+        }
+        
+        if (status) {
+            status.textContent = '';
+        }
+    }
+
+    updateSyncHistoryTab() {
+        const list = document.getElementById('admin-sync-items');
+        if (!list) return;
+
+        const history = this.sync.getSyncHistory(20);
+        list.innerHTML = '';
+
+        if (history.length === 0) {
+            list.innerHTML = '<li style="text-align: center; color: var(--text-muted);">Ingen sync-historik</li>';
+            return;
+        }
+
+        history.forEach(sync => {
+            const li = document.createElement('li');
+            li.className = 'admin-sync-item';
+            
+            const statusClass = sync.status === 'success' ? 'success' : 
+                              sync.status === 'failed' ? 'failed' : 'pending';
+            
+            li.innerHTML = `
+                <div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="sync-status-indicator ${statusClass}"></div>
+                        <strong>Job: ${sync.jobId}</strong>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                        ${sync.itemCount} artiklar • ${new Date(sync.syncedAt).toLocaleString('sv-SE')}
+                        ${sync.error ? `• ${sync.error}` : ''}
+                    </div>
+                </div>
+            `;
+
+            list.appendChild(li);
+        });
+    }
+
+    addToPricebookFromAdmin() {
+        const barcodeInput = document.getElementById('admin-barcode');
+        const nameInput = document.getElementById('admin-name');
+        const unitSelect = document.getElementById('admin-unit');
+
+        if (!barcodeInput || !nameInput || !unitSelect) return;
+
+        const barcode = barcodeInput.value.trim();
+        const name = nameInput.value.trim();
+        const unit = unitSelect.value;
+
+        if (!barcode || !name) {
+            alert('Streckkod och produktnamn måste fyllas i');
+            return;
+        }
+
+        // Check if barcode already exists
+        if (this.store.findInPricebook(barcode)) {
+            alert('Streckkoden finns redan i pricebook');
+            return;
+        }
+
+        this.store.addToPricebook({
+            barcode,
+            name,
+            unit
+        });
+
+        // Clear inputs
+        barcodeInput.value = '';
+        nameInput.value = '';
+        unitSelect.value = 'st';
+
+        // Update list
+        this.updatePricebookTab();
+
+        console.log(`Added to pricebook: ${name} (${barcode})`);
+    }
+
+    async testWebhook() {
+        const input = document.getElementById('webhook-url');
+        const button = document.getElementById('test-webhook-btn');
+        const status = document.getElementById('webhook-status');
+
+        if (!input || !button || !status) return;
+
+        const url = input.value.trim();
+        if (!url) {
+            alert('Ange webhook URL först');
+            return;
+        }
+
+        try {
+            button.disabled = true;
+            button.textContent = 'Testar...';
+            status.textContent = '';
+
+            // Set URL temporarily for test
+            this.sync.setWebhookUrl(url);
+
+            const result = await this.sync.testWebhook();
+
+            if (result.status === 'success') {
+                status.innerHTML = '<span style="color: var(--success-green);">✅ Webhook fungerar</span>';
+            } else {
+                status.innerHTML = `<span style="color: var(--error-red);">❌ ${result.error || 'Test misslyckades'}</span>`;
+            }
+
+        } catch (error) {
+            status.innerHTML = `<span style="color: var(--error-red);">❌ ${error.message}</span>`;
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Testa Webhook';
+        }
+    }
+
+    saveAdminSettings() {
+        const webhookInput = document.getElementById('webhook-url');
+        
+        if (webhookInput) {
+            const url = webhookInput.value.trim();
+            this.sync.setWebhookUrl(url);
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('material_webhook_url', url);
+        }
+
+        alert('Inställningar sparade!');
+        this.hideAdminPanel();
+    }
+
+    clearSyncHistory() {
+        if (confirm('Är du säker på att du vill rensa all sync-historik?')) {
+            this.sync.clearSyncHistory();
+            this.updateSyncHistoryTab();
+        }
+    }
+
+    // Setup admin easter egg - klicka 5 gånger på scan-knappen för att visa admin
+    setupAdminEasterEgg() {
+        let clickCount = 0;
+        let lastClick = 0;
+        
+        const scanBtn = document.getElementById('scan-material-btn');
+        if (!scanBtn) return;
+        
+        const originalHandler = scanBtn.onclick;
+        
+        scanBtn.addEventListener('click', (e) => {
+            const now = Date.now();
+            
+            // Reset counter om det gått mer än 3 sekunder mellan klick
+            if (now - lastClick > 3000) {
+                clickCount = 0;
+            }
+            
+            clickCount++;
+            lastClick = now;
+            
+            if (clickCount >= 5) {
+                this.enableAdminMode();
+                clickCount = 0; // Reset
+            }
+        });
+    }
+
+    // Show admin button after multiple clicks on scan button (easter egg)
+    enableAdminMode() {
+        const adminBtn = document.getElementById('admin-pricebook-btn');
+        if (adminBtn) {
+            adminBtn.style.display = 'inline-flex';
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.textContent = 'Admin-läge aktiverat!';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success-green);
+                color: white;
+                padding: 10px 15px;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    }
+}
+
 // Initialisera applikationen när DOM är laddat
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Initialiserar Solida Elinstallationer App...');
@@ -2080,5 +2817,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Starta tema-toggle
     window.themeToggle = new ThemeToggle();
     
-    console.log('✅ App initialiserad');
+    // Starta material manager (väntar på att lösenord är verifierat)
+    setTimeout(() => {
+        if (window.passwordProtection.isAuthenticated()) {
+            window.materialManager = new MaterialManager();
+        }
+    }, 1000);
+    
+    // Lyssna på när användaren loggar in
+    window.addEventListener('userAuthenticated', () => {
+        if (!window.materialManager) {
+            window.materialManager = new MaterialManager();
+        }
+    });
+    
+    console.log('App initialiserad');
 });

@@ -7,6 +7,7 @@
     <meta name="description" content="Professionell elinstallationsapp för prisberäkning och anbudshantering">
     <meta name="keywords" content="elinstallationer, elmontör, elarbeten, elreparationer, ROT-avdrag">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="signature/signature.css">
 </head>
 <body data-theme="light">
     <!-- Lösenordsskydd -->
@@ -84,6 +85,7 @@
         <!-- Tab Navigation -->
         <div class="tabs">
             <button class="tab-button active" data-tab="stadtjanster">Elinstallationer</button>
+            <button class="tab-button" data-tab="material">Material</button>
             <button class="tab-button" data-tab="arbetsbeskrivning">Arbetsbeskrivning</button>
             <button class="tab-button" data-tab="tillaggtjanst">Tilläggstjänst</button>
         </div>
@@ -746,6 +748,62 @@
             </form>
         </div>
 
+        <!-- Material Tab Content -->
+        <div id="material" class="tab-content">
+            <div class="material-scanner-content">
+                <!-- Material Scanner Section -->
+                <section class="form-section">
+                    <h2>Materialskanning</h2>
+                    
+                    <div class="material-controls">
+                        <button id="scan-material-btn" class="scanner-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            Skanna material
+                        </button>
+                        <button id="admin-pricebook-btn" class="scanner-btn admin-btn" style="display: none;">
+                            Admin
+                        </button>
+                    </div>
+
+                    <div class="material-stats">
+                        <div class="material-stat">
+                            <span id="material-items-count" class="material-stat-value">0</span>
+                            <small class="material-stat-label">Artiklar</small>
+                        </div>
+                        <div class="material-stat">
+                            <span id="material-total-qty" class="material-stat-value">0</span>
+                            <small class="material-stat-label">Totalt antal</small>
+                        </div>
+                        <div class="material-stat">
+                            <button id="sync-materials-btn" class="sync-btn" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"/>
+                                    <polyline points="1 20 1 14 7 14"/>
+                                    <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                </svg>
+                                Synka till systemet
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Material List Section -->
+                <section class="form-section">
+                    <h3>Skannade material</h3>
+                    
+                    <div id="material-empty" class="material-empty">
+                        <p>Inga material skannade ännu.</p>
+                        <p><small>Använd skanna-knappen för att börja bygga din materiallista.</small></p>
+                    </div>
+                    
+                    <ul id="material-list" class="material-list" style="display: none;"></ul>
+                </section>
+            </div>
+        </div>
+
         <!-- Arbetsbeskrivning Tab Content -->
         <div id="arbetsbeskrivning" class="tab-content">
             <form id="arbetsbeskrivning-form" class="quote-form">
@@ -1050,6 +1108,129 @@
         </div>
     </div>
 
+    <!-- Barcode Scanner Fullscreen -->
+    <div id="barcode-fullscreen" class="barcode-fullscreen" style="display: none;">
+        <div class="barcode-video-container">
+            <video id="barcode-video" class="barcode-video" autoplay muted playsinline></video>
+            <!-- Overlay will be added by JavaScript -->
+        </div>
+        
+        <div class="barcode-controls">
+            <button id="barcode-torch-btn" class="barcode-btn" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 2v2l3 3 3-3V2a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1z"/>
+                    <path d="M8 9l8 0"/>
+                    <path d="M7 14l10 0"/>
+                    <circle cx="12" cy="19" r="3"/>
+                </svg>
+                Ficklampa
+            </button>
+            <button id="barcode-manual-btn" class="barcode-btn">
+                Manuellt
+            </button>
+            <button id="barcode-stop-btn" class="barcode-btn danger">
+                Stäng
+            </button>
+        </div>
+    </div>
+
+    <!-- Material Detection Modal -->
+    <div id="material-detection-modal" class="barcode-detection-modal" style="display: none;">
+        <div class="barcode-detection-content">
+            <h3>Material hittades!</h3>
+            
+            <div id="barcode-info" class="barcode-info">
+                Streckkod: <span id="detected-barcode"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="material-name">Produktnamn *</label>
+                <input type="text" id="material-name" placeholder="Ange produktnamn...">
+            </div>
+            
+            <div class="form-group">
+                <label for="material-quantity">Antal</label>
+                <input type="number" id="material-quantity" min="1" value="1" step="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="material-unit">Enhet</label>
+                <select id="material-unit">
+                    <option value="st">st</option>
+                    <option value="m">m</option>
+                    <option value="rulle">rulle</option>
+                    <option value="förp">förp</option>
+                    <option value="liter">liter</option>
+                </select>
+            </div>
+            
+            <div class="modal-buttons">
+                <button id="material-cancel-btn" class="btn-cancel">Avbryt</button>
+                <button id="material-add-btn" class="btn-add">Lägg till</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricebook Admin Modal -->
+    <div id="pricebook-admin-modal" class="barcode-detection-modal" style="display: none;">
+        <div class="barcode-detection-content" style="max-width: 600px;">
+            <h3>📚 Pricebook Administration</h3>
+            
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-tab="pricebook">Pricebook</button>
+                <button class="admin-tab-btn" data-tab="webhook">Webhook</button>
+                <button class="admin-tab-btn" data-tab="sync-history">Sync History</button>
+            </div>
+            
+            <!-- Pricebook Tab -->
+            <div id="admin-pricebook" class="admin-tab-content">
+                <div class="form-group">
+                    <label>Lägg till ny artikel:</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="admin-barcode" placeholder="Streckkod" style="flex: 1;">
+                        <input type="text" id="admin-name" placeholder="Produktnamn" style="flex: 2;">
+                        <select id="admin-unit" style="flex: 1;">
+                            <option value="st">st</option>
+                            <option value="m">m</option>
+                            <option value="rulle">rulle</option>
+                            <option value="förp">förp</option>
+                        </select>
+                        <button id="admin-add-btn" class="btn-add" style="flex: 0 0 auto;">Lägg till</button>
+                    </div>
+                </div>
+                
+                <div class="admin-pricebook-list" style="max-height: 300px; overflow-y: auto;">
+                    <ul id="admin-pricebook-items"></ul>
+                </div>
+            </div>
+            
+            <!-- Webhook Tab -->
+            <div id="admin-webhook" class="admin-tab-content" style="display: none;">
+                <div class="form-group">
+                    <label for="webhook-url">Webhook URL:</label>
+                    <input type="url" id="webhook-url" placeholder="https://hooks.zapier.com/...">
+                </div>
+                <div class="form-group">
+                    <button id="test-webhook-btn" class="sync-btn">Testa Webhook</button>
+                    <span id="webhook-status"></span>
+                </div>
+            </div>
+            
+            <!-- Sync History Tab -->
+            <div id="admin-sync-history" class="admin-tab-content" style="display: none;">
+                <div class="admin-sync-list" style="max-height: 300px; overflow-y: auto;">
+                    <ul id="admin-sync-items"></ul>
+                </div>
+                <button id="clear-sync-history-btn" class="btn-cancel">Rensa historik</button>
+            </div>
+            
+            <div class="modal-buttons">
+                <button id="admin-close-btn" class="btn-cancel">Stäng</button>
+                <button id="admin-save-btn" class="btn-add">Spara</button>
+            </div>
+        </div>
+    </div>
+
     <!-- GDPR Modal -->
     <div id="gdpr-modal" class="gdpr-modal" style="display: none;">
         <div class="gdpr-modal-content">
@@ -1079,36 +1260,74 @@
         </div>
     </div>
 
-    <!-- Fullscreen Signature Modal -->
-    <div id="signature-fullscreen-modal" class="signature-fullscreen-overlay" style="display: none;">
-        <div class="signature-fullscreen-content">
-            <div class="signature-fullscreen-header">
-                <h2>Signera Tilläggstjänst</h2>
-                <div class="signature-orientation-notice" id="signature-orientation-notice">
-                    <p>Vänd telefonen till liggande läge för bästa signeringsupplevelse</p>
-                </div>
+    <!-- Signature Modal - Powered by Signature Module -->
+    <div id="signature-fullscreen-modal" class="sig-modal" style="display: none;">
+        <div class="sig-modal__header">
+            <h2>Signera Tilläggstjänst</h2>
+            <div class="sig-orientation-notice">
+                <p>Vänd telefonen till liggande läge för bästa signeringsupplevelse</p>
             </div>
-            
-            <div class="signature-fullscreen-body">
-                <div class="sign-canvas-wrap">
-                    <canvas id="signature-fullscreen-canvas" class="signature-fullscreen-canvas"></canvas>
-                </div>
+        </div>
+        
+        <div class="sig-modal__body">
+            <div class="sig-canvas-wrap">
+                <canvas id="signatureCanvas"></canvas>
             </div>
-            
-            <div class="signature-fullscreen-controls">
-                <button type="button" class="signature-control-btn signature-clear-btn" id="signature-fullscreen-clear">
-                    <span>Rensa</span>
-                </button>
-                <button type="button" class="signature-control-btn signature-cancel-btn" id="signature-fullscreen-cancel">
-                    <span>Avbryt</span>
-                </button>
-                <button type="button" class="signature-control-btn signature-save-btn" id="signature-fullscreen-save">
-                    <span>Spara Signering</span>
-                </button>
-            </div>
+        </div>
+        
+        <div class="sig-modal__footer">
+            <button type="button" class="sig-btn sig-btn--clear" data-sig="clear">
+                Rensa
+            </button>
+            <button type="button" class="sig-btn sig-btn--cancel" data-sig="cancel">
+                Avbryt
+            </button>
+            <button type="button" class="sig-btn sig-btn--save" data-sig="save">
+                Spara Signering
+            </button>
         </div>
     </div>
 
+    <script type="module">
+        import { initSignature } from './signature/signature.js';
+        
+        // Global variable för signatur-API
+        window.signatureAPI = null;
+        
+        // Lägg till signaturmodul till huvudapp
+        window.initSignatureModule = function(modal) {
+            return initSignature(modal, {
+                hideHeaderInLandscape: true,
+                onSave: (dataUrl) => {
+                    // Använd befintlig spara-logik från huvudapp
+                    if (window.app && window.app.saveSignature) {
+                        window.app.saveSignature(dataUrl);
+                    }
+                },
+                onCancel: () => {
+                    // Använd befintlig avbryt-logik från huvudapp
+                    if (window.app && window.app.closeSignatureModal) {
+                        window.app.closeSignatureModal();
+                    }
+                },
+                onClear: () => {
+                    console.log('Signature cleared');
+                }
+            });
+        };
+    </script>
+    
+    <!-- ZXing-JS Barcode Library -->
+    <script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
+    <!-- Fallback QuaggaJS Library -->
+    <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
+    
+    <!-- Material Scanner Modules -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/material-store.js"></script>
+    <script src="assets/js/material-sync.js"></script>
+    <script src="assets/js/barcode-scanner.js"></script>
+    
     <script src="assets/js/app.js"></script>
 </body>
 </html>
