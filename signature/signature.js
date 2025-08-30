@@ -73,37 +73,62 @@ export function initSignature(containerEl, options = {}) {
             safeBottom = parseInt((sb || '0').replace('px',''), 10) || 0;
         } catch(e) {}
         
-        const verticalGaps = 16; // liten buffert för paddings/marginaler
+        const verticalGaps = 16;
         const available = Math.max(120, vvH - headerH - footerH - safeBottom - verticalGaps);
         
         // Sätt höjd på canvasens wrapper
         wrap.style.height = available + 'px';
         
-        // Sätt faktiska canvas-pixlar med device pixel ratio
-        const dpr = window.devicePixelRatio || 1;
+        // Optimerad canvas-rendering - använd lägre DPR på mobil för bättre prestanda
+        const isMobile = window.innerWidth < 768;
+        const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
         const displayWidth = wrap.clientWidth;
         const displayHeight = wrap.clientHeight;
         
-        // Viktigt: width/height attribut, inte bara CSS
-        canvas.width = displayWidth * dpr;
-        canvas.height = displayHeight * dpr;
-        canvas.style.width = displayWidth + 'px';
-        canvas.style.height = displayHeight + 'px';
+        // Kolla om dimensioner faktiskt har ändrats
+        const needsResize = canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr;
         
-        // Scale the context to match device pixel ratio
-        if (signatureContext) {
-            signatureContext.scale(dpr, dpr);
+        if (needsResize) {
+            // Spara befintlig signatur om det finns någon
+            let imageData = null;
+            if (signatureContext && !isEmpty()) {
+                imageData = canvas.toDataURL('image/png');
+            }
             
-            // Restore canvas styling after scaling
-            signatureContext.lineWidth = 2;
-            signatureContext.lineCap = 'round';
-            signatureContext.lineJoin = 'round';
-            signatureContext.strokeStyle = '#000000';
-            signatureContext.imageSmoothingEnabled = true;
-            if (signatureContext.imageSmoothingQuality) {
-                signatureContext.imageSmoothingQuality = 'high';
+            // Sätt nya dimensioner
+            canvas.width = displayWidth * dpr;
+            canvas.height = displayHeight * dpr;
+            canvas.style.width = displayWidth + 'px';
+            canvas.style.height = displayHeight + 'px';
+            
+            // Återställ context-inställningar efter resize
+            if (signatureContext) {
+                signatureContext.scale(dpr, dpr);
+                signatureContext.lineWidth = 2;
+                signatureContext.lineCap = 'round';
+                signatureContext.lineJoin = 'round';
+                signatureContext.strokeStyle = '#000000';
+                signatureContext.imageSmoothingEnabled = true;
+                if (signatureContext.imageSmoothingQuality) {
+                    signatureContext.imageSmoothingQuality = 'high';
+                }
+                
+                // Återställ signatur om det fanns någon
+                if (imageData) {
+                    const img = new Image();
+                    img.onload = () => {
+                        signatureContext.drawImage(img, 0, 0, displayWidth, displayHeight);
+                    };
+                    img.src = imageData;
+                }
             }
         }
+    }
+    
+    function isEmpty() {
+        if (!signatureContext) return true;
+        const imageData = signatureContext.getImageData(0, 0, canvas.width, canvas.height);
+        return !imageData.data.some(channel => channel !== 0);
     }
 
     // Rita-funktioner
@@ -138,17 +163,27 @@ export function initSignature(containerEl, options = {}) {
         }
     }
 
-    // Event handlers
+    // Event handlers med throttling för bättre prestanda
+    let layoutTimer = null;
+    
+    function throttledLayout() {
+        if (layoutTimer) {
+            cancelAnimationFrame(layoutTimer);
+        }
+        layoutTimer = requestAnimationFrame(layoutSignature);
+    }
+
     function onResize() {
-        setTimeout(layoutSignature, 100);
+        throttledLayout();
     }
 
     function onOrientationChange() {
-        setTimeout(layoutSignature, 150);
+        // Orientation change behöver lite längre timeout
+        setTimeout(throttledLayout, 100);
     }
 
     function onVisualViewportResize() {
-        setTimeout(layoutSignature, 50);
+        throttledLayout();
     }
 
     // Canvas-rithantering
@@ -247,8 +282,7 @@ export function initSignature(containerEl, options = {}) {
         },
         
         isEmpty() {
-            const imageData = signatureContext.getImageData(0, 0, canvas.width, canvas.height);
-            return !imageData.data.some(channel => channel !== 0);
+            return isEmpty();
         }
     };
 }

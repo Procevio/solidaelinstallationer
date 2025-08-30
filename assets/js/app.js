@@ -1715,24 +1715,45 @@ class QuoteCalculator {
         this.isDrawing = false;
         this.currentSignatureType = null; // 'main' or 'tillagg'
 
+        // Förladda signature-modul för bättre prestanda
+        this.preloadSignatureModule();
+
         // Setup event listeners for signature buttons
         this.setupSignatureEventListeners();
+    }
+
+    preloadSignatureModule() {
+        // Förladda signature-modulen i bakgrunden för snabbare respons
+        if (typeof window.initSignatureModule === 'function' && !window.signatureAPI) {
+            const modal = document.getElementById('signature-fullscreen-modal');
+            if (modal) {
+                // Initiera modulen men håll modalen dold
+                try {
+                    window.signatureAPI = window.initSignatureModule(modal);
+                    console.log('📝 Signature module preloaded successfully');
+                } catch (error) {
+                    console.warn('Failed to preload signature module:', error);
+                }
+            }
+        }
     }
 
     setupSignatureEventListeners() {
         // Main signature button
         const mainSignatureBtn = document.getElementById('signature-fullscreen-btn');
         if (mainSignatureBtn) {
-            mainSignatureBtn.addEventListener('click', () => {
-                this.openSignatureModal('main');
+            mainSignatureBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleSignatureButtonClick(mainSignatureBtn, 'main');
             });
         }
 
         // Tilläggstjänst signature button  
         const tillaggSignatureBtn = document.getElementById('tillagg-signature-fullscreen-btn');
         if (tillaggSignatureBtn) {
-            tillaggSignatureBtn.addEventListener('click', () => {
-                this.openSignatureModal('tillagg');
+            tillaggSignatureBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleSignatureButtonClick(tillaggSignatureBtn, 'tillagg');
             });
         }
 
@@ -1785,6 +1806,21 @@ class QuoteCalculator {
         }
     }
 
+    handleSignatureButtonClick(button, type) {
+        // Omedelbar visuell feedback
+        button.style.opacity = '0.7';
+        button.textContent = 'Laddar...';
+        
+        // Öppna modal med liten fördröjning för att visa feedback
+        setTimeout(() => {
+            this.openSignatureModal(type);
+            
+            // Återställ knappens ursprungliga utseende
+            button.style.opacity = '1';
+            button.textContent = type === 'main' ? 'Signera tilläggstjänst' : 'Signera tilläggstjänst';
+        }, 100);
+    }
+
     openSignatureModal(type) {
         this.currentSignatureType = type;
         const modal = document.getElementById('signature-fullscreen-modal');
@@ -1792,15 +1828,22 @@ class QuoteCalculator {
         if (modal) {
             modal.style.display = 'flex';
             
-            // Initialize signature module
-            if (window.initSignatureModule && !window.signatureAPI) {
+            // Initialize signature module if not already loaded
+            if (!window.signatureAPI && window.initSignatureModule) {
                 window.signatureAPI = window.initSignatureModule(modal);
-                
-                // Store reference to app methods for callbacks
-                window.app = {
-                    saveSignature: (dataUrl) => this.handleSignatureSave(dataUrl),
-                    closeSignatureModal: () => this.closeSignatureModal()
-                };
+            }
+            
+            // Store reference to app methods for callbacks
+            window.app = {
+                saveSignature: (dataUrl) => this.handleSignatureSave(dataUrl),
+                closeSignatureModal: () => this.closeSignatureModal()
+            };
+            
+            // Trigger layout update om modulen redan finns
+            if (window.signatureAPI && window.signatureAPI.redraw) {
+                setTimeout(() => {
+                    window.signatureAPI.redraw();
+                }, 50);
             }
         }
     }
@@ -1808,14 +1851,13 @@ class QuoteCalculator {
     closeSignatureModal() {
         const modal = document.getElementById('signature-fullscreen-modal');
         if (modal) {
-            // Clean up signature module
-            if (window.signatureAPI) {
-                window.signatureAPI.destroy();
-                window.signatureAPI = null;
-            }
-            
             modal.style.display = 'none';
             this.currentSignatureType = null;
+            
+            // Rensa canvas men behåll API:et för återanvändning
+            if (window.signatureAPI && window.signatureAPI.clear) {
+                window.signatureAPI.clear();
+            }
         }
     }
 

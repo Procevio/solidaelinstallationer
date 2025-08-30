@@ -1322,8 +1322,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding: 12px 20px;
     margin: 0 -16px var(--spacing-sm) -16px;
     box-shadow: 0 2px 12px var(--shadow-subtle);
-    text-align: center;
     border: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
 }
 
 .logo {
@@ -1376,12 +1380,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     display: flex;
     gap: 8px;
     align-items: center;
+    justify-content: center;
 }
 
 .header-controls {
     display: flex;
     gap: 8px;
     align-items: center;
+    justify-content: center;
 }
 
 .navigation-bar.visible {
@@ -1410,35 +1416,31 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     background: rgba(0,0,0,0.1);
     border-radius: 6px;
     cursor: pointer;
-    transition: background 0.2s;
-    position: static; /* Ta bort sticky */
+    transition: all 0.2s ease;
+    position: static;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    flex-shrink: 0;
     color: var(--text-primary);
     text-decoration: none;
     font-size: 0.8rem;
     font-weight: 500;
 }
 
+/* Ta bort gamla ::before animation */
 .nav-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(44, 44, 44, 0.1), transparent);
-    transition: left 0.6s ease;
+    display: none;
 }
 
+/* Ta bort hover ::before animation */
 .nav-btn:hover::before {
-    left: 100%;
+    display: none;
 }
 
 .nav-btn:hover {
     background: rgba(0,0,0,0.15);
+    transform: scale(1.05);
 }
 
 .nav-btn .nav-icon {
@@ -1448,13 +1450,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transition: var(--transition-fast);
 }
 
+/* Ta bort nav-label styling - används inte längre för header-knappar */
 .nav-label {
-    font-size: 11px;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.1;
-    margin: 0;
-    color: inherit;
+    display: none;
 }
 
 /* ===== MODERN PROFESSIONAL ICON NAVIGATION ===== */
@@ -1598,6 +1596,25 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     font-size: 12px;
     z-index: 1000;
     animation: tooltipFlash 1.5s ease-out forwards;
+}
+
+/* Förbättrad responsivitet för signature-knappar */
+.signature-fullscreen-btn {
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+}
+
+.signature-fullscreen-btn:active {
+    transform: scale(0.98);
+    opacity: 0.8;
+}
+
+.signature-fullscreen-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .nav-icon.active .icon-label {
@@ -2523,15 +2540,22 @@ input::placeholder {
     
     .header {
         padding: var(--spacing-lg) var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
     }
     
     .navigation-bar {
         gap: var(--spacing-sm);
+        justify-content: center;
     }
     
     .nav-btn {
-        min-width: 70px;
-        padding: 10px 12px;
+        width: 32px;
+        height: 32px;
+        padding: 6px;
     }
     
     .nav-label {
@@ -2552,6 +2576,11 @@ input::placeholder {
     
     .header {
         padding: var(--spacing-lg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
     }
     
     .form-section {
@@ -2619,8 +2648,11 @@ input::placeholder {
     
     .header {
         padding: var(--spacing-md);
+        display: flex;
         flex-direction: column;
-        gap: var(--spacing-md);
+        align-items: center;
+        gap: 12px;
+        text-align: center;
     }
     
     .company-logo {
@@ -2634,12 +2666,12 @@ input::placeholder {
     }
     
     .nav-btn {
-        min-width: 60px;
-        padding: 8px 10px;
-        font-size: 0.7rem;
+        width: 32px;
+        height: 32px;
+        padding: 6px;
     }
     
-    .nav-icon {
+    .nav-btn .nav-icon {
         width: 16px;
         height: 16px;
     }
@@ -3115,10 +3147,14 @@ body[data-theme="dark"] .nav-icon.active {
     
     .header {
         padding: var(--spacing-md) var(--spacing-sm);
-        text-align: center;
-        position: static; /* Ta bort sticky */
+        position: static;
         background: var(--white);
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
     }
     
     .logo-section {
@@ -3139,15 +3175,15 @@ body[data-theme="dark"] .nav-icon.active {
     }
     
     .nav-btn {
-        padding: var(--spacing-sm);
-        min-width: 50px;
-        min-height: 46px;
-        border-radius: 8px;
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+        border-radius: 6px;
     }
     
-    .nav-icon {
-        width: 20px;
-        height: 20px;
+    .nav-btn .nav-icon {
+        width: 16px;
+        height: 16px;
     }
     
     /* Tab navigation for mobile */
@@ -3461,6 +3497,11 @@ body[data-theme="dark"] .nav-icon.active {
     
     .header {
         padding: var(--spacing-lg) var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
     }
     
     .company-logo {
@@ -3564,12 +3605,12 @@ body[data-theme="dark"] .nav-icon.active {
 }
 
     .nav-btn {
-        min-width: 50px;
-        padding: 6px 8px;
-        font-size: 0.6rem;
+        width: 28px;
+        height: 28px;
+        padding: 4px;
     }
     
-    .nav-icon {
+    .nav-btn .nav-icon {
         width: 14px;
         height: 14px;
     }
@@ -3697,18 +3738,25 @@ body[data-theme="dark"] .nav-icon.active {
     
     .header {
         padding: var(--spacing-xs);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
     }
     
     .navigation-bar {
         gap: 2px;
+        justify-content: center;
     }
     
     .nav-btn {
-        min-width: 45px;
-        padding: 4px 6px;
+        width: 28px;
+        height: 28px;
+        padding: 4px;
     }
     
-    .nav-icon {
+    .nav-btn .nav-icon {
         width: 12px;
         height: 12px;
     }
@@ -3777,6 +3825,11 @@ body[data-theme="dark"] .nav-icon.active {
 @media (max-width: 768px) and (orientation: landscape) {
     .header {
         padding: var(--spacing-sm) var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
     }
     
     .navigation-bar {
@@ -3975,8 +4028,9 @@ body[data-theme="dark"] .nav-btn:hover {
     border-color: rgba(249, 250, 251, 0.3);
 }
 
+/* Ta bort dark theme ::before animation */
 body[data-theme="dark"] .nav-btn::before {
-    background: linear-gradient(90deg, transparent, rgba(249, 250, 251, 0.1), transparent);
+    display: none;
 }
 
 body[data-theme="dark"] .material-scan-btn {
@@ -4002,9 +4056,9 @@ body[data-theme="dark"] .material-scan-btn::before {
         gap: 8px;
     }
     
-    .nav-icon {
-        width: 24px;
-        height: 24px;
+    .nav-btn .nav-icon {
+        width: 18px;
+        height: 18px;
     }
     
     .nav-label {
