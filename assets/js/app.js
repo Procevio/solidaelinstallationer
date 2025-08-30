@@ -1570,6 +1570,11 @@ class QuoteCalculator {
             button.addEventListener('click', () => {
                 const targetTab = button.dataset.tab;
                 
+                // Visa mobil flash-tooltip om det är en nav-icon och inte hover-kapabel
+                if (button.classList.contains('nav-icon') && !window.matchMedia("(hover: hover)").matches) {
+                    this.showMobileTooltip(button);
+                }
+                
                 // Uppdatera tab-knappar (both old and new selectors)
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
@@ -1642,6 +1647,21 @@ class QuoteCalculator {
                 element.style.opacity = '1';
             });
         });
+    }
+
+    // Visa mobil flash-tooltip funktionalitet
+    showMobileTooltip(element) {
+        const text = element.getAttribute('data-tooltip');
+        if (!text) return;
+        
+        const flash = document.createElement('div');
+        flash.className = 'mobile-tooltip-flash';
+        flash.textContent = text;
+        
+        element.style.position = 'relative';
+        element.appendChild(flash);
+        
+        setTimeout(() => flash.remove(), 1500);
     }
 
     handleOrientationChange() {
